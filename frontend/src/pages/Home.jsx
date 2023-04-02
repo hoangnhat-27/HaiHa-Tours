@@ -18,25 +18,24 @@ import Newsletter from "../shared/Newsletter";
 const Home = () => {
   return (
     <>
-      {/* hero section */}
       <section>
         <Container>
           <Row>
             <Col lg="6">
               <div className="hero__content">
                 <div className="hero__subtitle d-flex align-items-center">
-                  <Subtitle subtitle={"Know Before You Go !"} />
+                  <Subtitle subtitle={"Có thể bạn chưa biết !"} />
                   <img src={wordImg} alt="" />
                 </div>
                 <h1>
-                  Traveling opens the door to creating{" "}
-                  <span className="hightlight"> memories</span>
+                  Du lịch là chìa khóa tạo nên{" "}
+                  <span className="hightlight"> kí ức</span>
                 </h1>
                 <p>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Fugit ut cupiditate consectetur dolores, aliquid id unde
-                  deleniti accusantium impedit adipisci non molestiae minus
-                  expedita similique asperiores sint quaerat ipsum qui!
+                  Hãy đặt ngay 1 chuyến du lịch, bạn sẽ đến với hàng ngàn cung
+                  bậc cảm xúc và có những kỉ niệm đáng nhớ bên người thân và gia
+                  đình, cùng nhau trải nghiệm những điều mới lạ và gặp gỡ những
+                  thành phố mới, văn hóa mới, con người mới.
                 </p>
               </div>
             </Col>
@@ -63,8 +62,10 @@ const Home = () => {
         <Container>
           <Row>
             <Col lg="3">
-              <h5 className="services__subtitle">What we serve</h5>
-              <h2 className="services__title">We offer our best services</h2>
+              <h5 className="services__subtitle">Bạn sẽ nhận được gì ?</h5>
+              <h2 className="services__title">
+                Chúng tôi đưa đến trải nghiệm tốt nhất
+              </h2>
             </Col>
             <ServiceList />
           </Row>
@@ -75,8 +76,10 @@ const Home = () => {
         <Container>
           <Row>
             <Col lg="12" className="mb-5">
-              <Subtitle subtitle={"Explore"}>
-                <h2 className="feature__tour--title">Our feature tours</h2>
+              <Subtitle subtitle={"Khám phá"}>
+                <h2 className="feature__tour--title">
+                  Những tour du lịch hấp dẫn của chúng tôi
+                </h2>
               </Subtitle>
             </Col>
             <FeatureTourList />
@@ -89,32 +92,33 @@ const Home = () => {
           <Row>
             <Col lg="6">
               <div className="experience__content">
-                <Subtitle subtitle={"Experience"} />
+                <Subtitle subtitle={"Về kinh nghiệm"} />
 
                 <h2>
-                  With our all experience <br /> we will serve you
+                  Với tất cả kinh nghiệm làm việc, chúng tôi sẽ đem lại cho bạn
+                  trải nghiệm tuyệt vời nhẩt !
                 </h2>
                 <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Hãy chậm lại một nhịp sống
                   <br />
-                  Consequuntur minima dolor numquam itaque, placeat quidem
-                  inventore nemo optio aliquid deleniti molestias voluptatum
-                  enim recusandae quia cupiditate iste sint. Obcaecati, maxime?
+                  Để cảm nhận thiên nhiên tươi đẹp và đi đến các vùng đất mới,
+                  thành phố mới, con người mới để lấy lại năng lượng sau những
+                  ngày mệt mỏi.
                 </p>
               </div>
 
               <div className="counter__wrapper d-flex align-items-center gap-5">
                 <div className="counter__box">
-                  <span>12k+</span>
-                  <h6>Successfull Trip</h6>
-                </div>
-                <div className="counter__box">
                   <span>2k+</span>
-                  <h6>Regular clients</h6>
+                  <h6>Chuyến du lịch</h6>
                 </div>
                 <div className="counter__box">
-                  <span>15k+</span>
-                  <h6>Years experience</h6>
+                  <span>3k+</span>
+                  <h6>Khách hàng</h6>
+                </div>
+                <div className="counter__box">
+                  <span>5k+</span>
+                  <h6>Năm kinh nghiệm</h6>
                 </div>
               </div>
             </Col>
@@ -131,7 +135,9 @@ const Home = () => {
         <Container>
           <Col lg="12">
             <Subtitle subtitle={"Gallery"} />
-            <h2 className="gallery__title">Visit our customers tour gallery</h2>
+            <h2 className="gallery__title">
+              Những bức ảnh chân thực nhất từ du khách
+            </h2>
           </Col>
           <Col lg="12">
             <MasonryImagesGallery />
@@ -139,13 +145,14 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* testimonial start */}
       <section>
         <Container>
           <Row>
             <Col lg="12">
               <Subtitle subtitle="Fan love" />
-              <h2 className="testimonial__title">What our fans say about us</h2>
+              <h2 className="testimonial__title">
+                Khách hàng nói gì về chúng tôi
+              </h2>
             </Col>
             <Col lg="12">
               <Testimonials />

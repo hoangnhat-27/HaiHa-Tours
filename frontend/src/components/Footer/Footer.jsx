@@ -5,14 +5,14 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 
 const quick__links1 = [
-  { path: "/home", display: "Home" },
-  { path: "/about", display: "About" },
-  { path: "/tours", display: "Tours" },
+  { path: "/home", display: "Trang chủ" },
+  { path: "/about", display: "Về chúng tôi" },
+  { path: "/tours", display: "Tours du lịch" },
 ];
 const quick__links2 = [
-  { path: "/gallery", display: "Gallery" },
-  { path: "/login", display: "Login" },
-  { path: "/register", display: "Register" },
+  { path: "/gallery", display: "Bộ sưu tập" },
+  { path: "/login", display: "Đăng nhập" },
+  { path: "/register", display: "Đăng ký" },
 ];
 
 const Footer = () => {
@@ -25,7 +25,10 @@ const Footer = () => {
           <Col lg="3">
             <div className="logo">
               <img src={logo} alt="" />
-              <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
+              <p>
+                Theo dõi chúng tôi qua các kênh sau để nắm được những thông tin
+                mới nhất
+              </p>
               <div className="social__links d-flex align-items-center gap-4">
                 <span>
                   <Link to="#">
@@ -51,7 +54,7 @@ const Footer = () => {
             </div>
           </Col>
           <Col lg="3">
-            <h5 className="footer__link-title">Discover</h5>
+            <h5 className="footer__link-title">Danh mục</h5>
             <ListGroup className="footer__quick-links">
               {quick__links1.map((item, index) => (
                 <ListGroupItem key={index} className="ps-0 border-0">
@@ -61,7 +64,7 @@ const Footer = () => {
             </ListGroup>
           </Col>
           <Col lg="3">
-            <h5 className="footer__link-title">Quick Links</h5>
+            <h5 className="footer__link-title">Lối tắt</h5>
             <ListGroup className="footer__quick-links">
               {quick__links2.map((item, index) => (
                 <ListGroupItem key={index} className="ps-0 border-0">
@@ -81,7 +84,7 @@ const Footer = () => {
                   </span>
                   Address:
                 </h6>
-                <p className="mb-0">Sylhet, VietName</p>
+                <p className="mb-0">Tu Liem, Viet Nam</p>
               </ListGroupItem>
               <ListGroupItem className="ps-0 border-0 d-flex align-items-center gap-3">
                 <h6 className="mb-0 d-flex align-items-center gap-2">
