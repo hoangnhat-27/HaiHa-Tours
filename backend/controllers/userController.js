@@ -1,13 +1,13 @@
-import Tour from "../models/Tour.js";
+import User from "../models/User.js";
 
-export const createTour = async (req, res) => {
-  const newtour = new Tour(req.body);
+export const createUser = async (req, res) => {
+  const newUser = new User(req.body);
   try {
-    const savedTour = await newtour.save();
+    const savedUser = await newUser.save();
     res.status(200).json({
       success: true,
       message: "Successfully created",
-      data: savedTour,
+      data: savedUser,
     });
   } catch (err) {
     res
@@ -16,11 +16,11 @@ export const createTour = async (req, res) => {
   }
 };
 
-//update tour
-export const updateTour = async (req, res) => {
+//update user
+export const updateUser = async (req, res) => {
   const id = req.params.id;
   try {
-    const updatedTour = await Tour.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       id,
       {
         $set: req.body,
@@ -30,7 +30,7 @@ export const updateTour = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Successfully updated",
-      data: updatedTour,
+      data: updatedUser,
     });
   } catch (err) {
     res
@@ -39,11 +39,11 @@ export const updateTour = async (req, res) => {
   }
 };
 
-//delete tour
-export const deleteTour = async (req, res) => {
+//delete user
+export const deleteUser = async (req, res) => {
   const id = req.params.id;
   try {
-    const deletedTour = await Tour.findByIdAndDelete(id);
+    await User.findByIdAndDelete(id);
     res.status(200).json({
       success: true,
       message: "Successfully deleted",
@@ -55,86 +55,79 @@ export const deleteTour = async (req, res) => {
   }
 };
 
-//get single tour
-export const getSingleTour = async (req, res) => {
+//get single User
+export const getSingleUser = async (req, res) => {
   const id = req.params.id;
   try {
-    const tour = await Tour.findById(id).populate("reviews");
+    const user = await User.findById(id);
     res.status(200).json({
       success: true,
-      message: "Successfully get tour",
-      data: tour,
+      message: "Successfully get User",
+      data: user,
     });
   } catch (err) {
     res.status(404).json({ success: false, message: "Not found" });
   }
 };
 
-//get all tour
-export const getAllTour = async (req, res) => {
-  const page = parseInt(req.query.page);
-
+//get all user
+export const getAllUser = async (req, res) => {
   try {
-    const tours = await Tour.find({})
-      .populate("reviews")
-      .skip(page * 8)
-      .limit(8);
+    const users = await User.find({});
     res.status(200).json({
       success: true,
       message: "Successfully",
-      result: tours.length,
-      data: tours,
+      result: users.length,
+      data: users,
     });
   } catch (err) {
     res.status(404).json({ success: false, message: "Not found" });
   }
 };
 
-//get tour by search
-export const getTourBySearch = async (req, res) => {
+//get user by search
+export const getUserBySearch = async (req, res) => {
   const city = new RegExp(req.query.city, "i");
   const distance = parseInt(req.query.distance);
   const maxGroupSize = parseInt(req.query.maxGroupSize);
   try {
-    const tours = await Tour.find({
+    const users = await User.find({
       city: city,
       distance: { $gte: distance },
       maxGroupSize: { $gte: maxGroupSize },
-    }).populate("reviews");
+    });
 
     res.status(200).json({
       success: true,
       message: "Successfullyy",
-      result: tours.length,
-      data: tours,
+      result: users.length,
+      data: users,
     });
   } catch (error) {
     res.status(404).json({ success: false, message: "Not found" });
   }
 };
 
-//get featured tour
-export const getFeaturedTour = async (req, res) => {
+//get featured User
+export const getFeaturedUser = async (req, res) => {
   try {
-    const tours = await Tour.find({ featured: true })
-      .populate("reviews")
-      .limit(8);
+    const users = await User.find({ featured: true }).limit(8);
     res.status(200).json({
       success: true,
       message: "Successfully",
-      result: tours.length,
-      data: tours,
+      result: users.length,
+      data: users,
     });
   } catch (err) {
     res.status(404).json({ success: false, message: "Not found" });
   }
 };
 
-//get tour counts
-export const getTourCount = async (req, res) => {
+//get User counts
+export const getUserCount = async (req, res) => {
   try {
-    const tourCount = await Tour.estimatedDocumentCount();
-    res.status(200).json({ success: true, data: tourCount });
+    const UserCount = await User.estimatedDocumentCount();
+    res.status(200).json({ success: true, data: UserCount });
   } catch (error) {
     res.status(500).json({ success: false, message: "failed to fetch" });
   }
