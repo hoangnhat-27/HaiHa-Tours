@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import { Container, Row, Button } from "reactstrap";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "./../../context/AuthContext";
 import logo from "../../assets/images/logo.png";
 import "./header.css";
 
@@ -12,6 +13,14 @@ const nav__link = [
 
 const Header = () => {
   const headerRef = useRef(null);
+  const menuRef = useRef(null);
+  const navigate = useNavigate(null);
+  const { user, dispatch } = useContext(AuthContext);
+
+  const logout = () => {
+    dispatch({ type: "LOGOUT" });
+    navigate("/");
+  };
   const stickyHeaderFunc = () => {
     window.addEventListener("scroll", () => {
       if (
@@ -30,6 +39,8 @@ const Header = () => {
     return window.removeEventListener("scroll", stickyHeaderFunc);
   });
 
+  const toggleMenu = () => menuRef.current.classList.toggle(`show__menu`);
+
   return (
     <header className="header" ref={headerRef}>
       <Container>
@@ -37,11 +48,13 @@ const Header = () => {
           <div className="nav__wrapper d-flex align-items-center justify-content-between">
             {/* logo */}
             <div className="logo">
-              <img src={logo} alt="Logo" />
+              <Link to="/">
+                <img src={logo} alt="Logo" />
+              </Link>
             </div>
 
             {/* menu */}
-            <div className="navigation">
+            <div className="navigation" ref={menuRef} onClick={toggleMenu}>
               <ul className="menu d-flex align-items-center gap-5">
                 {nav__link.map((item, index) => (
                   <li className="nav__item" key={index}>
@@ -60,14 +73,25 @@ const Header = () => {
 
             <div className="nav-right d-flex align-items-center gap-4">
               <div className="nav__btns d-flex align-items-center gap-4">
-                <Button className="btn secondary__btn">
-                  <Link to="/login">Đăng nhập</Link>
-                </Button>
-                <Button className="btn primary__btn">
-                  <Link to="/register">Đăng ký</Link>
-                </Button>
+                {user ? (
+                  <>
+                    <h5 className="mb-0">{user.username}</h5>
+                    <Button className="btn btn-dark" onClick={logout}>
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button className="btn secondary__btn">
+                      <Link to="/login">Đăng nhập</Link>
+                    </Button>
+                    <Button className="btn primary__btn">
+                      <Link to="/register">Đăng ký</Link>
+                    </Button>
+                  </>
+                )}
               </div>
-              <span className="mobile__menu">
+              <span className="mobile__menu" onClick={toggleMenu}>
                 <i class="ri-menu-line"></i>
               </span>
             </div>

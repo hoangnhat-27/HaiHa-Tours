@@ -1,37 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./booking.css";
 import { Form, FormGroup, ListGroup, ListGroupItem, Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import { BASE_URL } from "../../utils/config";
 
-const Booking = ({ tour, avgRating }) => {
-  const { price, reviews } = tour;
+const Booking = ({ tour }) => {
+  const { price, title } = tour;
   const navigate = useNavigate();
-  const [credentials, setCredentials] = useState({
-    userId: "01",
-    userEmail: "test@gmail.com",
+
+  const { user } = useContext(AuthContext);
+  const [booking, setBooking] = useState({
+    userId: user && user._id,
+    userEmail: user && user.email,
+    tourName: `${title}`,
     fullName: "",
     phone: "",
     guestSize: "",
-    bookAt: "",
+    bookingAt: "",
   });
 
   const handleChange = (e) => {
-    setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+    setBooking((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
   const serviceFee = 10;
   const totalAmount =
-    Number(price) * Number(credentials.guestSize) + Number(serviceFee);
+    Number(price) *
+      (Number(booking.guestSize) ? Number(booking.guestSize) : 1) +
+    Number(serviceFee);
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
-    navigate("/thank-you");
+
+    try {
+      if (!user || user === undefined || user === null) {
+        return alert("Please sign in");
+      }
+      const res = await fetch(`${BASE_URL}/booking`, {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(booking),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        return alert(result.message);
+      }
+      navigate("/thank-you");
+    } catch (error) {
+      alert(error.message);
+    }
   };
   return (
     <div className="booking">
       <div className="booking__form">
         <h5>Information</h5>
-        <Form className="booking__info-form">
+        <Form className="booking__info-form" onSubmit={handleClick}>
           <FormGroup>
             <input
               type="text"
@@ -54,7 +81,7 @@ const Booking = ({ tour, avgRating }) => {
             <input
               type="date"
               placeholder=""
-              id="bookAt"
+              id="bookingAt"
               required
               onChange={handleChange}
             />
@@ -66,29 +93,32 @@ const Booking = ({ tour, avgRating }) => {
               onChange={handleChange}
             />
           </FormGroup>
-        </Form>
-      </div>
-      <div className="booking__bottom">
-        <ListGroup>
-          <ListGroupItem className="border-0 px-0">
-            <h5 className="d-flex align-items-center gap-1">
-              {price}đ <i class="ri-close-line"></i> 1 người
-            </h5>
-            <span>{price}đ </span>
-          </ListGroupItem>
-          <ListGroupItem className="border-0 px-0">
-            <h5>Phụ phí</h5>
-            <span>{serviceFee}đ</span>
-          </ListGroupItem>
-          <ListGroupItem className="border-0 px-0 total">
-            <h5>Tổng cộng</h5>
-            <span>{totalAmount}đ</span>
-          </ListGroupItem>
-        </ListGroup>
+          <div className="booking__bottom">
+            <ListGroup className="text-right">
+              <ListGroupItem className="border-0 px-0">
+                <h5 className="d-flex align-items-center gap-1">
+                  {price}đ <i class="ri-close-line"></i> 1 người
+                </h5>
+                <span>{price}đ </span>
+              </ListGroupItem>
+              <ListGroupItem className="border-0 px-0">
+                <h5>Phụ phí</h5>
+                <span>{serviceFee}đ</span>
+              </ListGroupItem>
+              <ListGroupItem className="border-0 px-0 total">
+                <h5>Tổng cộng</h5>
+                <span>{totalAmount}đ</span>
+              </ListGroupItem>
+            </ListGroup>
 
-        <Button className="btn primary__btn w-100 mt-4" onClick={handleClick}>
-          Đặt ngay
-        </Button>
+            <Button
+              className="btn primary__btn w-100 mt-4"
+              onSubmit={handleClick}
+            >
+              Đặt ngay
+            </Button>
+          </div>
+        </Form>
       </div>
     </div>
   );

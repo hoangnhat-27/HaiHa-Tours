@@ -31,3 +31,50 @@
   border-radius: 10px 5px 10px 5px;
   cursor: pointer;
 }
+@media only screen and (max-width: 992px) {
+  .search__bar{
+    width: 100%;
+    border-radius: 2rem;
+}
+  .search__bar form{
+    flex-wrap: wrap;;
+  }
+  .search__bar form .form__group{
+    width: 48%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .search__bar form .form__group{
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+  }
+  .search__bar form{
+    gap: 0px !important;  
+    
+  }
+  .form__group input{
+    font-size: 0.7rem;
+  }
+  .form__group span i{
+    font-size: 1.1rem;
+  }
+  .form__group h6{
+    font-size: 1rem;
+  }
+  .search__btn{
+    margin: auto;
+    width: 40%;
+  }
+  .search__icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  .search__icon span{
+    font-size: 1rem;
+  }
+}

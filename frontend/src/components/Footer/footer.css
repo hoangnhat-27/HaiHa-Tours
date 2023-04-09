@@ -37,3 +37,18 @@
   color: var(--text-color);
   font-size: 1rem;
 }
+@media only screen and (max-width: 768px) {
+  .footer row{
+    width: 100%;
+  }
+  .footer .logo img{
+    width: 20%;
+  }
+  .footer__link-title{
+    font-size: 1.1rem;
+  }
+  
+  .footer__quick-links li{
+    font-size: 1rem;
+  }
+}
