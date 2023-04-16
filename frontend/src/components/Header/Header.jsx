@@ -1,15 +1,19 @@
-import React, { useRef, useEffect, useContext } from "react";
-import { Container, Row, Button } from "reactstrap";
+import React, { useRef, useEffect, useContext, useState } from "react";
+import {
+  Container,
+  Row,
+  Button,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./../../context/AuthContext";
+import useFetch from "../../hooks/useFetch";
+import { BASE_URL } from "../../utils/config";
 import logo from "../../assets/images/logo.png";
 import "./header.css";
-
-const nav__link = [
-  { path: "/home", display: "Trang chủ" },
-  { path: "/about", display: "Về chúng tôi" },
-  { path: "/tours", display: "Tours du lịch" },
-];
 
 const Header = () => {
   const headerRef = useRef(null);
@@ -17,6 +21,26 @@ const Header = () => {
   const navigate = useNavigate(null);
   const { user, dispatch } = useContext(AuthContext);
 
+  const { data: categories } = useFetch(`${BASE_URL}/category`);
+  let parentNav = categories.filter((item) => item.fatherCateId == null);
+  const nav__link = [
+    { path: "/home", display: "Trang chủ", click: true },
+    { path: "/about", display: "Giới thiệu", click: true },
+  ];
+  parentNav.forEach((item) => {
+    nav__link.push({
+      id: `${item._id}`,
+      path: null,
+      display: `${item.categoryName}`,
+    });
+  });
+  const categoryMenu = categories.filter((item) => {
+    const parentItem = parentNav.find(
+      (parent) => parent._id === item.fatherCateId
+    );
+    return parentItem !== undefined;
+  });
+  console.log("categoryMenu", categoryMenu);
   const logout = () => {
     dispatch({ type: "LOGOUT" });
     navigate("/");
@@ -37,7 +61,7 @@ const Header = () => {
   useEffect(() => {
     stickyHeaderFunc();
     return window.removeEventListener("scroll", stickyHeaderFunc);
-  });
+  }, []);
 
   const toggleMenu = () => menuRef.current.classList.toggle(`show__menu`);
 
@@ -55,17 +79,27 @@ const Header = () => {
 
             {/* menu */}
             <div className="navigation" ref={menuRef} onClick={toggleMenu}>
-              <ul className="menu d-flex align-items-center gap-5">
+              <ul className="menu d-flex">
                 {nav__link.map((item, index) => (
                   <li className="nav__item" key={index}>
                     <NavLink
                       to={item.path}
                       className={(navClass) =>
-                        navClass.isActive ? "active__link" : ""
+                        navClass.isActive && item.click ? "active__link" : ""
                       }
                     >
                       {item.display}
                     </NavLink>
+                    <ul>
+                      {categoryMenu.length &&
+                        categoryMenu.map((itemCate) =>
+                          itemCate.fatherCateId === item.id ? (
+                            <li key={itemCate._id}>{itemCate.categoryName}</li>
+                          ) : (
+                            ""
+                          )
+                        )}
+                    </ul>
                   </li>
                 ))}
               </ul>

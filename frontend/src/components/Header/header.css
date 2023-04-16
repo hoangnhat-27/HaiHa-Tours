@@ -2,21 +2,26 @@ header{
   width: 100%;
   height: 80px;
   line-height: 80px;
+  background-color: #83a4eb;
 }
 .logo img{
   width: 100px;
 }
-menu{
-  margin-bottom: 0;
+.menu{
+  margin-bottom: 0px;
+}
+.menu > li:hover{
+  background-color: rgb(182, 176, 176);
 }
 .nav__item a{
   text-decoration: none;
   color: var(--heading-color);
   font-weight: 500;
   font-size: 1.1rem;
+  padding: 0 20px;
 }
-.nav__item a:hover{
-  color: inherit;
+.nav__item:hover a{
+  color: #fff;
 }
 .nav__item a.active__link{
   color: var(--secondary-color);
@@ -30,12 +35,55 @@ menu{
   width: 100%;
   height: 80px;
   line-height: 80px;
-  background-color: #fff;
+  background-color: #83a4eb;
   position: sticky;
   top: 0;
   left: 0;
   box-shadow: 3px 3px 8px -3px #ddd;
   z-index: 999;
+}
+ul{
+  padding-left: 0px !important;
+}
+li {
+  display: block;
+  transition-duration: 0.5s;
+}
+
+li:hover {
+  cursor: pointer;
+}
+
+ul li ul {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  transition: all 0.5s ease;
+  z-index: 20;
+  top: 80px;
+  left: 10%;
+  right: 10%;
+  display: none;
+}
+
+ul li:hover > ul,
+ul li ul:hover {
+  visibility: visible;
+  opacity: 1;
+  background-color: rgb(238, 250, 215);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+ul li ul li {
+  padding: 0 1rem !important;
+  clear: both;
+  width: max-content;
+}
+ul li ul li:hover{
+  background-color: rgb(182, 176, 176);
+  color: #fff
 }
 
 /* responsive */

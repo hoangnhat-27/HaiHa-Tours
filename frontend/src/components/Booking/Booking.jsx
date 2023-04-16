@@ -1,6 +1,15 @@
 import React, { useState, useContext } from "react";
 import "./booking.css";
-import { Form, FormGroup, ListGroup, ListGroupItem, Button } from "reactstrap";
+import {
+  Form,
+  FormGroup,
+  ListGroup,
+  ListGroupItem,
+  Button,
+  Label,
+  Col,
+  Row,
+} from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { BASE_URL } from "../../utils/config";
@@ -10,40 +19,52 @@ const Booking = ({ tour }) => {
   const navigate = useNavigate();
 
   const { user } = useContext(AuthContext);
-  const [booking, setBooking] = useState({
+
+  const [order, setOrder] = useState({
     userId: user && user._id,
     userEmail: user && user.email,
-    tourName: `${title}`,
     fullName: "",
     phone: "",
-    guestSize: "",
-    bookingAt: "",
+    tourName: `${title}`,
+    people: {
+      adult: 0,
+      children: 0,
+    },
+    isPaid: false,
+    bookFrom: "",
+    bookTo: "",
   });
 
-  const handleChange = (e) => {
-    setBooking((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-  };
-
-  const serviceFee = 10;
   const totalAmount =
-    Number(price) *
-      (Number(booking.guestSize) ? Number(booking.guestSize) : 1) +
-    Number(serviceFee);
+    order.people.adult > 0 && order.people.children > 0
+      ? Number(price) * Number(order.people.adult) +
+        Math.round(Number(price / 2)) * Number(order.people.children)
+      : order.people.adult > 0
+      ? Number(price) * Number(order.people.adult)
+      : order.people.children > 0
+      ? Math.round(Number(price / 2)) * Number(order.people.children)
+      : 0;
+
+  const handleChange = (e) => {
+    setOrder((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+  };
 
   const handleClick = async (e) => {
     e.preventDefault();
+    setOrder((prev) => ({ ...prev, totalPrice: totalAmount }));
 
     try {
       if (!user || user === undefined || user === null) {
         return alert("Please sign in");
       }
-      const res = await fetch(`${BASE_URL}/booking`, {
+
+      const res = await fetch(`${BASE_URL}/orders/create`, {
         method: "post",
         headers: {
           "content-type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(booking),
+        body: JSON.stringify(order),
       });
       const result = await res.json();
       if (!res.ok) {
@@ -77,33 +98,49 @@ const Booking = ({ tour }) => {
               onChange={handleChange}
             />
           </FormGroup>
+          <Row>
+            <Col lg="6">
+              <Label for="bookFrom">Ngày đi</Label>
+            </Col>
+            <Col lg="6">
+              <Label for="bookTo">Ngày đến</Label>
+            </Col>
+          </Row>
+          <FormGroup className="d-flex align-items-center gap-3">
+            <input type="date" id="bookFrom" onChange={handleChange} />
+            <input type="date" id="bookTo" required onChange={handleChange} />
+          </FormGroup>
           <FormGroup className="d-flex align-items-center gap-3">
             <input
-              type="date"
-              placeholder=""
-              id="bookingAt"
-              required
-              onChange={handleChange}
+              type="number"
+              placeholder="Người lớn"
+              id="people"
+              onChange={(e) => {
+                setOrder((prev) => ({
+                  ...prev,
+                  people: { adult: e.target.value },
+                }));
+              }}
             />
             <input
-              type="text"
-              placeholder="Số người"
-              id="guestSize"
-              required
-              onChange={handleChange}
+              type="number"
+              placeholder="Trẻ em"
+              id="people"
+              onChange={(e) => {
+                setOrder((prev) => ({
+                  ...prev,
+                  people: { children: e.target.value },
+                }));
+              }}
             />
           </FormGroup>
           <div className="booking__bottom">
             <ListGroup className="text-right">
               <ListGroupItem className="border-0 px-0">
                 <h5 className="d-flex align-items-center gap-1">
-                  {price}đ <i class="ri-close-line"></i> 1 người
+                  {price}đ x 1 người lớn và {Math.round(price / 2)}đ x 1 trẻ em
                 </h5>
                 <span>{price}đ </span>
-              </ListGroupItem>
-              <ListGroupItem className="border-0 px-0">
-                <h5>Phụ phí</h5>
-                <span>{serviceFee}đ</span>
               </ListGroupItem>
               <ListGroupItem className="border-0 px-0 total">
                 <h5>Tổng cộng</h5>

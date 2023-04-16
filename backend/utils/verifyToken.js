@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 const verifyToken = (req, res, next) => {
-  const token = req.cookies.accessToken;
+  const token = req.headers.authorization.split(" ")[1];
 
   if (!token) {
     return res.status(401).json({
@@ -16,7 +16,6 @@ const verifyToken = (req, res, next) => {
         .status(401)
         .json({ success: false, message: "token is invalid" });
     }
-
     req.user = user;
     next();
   });

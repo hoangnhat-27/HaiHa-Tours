@@ -1,0 +1,321 @@
+import React, { useState, useEffect } from "react";
+import { Image } from "cloudinary-react";
+import Toast from "../LoadingError/Toast";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { editTour, updateTour } from "../../Redux/Actions/TourActions";
+import { TOUR_UPDATE_RESET } from "../../Redux/Constants/TourConstants";
+import { toast } from "react-toastify";
+import Message from "../LoadingError/Error";
+import Loading from "../LoadingError/Loading";
+
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
+
+const EditTourMain = (props) => {
+  const { tourId } = props;
+
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState(0);
+  const [photo, setPhoto] = useState("");
+  const [city, setCity] = useState("");
+  const [address, setAddress] = useState("");
+  const [distance, setDistance] = useState("");
+  const [slot, setSlot] = useState("");
+  // const [countInStock, setCountInStock] = useState(0);
+  const [description, setDescription] = useState("");
+  const [tourData, setTourData] = useState([]);
+  const [uploadData, setUploadData] = useState("");
+
+  const dispatch = useDispatch();
+
+  const tourEdit = useSelector((state) => state.tourEdit);
+  const { loading, error, tour } = tourEdit;
+
+  const tourUpdate = useSelector((state) => state.tourUpdate);
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = tourUpdate;
+
+  const uploadImage = async (files) => {
+    const formData = new FormData();
+    formData.append("file", files);
+    formData.append("upload_preset", "uploadBookingImg");
+
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/nhat-clouds/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+      if (data.url && data.public_id) {
+        setUploadData(data.public_id);
+        setPhoto(data.url);
+      }
+    } catch (e) {
+      <Message variant="alert-danger">Có lỗi đã xảy ra, hãy thử lại</Message>;
+    }
+  };
+
+  useEffect(() => {
+    if (tour?.success) {
+      setTourData(tour.data);
+    }
+  }, [tour]);
+  const [featured, setFeatured] = useState("");
+
+  useEffect(() => {
+    if (successUpdate) {
+      dispatch({ type: TOUR_UPDATE_RESET });
+      toast.success("Tour cập nhật thành công", ToastObjects);
+    } else {
+      if (!tourData.title || tourData._id !== tourId) {
+        dispatch(editTour(tourId));
+        return;
+      } else {
+        setName(tourData.title);
+        setCity(tourData.city);
+        setAddress(tourData.address);
+        setDistance(tourData.distance);
+        setSlot(tourData.maxGroupSize);
+        setDescription(tourData.desc);
+        // setCountInStock(tourData.countInStock);
+        setPhoto(tourData.photo);
+        setPrice(tourData.price);
+        setFeatured(tourData.featured ? "featured" : "notfeatured");
+      }
+    }
+  }, [tourData, dispatch, tourId, successUpdate]);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(
+      updateTour({
+        _id: tourId,
+        title: name,
+        city,
+        address,
+        distance,
+        maxGroupSize: slot,
+        price,
+        desc: description,
+        photo: photo,
+        featured: featured === "featured" ? true : false,
+        // countInStock,
+      })
+    );
+  };
+
+  return (
+    <>
+      <Toast />
+      <section className="content-main" style={{ maxWidth: "1200px" }}>
+        <form onSubmit={submitHandler}>
+          <div className="content-header">
+            <Link to="/tours" className="btn btn-danger text-white">
+              Quay lại
+            </Link>
+            <h2 className="content-title">Update Tour</h2>
+            <div>
+              <button type="submit" className="btn btn-primary">
+                Cập nhật
+              </button>
+            </div>
+          </div>
+
+          <div className="row mb-4">
+            <div className="col-xl-8 col-lg-8">
+              <div className="card mb-4 shadow-sm">
+                <div className="card-body">
+                  {errorUpdate && (
+                    <Message variant="alert-danger">{errorUpdate}</Message>
+                  )}
+                  {loadingUpdate && <Loading />}
+                  {loading ? (
+                    <Loading />
+                  ) : error ? (
+                    <Message variant="alert-danger">{error}</Message>
+                  ) : (
+                    <>
+                      <div className="mb-4">
+                        <label htmlFor="tour_title" className="form-label">
+                          Tên tour
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Type here"
+                          className="form-control"
+                          id="tour_title"
+                          required
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label htmlFor="tour_title" className="form-label">
+                          Thành phố
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Type here"
+                          className="form-control"
+                          id="city"
+                          required
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label htmlFor="tour_title" className="form-label">
+                          Địa chỉ
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Type here"
+                          className="form-control"
+                          id="address"
+                          required
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label htmlFor="tour_title" className="form-label">
+                          Khoảng cách
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="Type here"
+                          className="form-control"
+                          id="distance"
+                          required
+                          value={distance}
+                          onChange={(e) => setDistance(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label htmlFor="tour_title" className="form-label">
+                          Slots
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="Type here"
+                          className="form-control"
+                          id="slot"
+                          required
+                          value={slot}
+                          onChange={(e) => setSlot(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label htmlFor="featured" className="form-label">
+                          Nổi bật
+                        </label>
+                        <div className="d-flex gap-3">
+                          <div>
+                            <input
+                              type="radio"
+                              id="featured"
+                              name="featured"
+                              value="featured"
+                              checked={featured === "featured"}
+                              onChange={(e) => setFeatured(e.target.value)}
+                            />{" "}
+                            Có
+                          </div>
+                          <div>
+                            <input
+                              type="radio"
+                              name="featured"
+                              id="notfeatured"
+                              value="notfeatured"
+                              checked={featured === "notfeatured"}
+                              onChange={(e) => setFeatured(e.target.value)}
+                            />{" "}
+                            Không
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mb-4">
+                        <label htmlFor="tour_price" className="form-label">
+                          Giá tiền
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="Type here"
+                          className="form-control"
+                          id="tour_price"
+                          required
+                          value={price}
+                          onChange={(e) => setPrice(e.target.value)}
+                        />
+                      </div>
+                      {/* <div className="mb-4">
+                        <label htmlFor="tour_price" className="form-label">
+                          Count In Stock
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="Type here"
+                          className="form-control"
+                          id="tour_price"
+                          required
+                          value={countInStock}
+                          onChange={(e) => setCountInStock(e.target.value)}
+                        />
+                      </div> */}
+                      <div className="mb-4">
+                        <label className="form-label">Mô tả</label>
+                        <textarea
+                          placeholder="Type here"
+                          className="form-control"
+                          rows="7"
+                          required
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                        ></textarea>
+                      </div>
+                      <div className="mb-4">
+                        <label className="form-label">Ảnh</label>
+                        <input
+                          className="form-control"
+                          type="file"
+                          onChange={(e) => {
+                            uploadImage(e.target.files[0]);
+                          }}
+                        />
+                        <Image
+                          cloudName="nhat-clouds"
+                          publicId={`${
+                            uploadData
+                              ? uploadData
+                              : photo.slice(
+                                  photo.lastIndexOf("/tourImg") + 1,
+                                  photo.lastIndexOf(".")
+                                )
+                          }`}
+                          style={{ width: "50%", marginTop: "20px" }}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+    </>
+  );
+};
+
+export default EditTourMain;

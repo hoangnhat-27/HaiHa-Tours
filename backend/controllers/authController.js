@@ -50,21 +50,16 @@ export const login = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: "10m" }
+      { expiresIn: "10h" }
     );
 
     //set token in browser and send response to client
-    res
-      .cookie("accessToken", token, {
-        httpOnly: true,
-        expires: token.expiresIn,
-      })
-      .status(200)
-      .json({
-        success: true,
-        token,
-        data: { ...rest },
-      });
+    res.status(200).json({
+      success: true,
+      token,
+      role,
+      data: { ...rest },
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
