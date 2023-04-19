@@ -9,7 +9,6 @@ import {
 } from "../../Redux/Actions/OrderActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
-import moment from "moment";
 
 const OrderDetailmain = (props) => {
   const { orderId } = props;
@@ -18,16 +17,9 @@ const OrderDetailmain = (props) => {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { loading, error, order } = orderDetails;
 
-  // const orderDeliver = useSelector((state) => state.orderDeliver);
-  // const { loading: loadingDelivered, success: successDelivered } = orderDeliver;
-
   useEffect(() => {
     dispatch(getOrderDetails(orderId));
   }, [dispatch, orderId]);
-
-  const deliverHandler = () => {
-    dispatch(deliverOrder(order));
-  };
 
   return (
     <section className="content-main">
@@ -47,17 +39,20 @@ const OrderDetailmain = (props) => {
             <div className="row align-items-center ">
               <div className="col-lg-6 col-md-6">
                 <span>
-                  <b>Từ ngày: </b>
+                  <b>Ngày tạo: </b>
                   <span className="text-white">
-                    {moment(order.bookFrom).format("llll")}
-                  </span>
-                  <b> đến ngày: </b>
-                  <span className="text-white">
-                    {moment(order.bookTo).format("llll")}
+                    {new Date(order.data.createdAt).toLocaleDateString(
+                      window.userLang,
+                      {
+                        timeZone: "GMT",
+                      }
+                    )}
                   </span>
                 </span>
                 <br />
-                <small className="text-white">Order ID: {order.data._id}</small>
+                <small className="text-black">
+                  Order ID: <span className="text-white">{order.data._id}</span>
+                </small>
               </div>
               <div className="col-lg-6 col-md-6 ms-auto d-flex justify-content-end align-items-center">
                 <select
@@ -70,9 +65,6 @@ const OrderDetailmain = (props) => {
                   <option>Shipped</option>
                   <option>Delivered</option>
                 </select>
-                {/* <Link className="btn btn-success ms-2" to="#">
-                  <i className="fas fa-print"></i>
-                </Link> */}
               </div>
             </div>
           </header>
@@ -81,30 +73,9 @@ const OrderDetailmain = (props) => {
             <OrderDetailInfo order={order} />
 
             <div className="row">
-              <div className="col-lg-9">
+              <div className="col-lg-12">
                 <div className="table-responsive">
-                  <OrderDetailTours order={order} loading={loading} />
-                </div>
-              </div>
-              {/* Payment Info */}
-              <div className="col-lg-3">
-                <div className="box shadow-sm bg-light">
-                  {order.isDelivered ? (
-                    <button className="btn btn-success col-12">
-                      DELIVERED AT ({" "}
-                      {moment(order.isDeliveredAt).format("MMM Do YY")})
-                    </button>
-                  ) : (
-                    <>
-                      {<Loading />}
-                      <button
-                        onClick={deliverHandler}
-                        className="btn btn-dark col-12"
-                      >
-                        MARK AS DELIVERED
-                      </button>
-                    </>
-                  )}
+                  <OrderDetailTours order={order} />
                 </div>
               </div>
             </div>

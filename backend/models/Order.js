@@ -46,6 +46,10 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    paymentMethod: {
+      type: String,
+      default: "direct",
+    },
   },
   { timestamps: true }
 );

@@ -19,7 +19,6 @@ const Booking = ({ tour }) => {
   const navigate = useNavigate();
 
   const { user } = useContext(AuthContext);
-
   const [order, setOrder] = useState({
     userId: user && user._id,
     userEmail: user && user.email,
@@ -27,23 +26,40 @@ const Booking = ({ tour }) => {
     phone: "",
     tourName: `${title}`,
     people: {
-      adult: 0,
-      children: 0,
+      adult: 1,
+      children: 1,
     },
     isPaid: false,
     bookFrom: "",
     bookTo: "",
+    paymentMethod: "direct",
   });
-
-  const totalAmount =
-    order.people.adult > 0 && order.people.children > 0
-      ? Number(price) * Number(order.people.adult) +
-        Math.round(Number(price / 2)) * Number(order.people.children)
-      : order.people.adult > 0
-      ? Number(price) * Number(order.people.adult)
-      : order.people.children > 0
-      ? Math.round(Number(price / 2)) * Number(order.people.children)
-      : 0;
+  let totalAmount = 0;
+  if (order.bookFrom && order.bookTo) {
+    if (Date.parse(order.bookFrom) > Date.parse(order.bookTo)) {
+      alert("Ngày không hợp lệ");
+    } else {
+      let days = Math.round(
+        Math.abs(
+          (new Date(order.bookFrom) - new Date(order.bookTo)) /
+            (24 * 60 * 60 * 1000)
+        )
+      );
+      let adults = 0;
+      let children = 0;
+      if (!order.people.adult > 0 && !order.people.children > 0)
+        totalAmount = 1000;
+      if (order.people.adult > 0)
+        adults = Number(price) * Number(order.people.adult) * days;
+      else adults = 0;
+      if (order.people.children > 0)
+        children =
+          Math.round(Number(price / 2)) * Number(order.people.children) * days;
+      else children = 0;
+      console.log(order);
+      totalAmount = adults + children;
+    }
+  }
 
   const handleChange = (e) => {
     setOrder((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -78,21 +94,31 @@ const Booking = ({ tour }) => {
   return (
     <div className="booking">
       <div className="booking__form">
-        <h5>Information</h5>
+        <h5>Thông tin đơn đặt</h5>
         <Form className="booking__info-form" onSubmit={handleClick}>
           <FormGroup>
+            <Row>
+              <Col lg="6">
+                <Label for="fullName">Họ và tên</Label>
+              </Col>
+            </Row>
             <input
               type="text"
-              placeholder="Họ và tên"
+              placeholder="Nhập họ và tên"
               id="fullName"
               required
               onChange={handleChange}
             />
           </FormGroup>
           <FormGroup>
+            <Row>
+              <Col lg="6">
+                <Label for="phone">Điện thoại</Label>
+              </Col>
+            </Row>
             <input
               type="number"
-              placeholder="Điện thoại"
+              placeholder="Nhập số điện thoại"
               id="phone"
               required
               onChange={handleChange}
@@ -110,37 +136,89 @@ const Booking = ({ tour }) => {
             <input type="date" id="bookFrom" onChange={handleChange} />
             <input type="date" id="bookTo" required onChange={handleChange} />
           </FormGroup>
+          <Row>
+            <Col lg="6">
+              <Label for="people">Người lớn</Label>
+            </Col>
+            <Col lg="6">
+              <Label for="people">Trẻ em</Label>
+            </Col>
+          </Row>
           <FormGroup className="d-flex align-items-center gap-3">
             <input
               type="number"
-              placeholder="Người lớn"
               id="people"
               onChange={(e) => {
                 setOrder((prev) => ({
                   ...prev,
-                  people: { adult: e.target.value },
+                  people: { ...prev.people, adult: e.target.value },
                 }));
               }}
+              value={order.people.adult ? order.people.adult : 1}
             />
             <input
               type="number"
-              placeholder="Trẻ em"
               id="people"
               onChange={(e) => {
                 setOrder((prev) => ({
                   ...prev,
-                  people: { children: e.target.value },
+                  people: { ...prev.people, children: e.target.value },
                 }));
               }}
+              value={order.people.children ? order.people.children : 1}
             />
           </FormGroup>
+          <Row>
+            <Col lg="6">
+              <Label for="people">Phương thức thanh toán</Label>
+            </Col>
+          </Row>
+          <FormGroup className="d-flex align-items-center gap-3">
+            <div className="d-flex gap-3">
+              <div>
+                <input
+                  style={{ width: "unset" }}
+                  type="radio"
+                  id="direct"
+                  name="paymentMethod"
+                  value="direct"
+                  checked={order.paymentMethod === "direct"}
+                  onChange={(e) => {
+                    setOrder((prev) => ({
+                      ...prev,
+                      paymentMethod: "direct",
+                    }));
+                  }}
+                />{" "}
+                Thanh toán trực tiếp
+              </div>
+              <div>
+                <input
+                  style={{ width: "unset" }}
+                  type="radio"
+                  id="banking"
+                  name="paymentMethod"
+                  value="banking"
+                  checked={order.paymentMethod === "banking"}
+                  onChange={(e) => {
+                    setOrder((prev) => ({
+                      ...prev,
+                      paymentMethod: "banking",
+                    }));
+                  }}
+                />{" "}
+                Chuyển khoản
+              </div>
+            </div>
+          </FormGroup>
+
           <div className="booking__bottom">
             <ListGroup className="text-right">
               <ListGroupItem className="border-0 px-0">
                 <h5 className="d-flex align-items-center gap-1">
-                  {price}đ x 1 người lớn và {Math.round(price / 2)}đ x 1 trẻ em
+                  {price}đ/ngày cho 1 người lớn và {Math.round(price / 2)}đ/ngày
+                  cho 1 trẻ em
                 </h5>
-                <span>{price}đ </span>
               </ListGroupItem>
               <ListGroupItem className="border-0 px-0 total">
                 <h5>Tổng cộng</h5>

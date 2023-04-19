@@ -18,7 +18,7 @@ const OrderMain = () => {
   return (
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Đơn đặt hàng</h2>
+        <h5 className="content-title">Đơn đặt hàng</h5>
       </div>
 
       <div className="card mb-4 shadow-sm">
@@ -48,7 +48,7 @@ const OrderMain = () => {
             </div>
           </div>
         </header>
-        <div className="card-body">
+        <div className="card-body" style={{ minHeight: "300px" }}>
           <div className="table-responsive">
             {loading ? (
               <Loading />

@@ -5,7 +5,7 @@ const OrderDetailInfo = (props) => {
 
   return (
     <div className="row mb-5 order-info-wrap">
-      <div className="col-md-6 col-lg-4">
+      <div className="col-md-6 col-lg-6">
         <article className="icontext align-items-start">
           <span className="icon icon-sm rounded-circle alert-success">
             <i className="text-success fas fa-user"></i>
@@ -15,6 +15,7 @@ const OrderDetailInfo = (props) => {
             <p className="mb-1">
               <span>Họ tên: </span>
               {order.data.fullName} <br />
+              <span>Email: </span>
               <a href={`mailto:${order.data.userEmail}`}>
                 {order.data.userEmail}
               </a>
@@ -22,31 +23,19 @@ const OrderDetailInfo = (props) => {
           </div>
         </article>
       </div>
-      <div className="col-md-6 col-lg-4">
+      <div className="col-md-6 col-lg-6">
         <article className="icontext align-items-start">
           <div className="text">
-            <h6 className="mb-1">Thông tin đặt hàng</h6>
             <p className="mb-1">
-              Địa chỉ: {order.address}
-              <br /> Pay method: {/* {order.paymentMethod} */}
+              <br />
+              <span>Điện thoại: </span>
+              {order.data.phone} <br />
+              Phương thức thanh toán:{" "}
+              {order.data.paymentMethod === "direct"
+                ? "Thanh toán trực tiếp"
+                : "Chuyển khoản"}
             </p>
           </div>
-        </article>
-      </div>
-      <div className="col-md-6 col-lg-4">
-        <article className="icontext align-items-start">
-          <span className="icon icon-sm rounded-circle alert-success">
-            <i className="text-success fas fa-map-marker-alt"></i>
-          </span>
-          {/* <div className="text">
-            <h6 className="mb-1">Deliver to</h6>
-            <p className="mb-1">
-              Address: {order.shippingAddress.city}
-              <br />
-              {order.shippingAddress.address}
-              <br /> {order.shippingAddress.postalCode}
-            </p>
-          </div> */}
         </article>
       </div>
     </div>

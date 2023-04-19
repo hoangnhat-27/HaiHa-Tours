@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Toast from "../LoadingError/Toast";
-import moment from "moment";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { updateOrder } from "../../Redux/Actions/OrderActions";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
 const Orders = (props) => {
   const { orders } = props;
   const dispatch = useDispatch();
-  const [orderData, setOrderData] = useState({});
 
   const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -18,25 +18,49 @@ const Orders = (props) => {
     autoClose: 2000,
   };
 
-  const UpdateOrder = (order, orderStatus) => {
-    dispatch(updateOrder({ _id: order._id, status: orderStatus }));
+  const UpdateOrder = (
+    order,
+    orderStatus = order.status,
+    isPaid = order.isPaid
+  ) => {
+    dispatch(updateOrder({ _id: order._id, status: orderStatus, isPaid }));
     toast.success("Tour cập nhật thành công", ToastObjects);
   };
+  const [show, setShow] = useState(false);
+  const [orderItem, setOrderItem] = useState({});
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return (
     <>
       <Toast />
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Xác nhận đơn hàng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Bạn muốn xác nhận đơn hàng đã thanh toán ?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Đóng
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              UpdateOrder(orderItem, "", true);
+              handleClose();
+            }}
+          >
+            Xác nhận
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <table className="table">
         <thead>
           <tr>
             <th scope="col">Họ và tên</th>
-            <th scope="col">Email</th>
-            <th scope="col">Điện thoại</th>
             <th scope="col">Tour đặt</th>
-            <th scope="col">Đặt từ ngày</th>
-            <th scope="col">Đặt đến ngày</th>
-            <th scope="col">Người lớn</th>
-            <th scope="col">Trẻ em</th>
+            <th scope="col">Số ngày đặt</th>
             <th scope="col">Tổng cộng</th>
             <th scope="col">Thanh toán</th>
             <th>Trạng thái</th>
@@ -52,13 +76,15 @@ const Orders = (props) => {
                 <b>{order.fullName}</b>
               </td>
               <td>{order.userEmail}</td>
-              <td>{order.phone}</td>
-              <td>{order.tourName}</td>
-              <td>{order.bookFrom}</td>
-              <td>{order.bookTo}</td>
-              <td>{order.people.adult}</td>
-              <td>{order.people.children}</td>
-              <td>{order.totalPrice}đ</td>
+              <td>
+                {Math.round(
+                  Math.abs(
+                    (new Date(order.bookFrom) - new Date(order.bookTo)) /
+                      (24 * 60 * 60 * 1000)
+                  )
+                )}
+              </td>
+              <td>{Intl.NumberFormat("en-US").format(order.totalPrice)}đ</td>
               <td>
                 {order.isPaid ? (
                   <span className="badge rounded-pill alert-success">
@@ -100,9 +126,39 @@ const Orders = (props) => {
                 )}
               </td>
               <td className="d-flex justify-content-end align-item-center">
-                <Link to={`/order/${order._id}`} className="text-success">
-                  <i className="fas fa-eye"></i>
-                </Link>
+                <div className="d-flex gap-2">
+                  {!order.isPaid ? (
+                    <div
+                      className="text-success"
+                      onClick={() => {
+                        setOrderItem(order);
+                        handleShow();
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        opacity: "0.7",
+                      }}
+                      onMouseOver={(e) => (e.target.style.opacity = 1)}
+                      onMouseOut={(e) => (e.target.style.opacity = 0.6)}
+                    >
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <Link
+                    to={`/order/${order._id}`}
+                    className="text-success"
+                    style={{
+                      cursor: "pointer",
+                      opacity: "0.7",
+                    }}
+                    onMouseOver={(e) => (e.target.style.opacity = 1)}
+                    onMouseOut={(e) => (e.target.style.opacity = 0.6)}
+                  >
+                    <i className="fas fa-eye"></i>
+                  </Link>
+                </div>
               </td>
             </tr>
           ))}
