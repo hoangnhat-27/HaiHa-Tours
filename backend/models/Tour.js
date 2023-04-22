@@ -42,10 +42,17 @@ const tourSchema = new mongoose.Schema(
         ref: "Review",
       },
     ],
-
     featured: {
       type: Boolean,
       default: false,
+    },
+    cateId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Category",
+    },
+    investorId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Investor",
     },
   },
   { timestamps: true }

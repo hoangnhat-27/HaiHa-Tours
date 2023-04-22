@@ -4,6 +4,8 @@ import { Image } from "cloudinary-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { TOUR_CREATE_RESET } from "../../Redux/Constants/TourConstants";
+import { listInvestors } from "../../Redux/Actions/InvestorAction";
+import { listCategories } from "../../Redux/Actions/CategoryActions";
 import { createTour } from "../../Redux/Actions/TourActions";
 import Toast from "../LoadingError/Toast";
 import Message from "../LoadingError/Error";
@@ -32,6 +34,30 @@ const AddTourMain = () => {
 
   const tourCreate = useSelector((state) => state.tourCreate);
   const { loading, error, tour } = tourCreate;
+  const [cateId, setCateId] = useState(tour?.length ? tour.cateId : undefined);
+  const [investorId, setInvestorId] = useState(
+    tour?.length ? tour.investorId : undefined
+  );
+  const categoryList = useSelector((state) => state.categoryList);
+  const { categories } = categoryList;
+  const investorList = useSelector((state) => state.investorList);
+  const { investors } = investorList;
+  const [categoryData, setCategoryData] = useState([]);
+  const [investorData, setInvestorData] = useState([]);
+
+  useEffect(() => {
+    if (categories?.success) {
+      setCategoryData(categories.data);
+    }
+    if (investors?.success) {
+      setInvestorData(investors.data);
+    }
+  }, [categories, investors]);
+
+  useEffect(() => {
+    dispatch(listCategories());
+    dispatch(listInvestors());
+  }, [dispatch]);
 
   useEffect(() => {
     if (tour) {
@@ -71,6 +97,16 @@ const AddTourMain = () => {
       <Message variant="alert-danger">Có lỗi đã xảy ra, hãy thử lại</Message>;
     }
   };
+  const handleCategory = (event) => {
+    const selectedOption = event.target.options[event.target.selectedIndex];
+    const categoryId = selectedOption.getAttribute("data-cate-id");
+    setCateId(categoryId);
+  };
+  const handleInvestor = (event) => {
+    const selectedOption = event.target.options[event.target.selectedIndex];
+    const investId = selectedOption.getAttribute("data-investor-id");
+    setInvestorId(investId);
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -83,7 +119,9 @@ const AddTourMain = () => {
         distance,
         slot,
         description,
-        photo
+        photo,
+        cateId,
+        investorId
         // countInStock
       )
     );
@@ -210,6 +248,34 @@ const AddTourMain = () => {
                         Không
                       </div>
                     </div>
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="fatherCategory" className="form-label">
+                      Danh mục
+                    </label>
+                    <select className="form-select" onChange={handleCategory}>
+                      {categoryData.length &&
+                        categoryData.map((item) =>
+                          item.fatherCateId ? (
+                            <option data-cate-id={item._id}>
+                              {item.categoryName}
+                            </option>
+                          ) : null
+                        )}
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="investor" className="form-label">
+                      Nhà đầu tư
+                    </label>
+                    <select className="form-select" onChange={handleInvestor}>
+                      {investorData.length &&
+                        investorData.map((item) => (
+                          <option data-investor-id={item._id}>
+                            {item.name}
+                          </option>
+                        ))}
+                    </select>
                   </div>
                   <div className="mb-4">
                     <label htmlFor="tour_price" className="form-label">

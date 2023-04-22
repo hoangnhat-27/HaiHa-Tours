@@ -59,13 +59,13 @@ const Orders = (props) => {
         <thead>
           <tr>
             <th scope="col">Họ và tên</th>
-            <th scope="col">Tour đặt</th>
+            <th scope="col">Tên tour</th>
             <th scope="col">Số ngày đặt</th>
             <th scope="col">Tổng cộng</th>
             <th scope="col">Thanh toán</th>
             <th>Trạng thái</th>
             <th scope="col" className="text-end">
-              Action
+              Hành động
             </th>
           </tr>
         </thead>
@@ -99,6 +99,8 @@ const Orders = (props) => {
               <td>
                 {order.status === "accept" ? (
                   <span className="badge btn-success">Đã xác nhận</span>
+                ) : order.status === "deny" ? (
+                  <span className="badge btn-danger">Đã từ chối</span>
                 ) : (
                   <>
                     <span className="badge btn-dark">Chưa xác nhận</span>

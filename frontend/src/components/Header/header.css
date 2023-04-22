@@ -20,7 +20,7 @@ header{
   font-size: 1.1rem;
   padding: 0 20px;
 }
-.nav__item:hover a{
+.nav__item:hover > a{
   color: #fff;
 }
 .nav__item a.active__link{
@@ -77,9 +77,12 @@ ul li ul:hover {
 }
 
 ul li ul li {
-  padding: 0 1rem !important;
+  padding: 0 0.3rem !important;
   clear: both;
   width: max-content;
+  height: 75px;
+  border: 1px solid #ccc;
+  border-collapse: collapse;
 }
 ul li ul li:hover{
   background-color: rgb(182, 176, 176);

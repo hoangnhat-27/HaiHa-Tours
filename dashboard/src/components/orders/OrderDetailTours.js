@@ -54,20 +54,6 @@ const OrderDetailTours = (props) => {
                   </b>
                 </dd>
               </dl>
-              <dl className="dlist">
-                <dt className="text-end">Tình trạng:</dt>
-                <dd>
-                  {order.data.isPaid ? (
-                    <span className="badge rounded-pill alert alert-success text-success mb-0">
-                      Đã thanh toán
-                    </span>
-                  ) : (
-                    <span className="badge rounded-pill alert alert-danger text-danger mb-0">
-                      Chưa thanh toán
-                    </span>
-                  )}
-                </dd>
-              </dl>
             </article>
           </td>
         </tr>

@@ -94,7 +94,9 @@ export const createTour =
     distance,
     slot,
     description,
-    photo
+    photo,
+    cateId,
+    investorId
     // countInStock
   ) =>
   async (dispatch, getState) => {
@@ -122,6 +124,8 @@ export const createTour =
           price,
           desc: description,
           photo,
+          cateId,
+          investorId,
           // countInStock,
         },
         config

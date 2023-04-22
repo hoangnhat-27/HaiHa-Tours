@@ -40,7 +40,7 @@ const Header = () => {
     );
     return parentItem !== undefined;
   });
-  console.log("categoryMenu", categoryMenu);
+
   const logout = () => {
     dispatch({ type: "LOGOUT" });
     navigate("/");
@@ -94,7 +94,11 @@ const Header = () => {
                       {categoryMenu.length &&
                         categoryMenu.map((itemCate) =>
                           itemCate.fatherCateId === item.id ? (
-                            <li key={itemCate._id}>{itemCate.categoryName}</li>
+                            <li key={itemCate._id}>
+                              <Link to={`/category/${itemCate._id}`}>
+                                {itemCate.categoryName}
+                              </Link>
+                            </li>
                           ) : (
                             ""
                           )

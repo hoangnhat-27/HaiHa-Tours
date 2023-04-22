@@ -54,17 +54,19 @@ const OrderDetailmain = (props) => {
                   Order ID: <span className="text-white">{order.data._id}</span>
                 </small>
               </div>
-              <div className="col-lg-6 col-md-6 ms-auto d-flex justify-content-end align-items-center">
-                <select
-                  className="form-select d-inline-block"
-                  style={{ maxWidth: "200px" }}
-                >
-                  <option>Change status</option>
-                  <option>Awaiting payment</option>
-                  <option>Confirmed</option>
-                  <option>Shipped</option>
-                  <option>Delivered</option>
-                </select>
+              <div className="col-lg-6 col-md-6 ms-auto d-flex justify-content-end align-items-center gap-2">
+                <dt>Tình trạng: </dt>
+                <span>
+                  {order.data.isPaid ? (
+                    <span className="badge rounded-pill alert alert-success text-success mb-0">
+                      Đã thanh toán
+                    </span>
+                  ) : (
+                    <span className="badge rounded-pill alert alert-danger text-danger mb-0">
+                      Chưa thanh toán
+                    </span>
+                  )}
+                </span>
               </div>
             </div>
           </header>

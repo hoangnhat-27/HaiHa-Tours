@@ -11,6 +11,7 @@ import userRoute from "./routes/users.js";
 import reviewRoute from "./routes/reviews.js";
 import orderRoute from "./routes/orders.js";
 import categoryRoute from "./routes/categories.js";
+import investorRoute from "./routes/investors.js";
 // import orderRouter from "./routes/orderRoutes.js";
 
 dotenv.config();
@@ -49,7 +50,7 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/review", reviewRoute);
 app.use("/api/v1/orders", orderRoute);
 app.use("/api/v1/category", categoryRoute);
-// app.use("/api/orders", orderRouter);
+app.use("/api/v1/investor", investorRoute);
 
 // ERROR HANDLER
 app.use(notFound);

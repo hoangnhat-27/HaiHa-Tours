@@ -8,7 +8,7 @@ const LatestOrder = (props) => {
   const { loading, error, orders } = props;
   return (
     <div className="card-body">
-      <h4 className="card-title">New orders</h4>
+      <h4 className="card-title">Đơn mới nhất</h4>
       {loading ? (
         <Loading />
       ) : error ? (
@@ -24,12 +24,13 @@ const LatestOrder = (props) => {
                       <b>{order.fullName}</b>
                     </td>
                     <td>{order.userEmail}</td>
-                    <td>{order.totalPrice}đ</td>
+                    <td>
+                      {Intl.NumberFormat("en-US").format(order.totalPrice)}đ
+                    </td>
                     <td>
                       {order.isPaid ? (
                         <span className="badge rounded-pill alert-success">
-                          Đã thanh toán lúc{" "}
-                          {moment(order.paidAt).format("MMM Do YY")}
+                          Đã thanh toán
                         </span>
                       ) : (
                         <span className="badge rounded-pill alert-danger">
@@ -37,7 +38,14 @@ const LatestOrder = (props) => {
                         </span>
                       )}
                     </td>
-                    <td>{moment(order.createdAt).calendar()}</td>
+                    <td>
+                      {new Date(order.createdAt).toLocaleDateString(
+                        window.userLang,
+                        {
+                          timeZone: "GMT",
+                        }
+                      )}
+                    </td>
                     <td className="d-flex justify-content-end align-item-center">
                       <Link to={`/order/${order._id}`} className="text-success">
                         <i className="fas fa-eye"></i>

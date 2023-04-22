@@ -77,6 +77,8 @@ export const getAllTour = async (req, res) => {
   try {
     const tours = await Tour.find({})
       .populate("reviews")
+      .populate("cateId")
+      .populate("investorId")
       .skip(page * 8)
       .limit(8);
     res.status(200).json({

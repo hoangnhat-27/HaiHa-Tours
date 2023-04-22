@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editTour, updateTour } from "../../Redux/Actions/TourActions";
 import { TOUR_UPDATE_RESET } from "../../Redux/Constants/TourConstants";
+import { listInvestors } from "../../Redux/Actions/InvestorAction";
+import { listCategories } from "../../Redux/Actions/CategoryActions";
 import { toast } from "react-toastify";
 import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
@@ -35,8 +37,36 @@ const EditTourMain = (props) => {
 
   const tourEdit = useSelector((state) => state.tourEdit);
   const { loading, error, tour } = tourEdit;
+  const categoryList = useSelector((state) => state.categoryList);
+  const { categories } = categoryList;
+  const investorList = useSelector((state) => state.investorList);
+  const { investors } = investorList;
+  const [categoryData, setCategoryData] = useState([]);
+  const [investorData, setInvestorData] = useState([]);
 
+  useEffect(() => {
+    if (categories?.success) {
+      setCategoryData(categories.data);
+    }
+    if (investors?.success) {
+      setInvestorData(investors.data);
+    }
+  }, [categories, investors]);
+
+  useEffect(() => {
+    dispatch(listCategories());
+    dispatch(listInvestors());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (tour?.success) {
+      setTourData(tour.data);
+    }
+  }, [tour]);
+
+  const [featured, setFeatured] = useState("");
   const tourUpdate = useSelector((state) => state.tourUpdate);
+
   const {
     loading: loadingUpdate,
     error: errorUpdate,
@@ -65,13 +95,22 @@ const EditTourMain = (props) => {
       <Message variant="alert-danger">Có lỗi đã xảy ra, hãy thử lại</Message>;
     }
   };
-
+  const [cateId, setCateId] = useState(tour?.length ? tour.cateId : undefined);
+  const [investorId, setInvestorId] = useState(
+    tour?.length ? tour.investorId : undefined
+  );
+  const [currentCateName, setCurrentCateName] = useState("");
+  const [currentInvestorName, setCurrentInvestorName] = useState("");
   useEffect(() => {
-    if (tour?.success) {
-      setTourData(tour.data);
+    if (cateId?.length) {
+      let category = categoryData.find((item) => item._id === cateId);
+      setCurrentCateName(category?.categoryName);
     }
-  }, [tour]);
-  const [featured, setFeatured] = useState("");
+    if (investorId?.length) {
+      let investor = investorData.find((item) => item._id === investorId);
+      setCurrentInvestorName(investor?.name);
+    }
+  }, [cateId, investorId]);
 
   useEffect(() => {
     if (successUpdate) {
@@ -92,9 +131,22 @@ const EditTourMain = (props) => {
         setPhoto(tourData.photo);
         setPrice(tourData.price);
         setFeatured(tourData.featured ? "featured" : "notfeatured");
+        setCateId(tourData.cateId);
+        setInvestorId(tourData.investorId);
       }
     }
   }, [tourData, dispatch, tourId, successUpdate]);
+
+  const handleCategory = (event) => {
+    const selectedOption = event.target.options[event.target.selectedIndex];
+    const fatherCateId = selectedOption.getAttribute("data-cate-id");
+    setCateId(fatherCateId);
+  };
+  const handleInvestor = (event) => {
+    const selectedOption = event.target.options[event.target.selectedIndex];
+    const investorId = selectedOption.getAttribute("data-investor-id");
+    setInvestorId(investorId);
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -244,6 +296,42 @@ const EditTourMain = (props) => {
                             Không
                           </div>
                         </div>
+                      </div>
+                      <div className="mb-4">
+                        <label htmlFor="fatherCategory" className="form-label">
+                          Danh mục
+                        </label>
+                        <select
+                          className="form-select"
+                          onChange={handleCategory}
+                          value={currentCateName}
+                        >
+                          {categoryData.length &&
+                            categoryData.map((item) =>
+                              item.fatherCateId ? (
+                                <option data-cate-id={item._id}>
+                                  {item.categoryName}
+                                </option>
+                              ) : null
+                            )}
+                        </select>
+                      </div>
+                      <div className="mb-4">
+                        <label htmlFor="investor" className="form-label">
+                          Nhà đầu tư
+                        </label>
+                        <select
+                          className="form-select"
+                          onChange={handleInvestor}
+                          value={currentInvestorName}
+                        >
+                          {investorData.length &&
+                            investorData.map((item) => (
+                              <option data-investor-id={item._id}>
+                                {item.name}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                       <div className="mb-4">
                         <label htmlFor="tour_price" className="form-label">

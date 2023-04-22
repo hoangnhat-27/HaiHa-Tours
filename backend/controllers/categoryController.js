@@ -60,3 +60,17 @@ export const getAllCategories = async (req, res) => {
     });
   }
 };
+//get single categories
+export const getSingleCategories = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const category = await Category.findById(id);
+    res.status(200).json({
+      success: true,
+      message: "Successfully get category",
+      data: category,
+    });
+  } catch (err) {
+    res.status(404).json({ success: false, message: "Not found" });
+  }
+};

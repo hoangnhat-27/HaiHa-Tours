@@ -12,7 +12,9 @@ const TourCard = ({ tour }) => {
     <div className="tour__card">
       <Card>
         <div className="tour__img">
-          <img src={photo} alt="tour-img" />
+          <Link to={`/tour/${_id}`}>
+            <img src={photo} alt="tour-img" />
+          </Link>
           {featured && <span>Nổi bật</span>}
         </div>
 

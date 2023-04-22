@@ -10,10 +10,24 @@ import {
   tourUpdateReducer,
 } from "./Reducers/TourReducers";
 import {
+  categoryCreateReducer,
+  categoryDeleteReducer,
+  categoryEditReducer,
+  categoryListReducer,
+  categoryUpdateReducer,
+} from "./Reducers/CategoryReducers";
+import {
   orderUpdatedReducer,
   orderDetailsReducer,
   orderListReducer,
-} from "./Reducers/OrderReducres";
+} from "./Reducers/OrderReducers";
+import {
+  investorCreateReducer,
+  investorDeleteReducer,
+  investorUpdateReducer,
+  investorListReducer,
+  investorEditReducer,
+} from "./Reducers/InvestorReducers";
 
 const reducer = combineReducers({
   userLogin: userLoginReducer,
@@ -26,6 +40,15 @@ const reducer = combineReducers({
   orderList: orderListReducer,
   orderDetails: orderDetailsReducer,
   orderUpdate: orderUpdatedReducer,
+  categoryList: categoryListReducer,
+  categoryDelete: categoryDeleteReducer,
+  categoryCreate: categoryCreateReducer,
+  categoryEdit: categoryUpdateReducer,
+  investorList: investorListReducer,
+  investorDelete: investorDeleteReducer,
+  investorCreate: investorCreateReducer,
+  investorEdit: investorEditReducer,
+  investorUpdate: investorUpdateReducer,
 });
 
 // login

@@ -5,7 +5,7 @@ const ToursStatistics = () => {
     <div className="col-xl-6 col-lg-12">
       <div className="card mb-4 shadow-sm">
         <article className="card-body">
-          <h5 className="card-title">Tours statistics</h5>
+          <h5 className="card-title">Tour đã đặt</h5>
           <iframe
             style={{
               background: "#FFFFFF",
