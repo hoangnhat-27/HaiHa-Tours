@@ -88,13 +88,14 @@ export const deleteTour = (id) => async (dispatch, getState) => {
 export const createTour =
   (
     name,
-    price,
     city,
     address,
     distance,
-    slot,
-    description,
     photo,
+    description,
+    price,
+    slot,
+    featured,
     cateId,
     investorId
     // countInStock
@@ -124,6 +125,7 @@ export const createTour =
           price,
           desc: description,
           photo,
+          featured: featured,
           cateId,
           investorId,
           // countInStock,

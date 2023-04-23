@@ -88,6 +88,56 @@ ul li ul li:hover{
   background-color: rgb(182, 176, 176);
   color: #fff
 }
+/* img icon */
+.img-avatar {
+  border-radius: 100%;
+  border: 3px solid #fff;
+}
+
+.img-xs,
+.img-sm,
+.img-md,
+.img-lg {
+  object-fit: cover;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.img-xs {
+  width: 40px;
+  height: 40px;
+}
+
+.img-sm {
+  width: 60px;
+  height: 60px;
+}
+
+.img-md {
+  width: 112px;
+  height: 112px;
+}
+
+.img-lg {
+  width: 196px;
+  height: 196px;
+}
+.nav__wrapper img.rounded-circle:hover {
+  border-color: #4fa607;
+}
+.nav__wrapper img.rounded-circle {
+  border: 1px solid #eee;
+}
+
+.dropdown-item {
+  line-height: 2;
+}
+
+.dropdown-menu {
+  right: 0;
+  left: auto;
+  top: 70px;
+}
 
 /* responsive */
 @media only screen and (max-width: 992px) {

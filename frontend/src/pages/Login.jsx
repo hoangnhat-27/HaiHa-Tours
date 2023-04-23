@@ -35,6 +35,7 @@ const Login = () => {
       if (!res.ok) alert(result.message);
       else {
         dispatch({ type: "LOGIN_SUCCESS", payload: result.data });
+        localStorage.setItem("token", result.token);
         navigate("/");
       }
     } catch (error) {

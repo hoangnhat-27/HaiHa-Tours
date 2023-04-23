@@ -216,19 +216,26 @@ const Booking = ({ tour }) => {
             <ListGroup className="text-right">
               <ListGroupItem className="border-0 px-0">
                 <h5 className="d-flex align-items-center gap-1">
-                  {price}đ/ngày cho 1 người lớn và {Math.round(price / 2)}đ/ngày
-                  cho 1 trẻ em
+                  {Intl.NumberFormat("en-US").format(price)}đ/ngày cho 1 người
+                  lớn và{" "}
+                  {Intl.NumberFormat("en-US").format(Math.round(price / 2))}
+                  đ/ngày cho 1 trẻ em
                 </h5>
               </ListGroupItem>
               <ListGroupItem className="border-0 px-0 total">
                 <h5>Tổng cộng</h5>
-                <span>{totalAmount}đ</span>
+                <span>{Intl.NumberFormat("en-US").format(totalAmount)}đ</span>
               </ListGroupItem>
             </ListGroup>
 
             <Button
               className="btn primary__btn w-100 mt-4"
               onSubmit={handleClick}
+              style={{
+                backgroundColor: "orange",
+                color: "#000",
+                border: "none",
+              }}
             >
               Đặt ngay
             </Button>

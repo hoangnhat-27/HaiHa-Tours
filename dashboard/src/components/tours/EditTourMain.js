@@ -188,11 +188,11 @@ const EditTourMain = (props) => {
             <div className="col-xl-12 col-lg-12">
               <div className="card mb-4 shadow-sm">
                 <div className="card-body">
-                  {errorUpdate && (
+                  {errorUpdate ? (
                     <Message variant="alert-danger">{errorUpdate}</Message>
-                  )}
-                  {loadingUpdate && <Loading />}
-                  {loading ? (
+                  ) : loadingUpdate ? (
+                    <Loading />
+                  ) : loading ? (
                     <Loading />
                   ) : error ? (
                     <Message variant="alert-danger">{error}</Message>

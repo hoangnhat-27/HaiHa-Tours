@@ -12,7 +12,6 @@ import {
 import {
   categoryCreateReducer,
   categoryDeleteReducer,
-  categoryEditReducer,
   categoryListReducer,
   categoryUpdateReducer,
 } from "./Reducers/CategoryReducers";

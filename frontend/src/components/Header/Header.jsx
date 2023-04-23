@@ -1,13 +1,5 @@
 import React, { useRef, useEffect, useContext, useState } from "react";
-import {
-  Container,
-  Row,
-  Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
+import { Container, Row, Button } from "reactstrap";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./../../context/AuthContext";
 import useFetch from "../../hooks/useFetch";
@@ -27,6 +19,7 @@ const Header = () => {
     { path: "/home", display: "Trang chủ", click: true },
     { path: "/about", display: "Giới thiệu", click: true },
   ];
+
   parentNav.forEach((item) => {
     nav__link.push({
       id: `${item._id}`,
@@ -42,8 +35,8 @@ const Header = () => {
   });
 
   const logout = () => {
+    setTimeout(() => navigate("/home", { replace: true }), 500);
     dispatch({ type: "LOGOUT" });
-    navigate("/");
   };
   const stickyHeaderFunc = () => {
     window.addEventListener("scroll", () => {
@@ -56,6 +49,10 @@ const Header = () => {
         headerRef.current.classList.remove("sticky__header");
       }
     });
+  };
+  const toggleDropdown = () => {
+    document.querySelector(".dropdown-toggle").classList.toggle("show");
+    document.querySelector(".dropdown-menu").classList.toggle("show");
   };
 
   useEffect(() => {
@@ -109,21 +106,69 @@ const Header = () => {
               </ul>
             </div>
 
-            <div className="nav-right d-flex align-items-center gap-4">
-              <div className="nav__btns d-flex align-items-center gap-4">
+            <div className="nav-right d-flex align-items-center gap-2">
+              <div className="nav__btns d-flex align-items-center gap-2">
                 {user ? (
                   <>
-                    <h5 className="mb-0">{user.username}</h5>
-                    <Button className="btn btn-dark" onClick={logout}>
+                    <h5 className="nav-item">{user.username}</h5>
+                    <ul className="nav">
+                      {/* <li className="nav-item">
+                        <Link
+                          className={`nav-link btn-icon `}
+                          title="Dark mode"
+                          to="#"
+                        >
+                          <i className="fas fa-moon"></i>
+                        </Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className="nav-link btn-icon" to="#">
+                          <i className="fas fa-bell"></i>
+                        </Link>
+                      </li> */}
+                      <li className="dropdown nav-item">
+                        <Link
+                          className="dropdown-toggle"
+                          data-bs-toggle="dropdown"
+                          to="#"
+                        >
+                          <img
+                            className="img-xs rounded-circle"
+                            src={user.photo}
+                            alt="User"
+                            onClick={toggleDropdown}
+                          />
+                        </Link>
+                        <div className="dropdown-menu dropdown-menu-end">
+                          <Link
+                            className="dropdown-item"
+                            to={`/user/info/${user._id}`}
+                          >
+                            Thông tin của tôi
+                          </Link>
+                          <Link className="dropdown-item" to="#">
+                            Cài đặt
+                          </Link>
+                          <Link
+                            onClick={logout}
+                            className="dropdown-item text-danger"
+                            to="#"
+                          >
+                            Đăng xuất
+                          </Link>
+                        </div>
+                      </li>
+                    </ul>
+                    {/* <Button className="btn btn-dark" onClick={logout}>
                       Logout
-                    </Button>
+                    </Button> */}
                   </>
                 ) : (
                   <>
                     <Button className="btn secondary__btn">
                       <Link to="/login">Đăng nhập</Link>
                     </Button>
-                    <Button className="btn primary__btn">
+                    <Button className="btn secondary__btn">
                       <Link to="/register">Đăng ký</Link>
                     </Button>
                   </>

@@ -24,7 +24,9 @@ const Tour = (props) => {
             <Link to="#" className="title text-truncate">
               {tour.title}
             </Link>
-            <div className="price mb-2">{tour.price}đ</div>
+            <div className="price mb-2">
+              {Intl.NumberFormat("en-US").format(tour.price)}đ
+            </div>
             <div className="row">
               <Link
                 to={`/tour/${tour._id}/edit`}

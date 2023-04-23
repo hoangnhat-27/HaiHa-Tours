@@ -182,7 +182,7 @@ const TourDetails = () => {
                       ></i>
                       {avgRating === 0 ? null : avgRating}
                       {totalRating === 0 ? (
-                        "Not rated"
+                        "0"
                       ) : (
                         <span>({reviews?.length})</span>
                       )}
@@ -195,7 +195,7 @@ const TourDetails = () => {
                   </div>
                   <div className="booking__bottom"></div>
                   <button className="btn booking__btn">
-                    <Link to={`/tour/checkout/${id}`}>Checkout ngay!</Link>
+                    <Link to={`/tour/checkout/${id}`}>Đặt ngay!</Link>
                   </button>
                 </div>
               </Col>

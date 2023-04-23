@@ -44,12 +44,6 @@ const Header = () => {
               <i className="far fa-search"></i>
             </button>
           </div>
-          <datalist id="search_terms">
-            <option value="Tours" />
-            <option value="New orders" />
-            <option value="Apple iphone" />
-            <option value="Ahmed Hassan" />
-          </datalist>
         </form>
       </div>
       <div className="col-nav">
@@ -80,17 +74,17 @@ const Header = () => {
             </Link>
             <div className="dropdown-menu dropdown-menu-end">
               <Link className="dropdown-item" to="/">
-                My profile
+                Thông tin của tôi
               </Link>
               <Link className="dropdown-item" to="#">
-                Settings
+                Cài đặt
               </Link>
               <Link
                 onClick={logoutHandler}
                 className="dropdown-item text-danger"
                 to="#"
               >
-                Exit
+                Đăng xuất
               </Link>
             </div>
           </li>

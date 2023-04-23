@@ -41,20 +41,19 @@ ul {
   list-style: none;
 }
 
-.primary__btn {
-  background: var(--secondary-color) !important;
+.secondary__btn {
   border: none !important;
   border-radius: 50px !important;
   padding: 0.4rem 1.5rem !important;
 }
 
-.primary__btn a {
+.secondary__btn a {
   font-size: 1.1rem;
   text-decoration: none;
   color: #fff;
 }
-.primary__btn a:hover {
-  color: inherit;
+.secondary__btn:hover {
+  background: var(--secondary-color) !important;
 }
 .secondary__btn {
   background: transparent !important;

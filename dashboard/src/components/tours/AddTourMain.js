@@ -27,7 +27,7 @@ const AddTourMain = () => {
   const [slot, setSlot] = useState(0);
   const [description, setDescription] = useState("");
   const [uploadData, setUploadData] = useState("");
-  const [featured, setFeatured] = useState("");
+  let [featured, setFeatured] = useState("");
 
   // const [countInStock, setCountInStock] = useState(0);
   const dispatch = useDispatch();
@@ -113,13 +113,14 @@ const AddTourMain = () => {
     dispatch(
       createTour(
         name,
-        price,
         city,
         address,
         distance,
-        slot,
-        description,
         photo,
+        description,
+        Number(price),
+        Number(slot),
+        featured === "featured" ? (featured = true) : (featured = false),
         cateId,
         investorId
         // countInStock
