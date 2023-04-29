@@ -17,6 +17,7 @@ import PrivateRouter from "./PrivateRouter";
 import { useDispatch, useSelector } from "react-redux";
 import { listTours } from "./Redux/Actions/TourActions";
 import { listOrders } from "./Redux/Actions/OrderActions";
+import UserInfo from "./screens/UserInfo";
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ function App() {
           <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
           <PrivateRouter path="/addtour" component={AddTour} />
           <PrivateRouter path="/users" component={UsersScreen} />
+          <PrivateRouter path="/admin/info/:id" component={UserInfo} />
           <PrivateRouter path="/tour/:id/edit" component={TourEditScreen} />
           <Route path="/login" component={Login} />
           <PrivateRouter path="*" component={NotFound} />

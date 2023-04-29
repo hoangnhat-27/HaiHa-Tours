@@ -143,10 +143,15 @@ const Header = () => {
                           <Link
                             className="dropdown-item"
                             to={`/user/info/${user._id}`}
+                            onClick={toggleDropdown}
                           >
                             Thông tin của tôi
                           </Link>
-                          <Link className="dropdown-item" to="#">
+                          <Link
+                            className="dropdown-item"
+                            to="#"
+                            onClick={toggleDropdown}
+                          >
                             Cài đặt
                           </Link>
                           <Link

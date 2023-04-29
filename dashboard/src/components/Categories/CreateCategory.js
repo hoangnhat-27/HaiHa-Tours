@@ -40,6 +40,7 @@ const CreateCategory = () => {
     if (category) {
       toast.success("Danh mục được tạo thành công", ToastObjects);
       dispatch({ type: CATEGORY_CREATE_RESET });
+      dispatch(listCategories());
       setCategoryname("");
     }
   }, [category, dispatch]);

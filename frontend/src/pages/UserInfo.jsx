@@ -102,6 +102,7 @@ const UserInfo = () => {
         })
       );
       toast.success("Cập nhật thông tin thành công", ToastObjects);
+      setTimeout(() => window.location.reload(), 2500);
     }
   };
 

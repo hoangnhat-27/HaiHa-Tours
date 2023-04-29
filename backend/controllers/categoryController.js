@@ -1,4 +1,5 @@
 import Category from "../models/Category.js";
+import Tour from "../models/Tour.js";
 
 //create a new category
 export const createCategory = async (req, res) => {
@@ -72,5 +73,22 @@ export const getSingleCategories = async (req, res) => {
     });
   } catch (err) {
     res.status(404).json({ success: false, message: "Not found" });
+  }
+};
+
+//delete category
+export const deleteCategory = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await Tour.deleteMany({ cateId: id });
+    await Category.findByIdAndDelete(id);
+    res.status(200).json({
+      success: true,
+      message: "Successfully delete category",
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: "Fail to delete. Try again" });
   }
 };

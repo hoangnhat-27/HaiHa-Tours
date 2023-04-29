@@ -3,6 +3,10 @@ import {
   USER_LIST_REQUEST,
   USER_LIST_RESET,
   USER_LIST_SUCCESS,
+  USER_SINGLE_FAIL,
+  USER_SINGLE_REQUEST,
+  USER_SINGLE_RESET,
+  USER_SINGLE_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -90,6 +94,39 @@ export const listUser = () => async (dispatch, getState) => {
     }
     dispatch({
       type: USER_LIST_FAIL,
+      payload: message,
+    });
+  }
+};
+
+// SINGLE USER
+export const singleUser = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_SINGLE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`${BASE_URL}/users/${id}`, config);
+
+    dispatch({ type: USER_SINGLE_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: USER_SINGLE_FAIL,
       payload: message,
     });
   }

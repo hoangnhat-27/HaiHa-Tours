@@ -2,6 +2,9 @@ import {
   CATEGORY_CREATE_REQUEST,
   CATEGORY_CREATE_SUCCESS,
   CATEGORY_CREATE_FAIL,
+  CATEGORY_DELETE_FAIL,
+  CATEGORY_DELETE_REQUEST,
+  CATEGORY_DELETE_SUCCESS,
   CATEGORY_EDIT_REQUEST,
   CATEGORY_EDIT_SUCCESS,
   CATEGORY_EDIT_FAIL,
@@ -128,6 +131,39 @@ export const updateCategory = (category) => async (dispatch, getState) => {
     }
     dispatch({
       type: CATEGORY_UPDATE_FAIL,
+      payload: message,
+    });
+  }
+};
+
+// DELETE CATEGORY
+export const deleteCategory = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CATEGORY_DELETE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    await axios.delete(`${BASE_URL}/category/${id}`, config);
+
+    dispatch({ type: CATEGORY_DELETE_SUCCESS });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: CATEGORY_DELETE_FAIL,
       payload: message,
     });
   }

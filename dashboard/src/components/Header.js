@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import $ from "jquery";
 import { useDispatch } from "react-redux";
@@ -6,6 +6,8 @@ import { logout } from "../Redux/Actions/userActions";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
   useEffect(() => {
     $("[data-trigger]").on("click", function (e) {
       e.preventDefault();
@@ -64,16 +66,22 @@ const Header = () => {
               <i className="fas fa-bell"></i>
             </Link>
           </li>
+          <li style={{ marginLeft: "10px", marginRight: "5px" }}>
+            <h5>{userInfo.data.username}</h5>
+          </li>
           <li className="dropdown nav-item">
             <Link className="dropdown-toggle" data-bs-toggle="dropdown" to="#">
               <img
                 className="img-xs rounded-circle"
-                src="/images/user.png"
+                src={`${userInfo.data.photo}`}
                 alt="User"
               />
             </Link>
             <div className="dropdown-menu dropdown-menu-end">
-              <Link className="dropdown-item" to="/">
+              <Link
+                className="dropdown-item"
+                to={`/admin/info/${userInfo.data._id}`}
+              >
                 Thông tin của tôi
               </Link>
               <Link className="dropdown-item" to="#">

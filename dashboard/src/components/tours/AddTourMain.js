@@ -53,6 +53,11 @@ const AddTourMain = () => {
       setInvestorData(investors.data);
     }
   }, [categories, investors]);
+  useEffect(() => {
+    if (categoryData.length) {
+      setCateId(categoryData[0]._id);
+    }
+  }, [categoryData]);
 
   useEffect(() => {
     dispatch(listCategories());

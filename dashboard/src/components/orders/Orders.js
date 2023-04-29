@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Toast from "../LoadingError/Toast";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { updateOrder } from "../../Redux/Actions/OrderActions";
+import { listOrders, updateOrder } from "../../Redux/Actions/OrderActions";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 const Orders = (props) => {
   const { orders } = props;
+  const [orderData, setOrderData] = useState([]);
   const dispatch = useDispatch();
 
   const ToastObjects = {
@@ -20,17 +21,24 @@ const Orders = (props) => {
 
   const UpdateOrder = (
     order,
-    orderStatus = order.status,
-    isPaid = order.isPaid
+    orderStatus = orderData.status,
+    isPaid = orderData.isPaid
   ) => {
     dispatch(updateOrder({ _id: order._id, status: orderStatus, isPaid }));
-    toast.success("Tour cập nhật thành công", ToastObjects);
+    toast.success("Xác nhận đơn hàng thành công", ToastObjects);
+    dispatch(listOrders());
   };
   const [show, setShow] = useState(false);
   const [orderItem, setOrderItem] = useState({});
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  useEffect(() => {
+    if (orders) {
+      setOrderData(orders);
+    }
+  }, [orders]);
 
   return (
     <>
@@ -47,7 +55,7 @@ const Orders = (props) => {
           <Button
             variant="primary"
             onClick={() => {
-              UpdateOrder(orderItem, "", true);
+              UpdateOrder(orderItem, "accept", true);
               handleClose();
             }}
           >
@@ -70,7 +78,7 @@ const Orders = (props) => {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
+          {orderData?.map((order) => (
             <tr key={order._id}>
               <td>
                 <b>{order.fullName}</b>

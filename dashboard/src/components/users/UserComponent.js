@@ -24,7 +24,7 @@ const UserComponent = () => {
   return (
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Khách hàng</h2>
+        <h2 className="content-title">Người dùng</h2>
         <div>
           <Link to="#" className="btn btn-primary">
             <i className="material-icons md-plus"></i> Tạo khách hàng
@@ -38,7 +38,7 @@ const UserComponent = () => {
             <div className="col-lg-4 col-md-6 me-auto">
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Tìm kiếm..."
                 className="form-control"
               />
             </div>

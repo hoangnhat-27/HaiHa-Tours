@@ -13,12 +13,14 @@ import {
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { BASE_URL } from "../../utils/config";
+import { useEffect } from "react";
 
 const Booking = ({ tour }) => {
   const { price, title } = tour;
   const navigate = useNavigate();
 
   const { user } = useContext(AuthContext);
+  const token = localStorage.getItem("token");
   const [order, setOrder] = useState({
     userId: user && user._id,
     userEmail: user && user.email,
@@ -56,7 +58,6 @@ const Booking = ({ tour }) => {
         children =
           Math.round(Number(price / 2)) * Number(order.people.children) * days;
       else children = 0;
-      console.log(order);
       totalAmount = adults + children;
     }
   }
@@ -64,10 +65,14 @@ const Booking = ({ tour }) => {
   const handleChange = (e) => {
     setOrder((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
+  useEffect(() => {
+    if (totalAmount) {
+      setOrder({ ...order, totalPrice: totalAmount });
+    }
+  }, [totalAmount]);
 
   const handleClick = async (e) => {
     e.preventDefault();
-    setOrder((prev) => ({ ...prev, totalPrice: totalAmount }));
 
     try {
       if (!user || user === undefined || user === null) {
@@ -78,6 +83,7 @@ const Booking = ({ tour }) => {
         method: "post",
         headers: {
           "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         credentials: "include",
         body: JSON.stringify(order),
