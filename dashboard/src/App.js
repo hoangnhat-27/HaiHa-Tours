@@ -8,6 +8,9 @@ import TourScreen from "./screens/TourScreen";
 import CategoriesScreen from "./screens/CategoriesScreen";
 import OrderScreen from "./screens/OrderScreen";
 import OrderDetailScreen from "./screens/OrderDetailScreen";
+import BlogScreen from "./screens/BlogScreen";
+import AddBlog from "./screens/AddBlog";
+import BlogEditScreen from "./screens/BlogEditScreen";
 import AddTour from "./screens/AddTour";
 import Login from "./screens/LoginScreen";
 import UsersScreen from "./screens/UsersScreen";
@@ -43,6 +46,9 @@ function App() {
           <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
           <PrivateRouter path="/addtour" component={AddTour} />
           <PrivateRouter path="/users" component={UsersScreen} />
+          <PrivateRouter path="/blogs" component={BlogScreen} />
+          <PrivateRouter path="/addblog" component={AddBlog} />
+          <PrivateRouter path="/blog/:id/edit" component={BlogEditScreen} />
           <PrivateRouter path="/admin/info/:id" component={UserInfo} />
           <PrivateRouter path="/tour/:id/edit" component={TourEditScreen} />
           <Route path="/login" component={Login} />

@@ -3,10 +3,7 @@ import OrderDetailTours from "./OrderDetailTours";
 import OrderDetailInfo from "./OrderDetailInfo";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deliverOrder,
-  getOrderDetails,
-} from "../../Redux/Actions/OrderActions";
+import { getOrderDetails } from "../../Redux/Actions/OrderActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 
@@ -24,7 +21,7 @@ const OrderDetailmain = (props) => {
   return (
     <section className="content-main">
       <div className="content-header">
-        <Link to="/orders" className="btn btn-dark text-white">
+        <Link to="/orders" className="btn btn-danger text-white">
           Quay lại
         </Link>
       </div>

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editTour, updateTour } from "../../Redux/Actions/TourActions";
 import { TOUR_UPDATE_RESET } from "../../Redux/Constants/TourConstants";
-import { listInvestors } from "../../Redux/Actions/InvestorAction";
+import { listInvestors } from "../../Redux/Actions/InvestorActions";
 import { listCategories } from "../../Redux/Actions/CategoryActions";
 import { toast } from "react-toastify";
 import Message from "../LoadingError/Error";

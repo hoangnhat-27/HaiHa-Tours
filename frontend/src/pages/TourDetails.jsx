@@ -104,54 +104,22 @@ const TourDetails = () => {
 
                   {/* tour review section */}
                   <div className="tour__reviews mt-4">
-                    <h4>Reviews ({reviews?.length}) đánh giá</h4>
-                    <Form>
-                      <div className="d-flex align-items-center gap-3 mb-4 rating__group">
-                        <span onClick={() => setTourRating(1)}>
-                          1 <i class="ri-star-s-fill"></i>
-                        </span>
-                        <span onClick={() => setTourRating(2)}>
-                          2 <i class="ri-star-s-fill"></i>
-                        </span>
-                        <span onClick={() => setTourRating(3)}>
-                          3 <i class="ri-star-s-fill"></i>
-                        </span>
-                        <span onClick={() => setTourRating(4)}>
-                          4 <i class="ri-star-s-fill"></i>
-                        </span>
-                        <span onClick={() => setTourRating(5)}>
-                          5 <i class="ri-star-s-fill"></i>
-                        </span>
-                      </div>
-                      <div className="review__input">
-                        <input
-                          type="text"
-                          ref={reviewMsgRef}
-                          placeholder="Chia sẻ cảm nhận của bạn"
-                          required
-                        />
-                        <button
-                          className="btn primary__btn text-white"
-                          type="submit"
-                          onClick={submitHandler}
-                        >
-                          Gửi
-                        </button>
-                      </div>
-                    </Form>
+                    <h4>Hiển thị {reviews?.length} đánh giá</h4>
                     <ListGroup className="user__reviews">
                       {reviews?.map((review) => (
                         <div className="review__item">
-                          <img src={avatar} alt="" />
+                          <img src={review.userId.photo} alt="" />
 
                           <div className="w-100">
                             <div className="d-flex align-items-center justify-content-between">
                               <div>
-                                <h5>{review.username}</h5>
+                                <h5>{review.userId.username}</h5>
                                 <p>
                                   {new Date(
                                     review.createdAt
-                                  ).toLocaleDateString("en-US", options)}
+                                  ).toLocaleDateString(window.userLang, {
+                                    timeZone: "GMT",
+                                  })}
                                 </p>
                               </div>
                               <span className="d-flex align-items-center">

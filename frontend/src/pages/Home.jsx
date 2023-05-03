@@ -8,7 +8,6 @@ import wordImg from "../assets/images/world.png";
 import experienceImg from "../assets/images/experience.png";
 import Subtitle from "../shared/Subtitle";
 
-import SearchBar from "../shared/Searchbar";
 import ServiceList from "../services/ServiceList";
 import FeatureTourList from "../components/Featured-tours/FeatureTourList";
 import MasonryImagesGallery from "../components/Image-gallery/MasonryImagesGallery";
@@ -54,7 +53,6 @@ const Home = () => {
                 <img src={heroImg02} alt="" />
               </div>
             </Col>
-            <SearchBar />
           </Row>
         </Container>
       </section>

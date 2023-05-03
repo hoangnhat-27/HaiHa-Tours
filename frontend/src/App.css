@@ -40,6 +40,13 @@ a {
 ul {
   list-style: none;
 }
+.primary__btn{
+  background: var(--secondary-color) !important;
+}
+.primary__btn a{
+  color: #000;
+  text-decoration: none;
+}
 
 .secondary__btn {
   border: none !important;

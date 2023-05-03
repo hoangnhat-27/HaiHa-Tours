@@ -10,6 +10,7 @@ import SearchResultList from "./../pages/SearchResultList";
 import UserInfo from "./../pages/UserInfo";
 import Checkout from "./../pages/Checkout";
 import ThankYou from "../pages/ThankYou";
+import OrderList from "../pages/OrderList";
 import NotFound from "../pages/NotFound";
 
 const Routers = () => {
@@ -25,8 +26,9 @@ const Routers = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/user/info/:id" element={<UserInfo />} />
       <Route path="/thank-you" element={<ThankYou />} />
+      <Route path="/orders-list/:id" element={<OrderList />} />
       <Route path="/tours/search" element={<SearchResultList />} />
-      <Route path="*" element={NotFound} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

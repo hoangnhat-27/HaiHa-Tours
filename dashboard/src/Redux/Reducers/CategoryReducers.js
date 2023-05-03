@@ -46,7 +46,7 @@ export const categoryDeleteReducer = (state = {}, action) => {
   }
 };
 
-// DELETE category
+// CREATE category
 export const categoryCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case CATEGORY_CREATE_REQUEST:

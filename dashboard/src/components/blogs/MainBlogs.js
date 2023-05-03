@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Tour from "./Tour";
+import Blog from "./Blog";
 import { useDispatch, useSelector } from "react-redux";
-import { listTours } from "../../Redux/Actions/TourActions";
+import { listBlogs } from "../../Redux/Actions/BlogActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 
-const MainTours = () => {
+const MainBlogs = () => {
   const dispatch = useDispatch();
 
-  const tourList = useSelector((state) => state.tourList);
-  const { loading, error, tours } = tourList;
-  const [tourData, setTourData] = useState([]);
+  const blogList = useSelector((state) => state.blogList);
+  const { loading, error, blogs } = blogList;
+  const [blogData, setBlogData] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [sortOption, setSortOption] = useState(0);
-  const [tourSorted, setTourSorted] = useState([]);
+  const [blogSorted, setBlogSorted] = useState([]);
 
-  const tourDelete = useSelector((state) => state.tourDelete);
-  const { error: errorDelete, success: successDelete } = tourDelete;
+  const blogDelete = useSelector((state) => state.blogDelete);
+  const { error: errorDelete, success: successDelete } = blogDelete;
 
   const handleSort = (event) => {
     const selectedOption = event.target.selectedIndex;
@@ -25,20 +25,20 @@ const MainTours = () => {
   };
 
   useEffect(() => {
-    if (tours?.success) {
-      setTourData(tours.data);
+    if (blogs?.success) {
+      setBlogData(blogs.data);
     }
-  }, [tours]);
+  }, [blogs]);
 
   useEffect(() => {
-    dispatch(listTours());
+    dispatch(listBlogs());
   }, [dispatch, successDelete]);
 
   useEffect(() => {
-    let result = tourData;
+    let result = blogData;
     if (searchInput?.trim()) {
-      result = result.filter((tour) =>
-        tour.title
+      result = result.filter((blog) =>
+        blog.title
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase()
@@ -56,14 +56,15 @@ const MainTours = () => {
         .sort((a, b) => a.title.localeCompare(b.title))
         .reverse();
     }
-    setTourSorted(result);
-  }, [tourData, sortOption, searchInput]);
+    setBlogSorted(result);
+  }, [blogData, sortOption, searchInput]);
+
   return (
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Tours</h2>
+        <h2 className="content-title">Blogs</h2>
         <div>
-          <Link to="/addtour" className="btn btn-primary">
+          <Link to="/addblog" className="btn btn-primary">
             Thêm mới
           </Link>
         </div>
@@ -75,7 +76,7 @@ const MainTours = () => {
             <div className="col-lg-4 col-md-6 me-auto ">
               <input
                 type="search"
-                placeholder="Tìm kiếm tour..."
+                placeholder="Tìm kiếm blog..."
                 className="form-control p-2"
                 onChange={(e) => setSearchInput(e.target.value)}
               />
@@ -92,7 +93,6 @@ const MainTours = () => {
                   <option>A-Z</option>
                   <option>Z-A</option>
                 </select>
-                {/* </Col> */}
               </div>
             </div>
           </div>
@@ -108,10 +108,8 @@ const MainTours = () => {
             <Message variant="alert-danger">{error}</Message>
           ) : (
             <div className="row">
-              {/* Tours */}
-              {tourSorted.map((tour) => (
-                <Tour tour={tour} key={tour._id} />
-              ))}
+              {/* Blogs */}
+              {blogSorted.length ? <Blog blogs={blogSorted} /> : null}
             </div>
           )}
 
@@ -150,4 +148,4 @@ const MainTours = () => {
   );
 };
 
-export default MainTours;
+export default MainBlogs;

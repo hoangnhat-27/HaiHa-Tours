@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import $ from "jquery";
 import { useDispatch } from "react-redux";
@@ -33,21 +33,7 @@ const Header = () => {
 
   return (
     <header className="main-header navbar">
-      <div className="col-search">
-        <form className="searchform">
-          <div className="input-group">
-            <input
-              list="search_terms"
-              type="text"
-              className="form-control"
-              placeholder="Search term"
-            />
-            <button className="btn btn-light bg" type="button">
-              <i className="far fa-search"></i>
-            </button>
-          </div>
-        </form>
-      </div>
+      <div className="col-search"></div>
       <div className="col-nav">
         <button
           className="btn btn-icon btn-mobile me-auto"

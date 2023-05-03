@@ -9,7 +9,7 @@ const NotFound = () => {
           <h4 className="text-center mb-2 mb-sm-5">404 Page Not Found</h4>
           <img
             style={{ width: "100%", height: "300px", objectFit: "contain" }}
-            src="../assets/images/not-found.png"
+            src="https://res.cloudinary.com/nhat-clouds/image/upload/v1682917928/not-found.png"
             alt="Not-found"
           />
           <button className="col-md-3 col-sm-6 col-12 btn btn-success mt-5">

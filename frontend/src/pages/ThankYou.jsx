@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { Container, Row, Col, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import "../styles/thank-you.css";
 
 const ThankYou = () => {
+  const { user } = useContext(AuthContext);
   return (
     <section>
       <Container>
@@ -17,7 +19,13 @@ const ThankYou = () => {
               <h3 className="mb-4">Tour của bạn đã được đặt.</h3>
 
               <Button className="btn primary__btn w-25">
-                <Link to="/home">Quay về trang chủ</Link>
+                <Link to="/home">&lt;- Quay về trang chủ</Link>
+              </Button>
+              <span> Hoặc </span>
+              <Button className="btn primary__btn w-25">
+                <Link to={`/orders-list/${user._id}`}>
+                  Kiểm tra đơn hàng của bạn -&gt;
+                </Link>
               </Button>
             </div>
           </Col>

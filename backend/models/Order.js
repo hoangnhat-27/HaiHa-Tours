@@ -17,9 +17,9 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    tourName: {
-      type: String,
-      required: true,
+    tourId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Tour",
     },
     people: {
       adult: { type: Number, default: 0 },
@@ -28,6 +28,10 @@ const orderSchema = new mongoose.Schema(
     isPaid: {
       type: Boolean,
       required: true,
+      default: false,
+    },
+    isReviewed: {
+      type: Boolean,
       default: false,
     },
     bookFrom: {

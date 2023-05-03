@@ -42,7 +42,7 @@ const Orders = (props) => {
 
   return (
     <>
-      <Toast />
+      <Toast style={{ position: "absolute" }} />
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Xác nhận đơn hàng</Modal.Title>
@@ -68,10 +68,11 @@ const Orders = (props) => {
           <tr>
             <th scope="col">Họ và tên</th>
             <th scope="col">Tên tour</th>
+            <th scope="col">Ảnh</th>
             <th scope="col">Số ngày đặt</th>
             <th scope="col">Tổng cộng</th>
             <th scope="col">Thanh toán</th>
-            <th>Trạng thái</th>
+            <th scope="col">Trạng thái</th>
             <th scope="col" className="text-end">
               Hành động
             </th>
@@ -83,7 +84,10 @@ const Orders = (props) => {
               <td>
                 <b>{order.fullName}</b>
               </td>
-              <td>{order.userEmail}</td>
+              <td>{order.tourId.title}</td>
+              <td>
+                <img src={order.tourId.photo} alt="" width="50px" />
+              </td>
               <td>
                 {Math.round(
                   Math.abs(
@@ -107,8 +111,8 @@ const Orders = (props) => {
               <td>
                 {order.status === "accept" ? (
                   <span className="badge btn-success">Đã xác nhận</span>
-                ) : order.status === "deny" ? (
-                  <span className="badge btn-danger">Đã từ chối</span>
+                ) : order.status === "cancel" ? (
+                  <span className="badge btn-danger">Đã hủy</span>
                 ) : (
                   <>
                     <span className="badge btn-dark">Chưa xác nhận</span>
@@ -126,10 +130,10 @@ const Orders = (props) => {
                         className="btn btn-danger"
                         onClick={(e) => {
                           e.preventDefault();
-                          UpdateOrder(order, "deny");
+                          UpdateOrder(order, "cancel");
                         }}
                       >
-                        Từ chối
+                        Hủy bỏ
                       </button>
                     </div>
                   </>

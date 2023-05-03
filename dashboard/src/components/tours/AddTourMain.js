@@ -4,7 +4,7 @@ import { Image } from "cloudinary-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { TOUR_CREATE_RESET } from "../../Redux/Constants/TourConstants";
-import { listInvestors } from "../../Redux/Actions/InvestorAction";
+import { listInvestors } from "../../Redux/Actions/InvestorActions";
 import { listCategories } from "../../Redux/Actions/CategoryActions";
 import { createTour } from "../../Redux/Actions/TourActions";
 import Toast from "../LoadingError/Toast";
@@ -72,7 +72,7 @@ const AddTourMain = () => {
       setDescription("");
       setAddress("");
       setCity("");
-      // setCountInStock(0);
+      setUploadData("");
       setPhoto("");
       setDistance(0);
       setPrice(0);

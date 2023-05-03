@@ -20,6 +20,13 @@ import {
   categoryUpdateReducer,
 } from "./Reducers/CategoryReducers";
 import {
+  blogCreateReducer,
+  blogDeleteReducer,
+  blogListReducer,
+  blogEditReducer,
+  blogUpdateReducer,
+} from "./Reducers/BlogReducers";
+import {
   orderUpdatedReducer,
   orderDetailsReducer,
   orderListReducer,
@@ -44,6 +51,11 @@ const reducer = combineReducers({
   orderList: orderListReducer,
   orderDetails: orderDetailsReducer,
   orderUpdate: orderUpdatedReducer,
+  blogList: blogListReducer,
+  blogDelete: blogDeleteReducer,
+  blogCreate: blogCreateReducer,
+  blogEdit: blogEditReducer,
+  blogUpdate: blogUpdateReducer,
   categoryList: categoryListReducer,
   categoryDelete: categoryDeleteReducer,
   categoryCreate: categoryCreateReducer,

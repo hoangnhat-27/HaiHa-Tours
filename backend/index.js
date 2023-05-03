@@ -12,7 +12,7 @@ import reviewRoute from "./routes/reviews.js";
 import orderRoute from "./routes/orders.js";
 import categoryRoute from "./routes/categories.js";
 import investorRoute from "./routes/investors.js";
-// import orderRouter from "./routes/orderRoutes.js";
+import blogRoute from "./routes/blogs.js";
 
 dotenv.config();
 const app = express();
@@ -49,6 +49,7 @@ app.use("/api/v1/tours", tourRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/review", reviewRoute);
 app.use("/api/v1/orders", orderRoute);
+app.use("/api/v1/blogs", blogRoute);
 app.use("/api/v1/category", categoryRoute);
 app.use("/api/v1/investor", investorRoute);
 

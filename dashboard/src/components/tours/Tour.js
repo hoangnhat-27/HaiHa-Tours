@@ -17,13 +17,11 @@ const Tour = (props) => {
     <>
       <div className="col-md-6 col-sm-6 col-lg-3 mb-5">
         <div className="card card-tour-grid shadow-sm">
-          <Link to="#" className="img-wrap">
+          <div className="img-wrap">
             <img src={tour.photo} alt="Tour" />
-          </Link>
+          </div>
           <div className="info-wrap">
-            <Link to="#" className="title text-truncate">
-              {tour.title}
-            </Link>
+            <div className="title text-truncate">{tour.title}</div>
             <div className="price mb-2">
               {Intl.NumberFormat("en-US").format(tour.price)}đ
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./booking.css";
 import {
   Form,
@@ -13,10 +13,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { BASE_URL } from "../../utils/config";
-import { useEffect } from "react";
 
 const Booking = ({ tour }) => {
-  const { price, title } = tour;
+  const { _id, price } = tour;
   const navigate = useNavigate();
 
   const { user } = useContext(AuthContext);
@@ -26,7 +25,7 @@ const Booking = ({ tour }) => {
     userEmail: user && user.email,
     fullName: "",
     phone: "",
-    tourName: `${title}`,
+    tourId: `${_id}`,
     people: {
       adult: 1,
       children: 1,

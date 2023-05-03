@@ -1,0 +1,8 @@
+.btn-warning a, td a{
+  text-decoration: none;
+  color: black;
+}
+
+.btn-warning a:hover, td a:hover{
+  color: green;
+}

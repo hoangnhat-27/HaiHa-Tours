@@ -8,7 +8,7 @@
 }
 .tour__img{
   position: relative;
-  height: 300px;
+  height: 200px;
 }
 .tour__img img{
   height: 100%;
@@ -44,7 +44,7 @@
 }
 .tour__title{
   margin-top: 1rem;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   cursor: pointer;
 }
 .tour__title a{
@@ -59,7 +59,7 @@
 
 .card__bottom h5{
   color: var(--secondary-color);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 .card__bottom h5 span{
@@ -71,7 +71,7 @@
 .booking__btn{
   background: var(--secondary-color) !important;
   cursor: pointer;
-  padding: 0.2rem 0.5rem;
+  padding: 0rem 0.5rem !important;
 }
 .booking__btn a{
   text-decoration: none;

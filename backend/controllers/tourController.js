@@ -59,7 +59,13 @@ export const deleteTour = async (req, res) => {
 export const getSingleTour = async (req, res) => {
   const id = req.params.id;
   try {
-    const tour = await Tour.findById(id).populate("reviews");
+    const tour = await Tour.findById(id).populate({
+      path: "reviews",
+      populate: {
+        path: "userId",
+        model: "User",
+      },
+    });
     res.status(200).json({
       success: true,
       message: "Successfully get tour",
@@ -94,14 +100,12 @@ export const getAllTour = async (req, res) => {
 
 //get tour by search
 export const getTourBySearch = async (req, res) => {
-  const city = new RegExp(req.query.city, "i");
-  const distance = parseInt(req.query.distance);
-  const maxGroupSize = parseInt(req.query.maxGroupSize);
+  const title = new RegExp(req.query.title, "i");
   try {
     const tours = await Tour.find({
-      city: city,
-      distance: { $gte: distance },
-      maxGroupSize: { $gte: maxGroupSize },
+      title: title,
+      // distance: { $gte: distance },
+      // maxGroupSize: { $gte: maxGroupSize },
     }).populate("reviews");
 
     res.status(200).json({

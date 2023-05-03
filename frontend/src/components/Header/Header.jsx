@@ -6,14 +6,31 @@ import useFetch from "../../hooks/useFetch";
 import { BASE_URL } from "../../utils/config";
 import logo from "../../assets/images/logo.png";
 import "./header.css";
+import SearchBar from "@mui/icons-material/Search";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Divider from "@mui/material/Divider";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
 
 const Header = () => {
   const headerRef = useRef(null);
   const menuRef = useRef(null);
   const navigate = useNavigate(null);
   const { user, dispatch } = useContext(AuthContext);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchData, setSearchData] = useState([]);
+
+  const handleSearchIconClick = () => {
+    setIsSearchOpen(!isSearchOpen);
+    setSearchInput("");
+  };
 
   const { data: categories } = useFetch(`${BASE_URL}/category`);
+  const { data: tours } = useFetch(`${BASE_URL}/tours`);
   let parentNav = categories.filter((item) => item.fatherCateId == null);
   const nav__link = [
     { path: "/home", display: "Trang chủ", click: true },
@@ -27,6 +44,15 @@ const Header = () => {
       display: `${item.categoryName}`,
     });
   });
+  nav__link.push(
+    user && user._id
+      ? {
+          path: `/orders-list/${user._id}`,
+          display: "Đơn đặt hàng",
+          click: true,
+        }
+      : {}
+  );
   const categoryMenu = categories.filter((item) => {
     const parentItem = parentNav.find(
       (parent) => parent._id === item.fatherCateId
@@ -44,9 +70,9 @@ const Header = () => {
         document.body.scrollTop > 80 ||
         document.documentElement.scrollTop > 80
       ) {
-        headerRef.current.classList.add("sticky__header");
+        headerRef.current?.classList.add("sticky__header");
       } else {
-        headerRef.current.classList.remove("sticky__header");
+        headerRef.current?.classList.remove("sticky__header");
       }
     });
   };
@@ -59,6 +85,32 @@ const Header = () => {
     stickyHeaderFunc();
     return window.removeEventListener("scroll", stickyHeaderFunc);
   }, []);
+  useEffect(() => {
+    if (searchInput?.trim()) {
+      let searchResult = tours
+        .filter((tour) =>
+          tour.title
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .includes(searchInput)
+        )
+        .slice(0, 8);
+      setSearchData(searchResult.length ? searchResult : []);
+    } else {
+      setSearchData([]);
+    }
+  }, [searchInput, tours]);
+
+  const searchHandler = () => {
+    if (searchInput?.trim() === "") {
+      return;
+    }
+
+    handleSearchIconClick();
+    navigate(`/tours/search?title=${searchInput}`);
+    setTimeout(() => window.location.reload(), 500);
+  };
 
   const toggleMenu = () => menuRef.current.classList.toggle(`show__menu`);
 
@@ -108,9 +160,79 @@ const Header = () => {
 
             <div className="nav-right d-flex align-items-center gap-2">
               <div className="nav__btns d-flex align-items-center gap-2">
+                {/* search */}
+                <div>
+                  <SearchBar
+                    onClick={handleSearchIconClick}
+                    className="search--icon"
+                  />
+                  {isSearchOpen && (
+                    <>
+                      <div className="search d-flex justify-content-center align-items-center gap-2">
+                        <input
+                          type="text"
+                          placeholder="Tìm kiếm tour"
+                          onChange={(e) => setSearchInput(e.target.value)}
+                        />
+                        <SearchBar
+                          className="search--btn"
+                          onClick={searchHandler}
+                        />
+                        {searchData?.length ? (
+                          <div className="resultList">
+                            <List
+                              sx={{
+                                width: "100%",
+                                maxWidth: 475,
+                                bgcolor: "background.paper",
+                              }}
+                            >
+                              {searchData.map((tour) => (
+                                <ListItem alignItems="flex-start">
+                                  <ListItemAvatar>
+                                    <Avatar alt="" src={tour.photo} />
+                                  </ListItemAvatar>
+                                  <Link
+                                    to={`/tour/${tour._id}`}
+                                    onClick={handleSearchIconClick}
+                                  >
+                                    <ListItemText
+                                      primary={`${tour.title}`}
+                                      secondary={
+                                        <React.Fragment>
+                                          <Typography
+                                            sx={{ display: "inline" }}
+                                            component="span"
+                                            variant="body2"
+                                            color="text.primary"
+                                          >
+                                            {tour.city}
+                                          </Typography>
+                                          {` — ${tour.desc.substring(0, 36)}…`}
+                                        </React.Fragment>
+                                      }
+                                    />
+                                  </Link>
+                                </ListItem>
+                              ))}
+                            </List>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <div
+                        className="overlay"
+                        onClick={handleSearchIconClick}
+                      ></div>
+                    </>
+                  )}
+                </div>
+
+                {/* userIcon */}
                 {user ? (
                   <>
-                    <h5 className="nav-item">{user.username}</h5>
+                    <h5 className="nav-item mb-0">{user.username}</h5>
                     <ul className="nav">
                       {/* <li className="nav-item">
                         <Link

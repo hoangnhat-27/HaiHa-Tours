@@ -33,7 +33,7 @@ const TourCard = ({ tour }) => {
           </h5>
           <div className="card__bottom d-flex align-items-center justify-content-between mt-3">
             <h5>
-              {price}đ <span> /người</span>
+              {Intl.NumberFormat("en-US").format(price)}đ <span> /người</span>
             </h5>
             <button className="btn booking__btn">
               <Link to={`/tour/${_id}`}>Chi tiết</Link>
