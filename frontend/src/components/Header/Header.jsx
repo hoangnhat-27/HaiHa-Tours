@@ -9,7 +9,6 @@ import "./header.css";
 import SearchBar from "@mui/icons-material/Search";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
@@ -44,15 +43,19 @@ const Header = () => {
       display: `${item.categoryName}`,
     });
   });
-  nav__link.push(
-    user && user._id
-      ? {
-          path: `/orders-list/${user._id}`,
-          display: "Đơn đặt hàng",
-          click: true,
-        }
-      : {}
-  );
+  nav__link.push({
+    path: `/blogs`,
+    display: "Tin tức",
+    click: true,
+  });
+  if (user && user._id) {
+    nav__link.push({
+      path: `/orders-list/${user._id}`,
+      display: "Đơn đặt hàng",
+      click: true,
+    });
+  }
+
   const categoryMenu = categories.filter((item) => {
     const parentItem = parentNav.find(
       (parent) => parent._id === item.fatherCateId
@@ -116,125 +119,123 @@ const Header = () => {
 
   return (
     <header className="header" ref={headerRef}>
-      <Container>
-        <Row>
-          <div className="nav__wrapper d-flex align-items-center justify-content-between">
-            {/* logo */}
-            <div className="logo">
-              <Link to="/">
-                <img src={logo} alt="Logo" />
-              </Link>
-            </div>
+      <Row style={{ padding: "0 1.5rem" }}>
+        <div className="nav__wrapper d-flex align-items-center justify-content-between">
+          {/* logo */}
+          <div className="logo">
+            <Link to="/">
+              <img src={logo} alt="Logo" />
+            </Link>
+          </div>
 
-            {/* menu */}
-            <div className="navigation" ref={menuRef} onClick={toggleMenu}>
-              <ul className="menu d-flex">
-                {nav__link.map((item, index) => (
-                  <li className="nav__item" key={index}>
-                    <NavLink
-                      to={item.path}
-                      className={(navClass) =>
-                        navClass.isActive && item.click ? "active__link" : ""
-                      }
-                    >
-                      {item.display}
-                    </NavLink>
-                    <ul>
-                      {categoryMenu.length &&
-                        categoryMenu.map((itemCate) =>
-                          itemCate.fatherCateId === item.id ? (
-                            <li key={itemCate._id}>
-                              <Link to={`/category/${itemCate._id}`}>
-                                {itemCate.categoryName}
-                              </Link>
-                            </li>
-                          ) : (
-                            ""
-                          )
-                        )}
-                    </ul>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="nav-right d-flex align-items-center gap-2">
-              <div className="nav__btns d-flex align-items-center gap-2">
-                {/* search */}
-                <div>
-                  <SearchBar
-                    onClick={handleSearchIconClick}
-                    className="search--icon"
-                  />
-                  {isSearchOpen && (
-                    <>
-                      <div className="search d-flex justify-content-center align-items-center gap-2">
-                        <input
-                          type="text"
-                          placeholder="Tìm kiếm tour"
-                          onChange={(e) => setSearchInput(e.target.value)}
-                        />
-                        <SearchBar
-                          className="search--btn"
-                          onClick={searchHandler}
-                        />
-                        {searchData?.length ? (
-                          <div className="resultList">
-                            <List
-                              sx={{
-                                width: "100%",
-                                maxWidth: 475,
-                                bgcolor: "background.paper",
-                              }}
-                            >
-                              {searchData.map((tour) => (
-                                <ListItem alignItems="flex-start">
-                                  <ListItemAvatar>
-                                    <Avatar alt="" src={tour.photo} />
-                                  </ListItemAvatar>
-                                  <Link
-                                    to={`/tour/${tour._id}`}
-                                    onClick={handleSearchIconClick}
-                                  >
-                                    <ListItemText
-                                      primary={`${tour.title}`}
-                                      secondary={
-                                        <React.Fragment>
-                                          <Typography
-                                            sx={{ display: "inline" }}
-                                            component="span"
-                                            variant="body2"
-                                            color="text.primary"
-                                          >
-                                            {tour.city}
-                                          </Typography>
-                                          {` — ${tour.desc.substring(0, 36)}…`}
-                                        </React.Fragment>
-                                      }
-                                    />
-                                  </Link>
-                                </ListItem>
-                              ))}
-                            </List>
-                          </div>
+          {/* menu */}
+          <div className="navigation" ref={menuRef} onClick={toggleMenu}>
+            <ul className="menu d-flex">
+              {nav__link.map((item, index) => (
+                <li className="nav__item" key={index}>
+                  <NavLink
+                    to={item.path}
+                    className={(navClass) =>
+                      navClass.isActive && item.click ? "active__link" : ""
+                    }
+                  >
+                    {item.display}
+                  </NavLink>
+                  <ul>
+                    {categoryMenu.length &&
+                      categoryMenu.map((itemCate) =>
+                        itemCate.fatherCateId === item.id ? (
+                          <li key={itemCate._id}>
+                            <Link to={`/category/${itemCate._id}`}>
+                              {itemCate.categoryName}
+                            </Link>
+                          </li>
                         ) : (
                           ""
-                        )}
-                      </div>
-                      <div
-                        className="overlay"
-                        onClick={handleSearchIconClick}
-                      ></div>
-                    </>
-                  )}
-                </div>
+                        )
+                      )}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-                {/* userIcon */}
-                {user ? (
+          <div className="nav-right d-flex align-items-center gap-2">
+            <div className="nav__btns d-flex align-items-center gap-2">
+              {/* search */}
+              <div>
+                <SearchBar
+                  onClick={handleSearchIconClick}
+                  className="search--icon"
+                />
+                {isSearchOpen && (
                   <>
-                    <h5 className="nav-item mb-0">{user.username}</h5>
-                    <ul className="nav">
-                      {/* <li className="nav-item">
+                    <div className="search d-flex justify-content-center align-items-center gap-2">
+                      <input
+                        type="text"
+                        placeholder="Tìm kiếm tour"
+                        onChange={(e) => setSearchInput(e.target.value)}
+                      />
+                      <SearchBar
+                        className="search--btn"
+                        onClick={searchHandler}
+                      />
+                      {searchData?.length ? (
+                        <div className="resultList">
+                          <List
+                            sx={{
+                              width: "100%",
+                              maxWidth: 475,
+                              bgcolor: "background.paper",
+                            }}
+                          >
+                            {searchData.map((tour) => (
+                              <ListItem alignItems="flex-start">
+                                <ListItemAvatar>
+                                  <Avatar alt="" src={tour.photo} />
+                                </ListItemAvatar>
+                                <Link
+                                  to={`/tour/${tour._id}`}
+                                  onClick={handleSearchIconClick}
+                                >
+                                  <ListItemText
+                                    primary={`${tour.title}`}
+                                    secondary={
+                                      <React.Fragment>
+                                        <Typography
+                                          sx={{ display: "inline" }}
+                                          component="span"
+                                          variant="body2"
+                                          color="text.primary"
+                                        >
+                                          {tour.city}
+                                        </Typography>
+                                      </React.Fragment>
+                                    }
+                                  />
+                                </Link>
+                              </ListItem>
+                            ))}
+                          </List>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                    <div
+                      className="overlay"
+                      onClick={handleSearchIconClick}
+                    ></div>
+                  </>
+                )}
+              </div>
+
+              {/* userIcon */}
+              {user ? (
+                <>
+                  <h5 className="nav-item mb-0">{user.username}</h5>
+                  <ul className="nav">
+                    {/* <li className="nav-item">
                         <Link
                           className={`nav-link btn-icon `}
                           title="Dark mode"
@@ -248,66 +249,65 @@ const Header = () => {
                           <i className="fas fa-bell"></i>
                         </Link>
                       </li> */}
-                      <li className="dropdown nav-item">
+                    <li className="dropdown nav-item">
+                      <Link
+                        className="dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        to="#"
+                      >
+                        <img
+                          className="img-xs rounded-circle"
+                          src={user.photo}
+                          alt="User"
+                          onClick={toggleDropdown}
+                        />
+                      </Link>
+                      <div className="dropdown-menu dropdown-menu-end">
                         <Link
-                          className="dropdown-toggle"
-                          data-bs-toggle="dropdown"
+                          className="dropdown-item"
+                          to={`/user/info/${user._id}`}
+                          onClick={toggleDropdown}
+                        >
+                          Thông tin của tôi
+                        </Link>
+                        <Link
+                          className="dropdown-item"
+                          to="#"
+                          onClick={toggleDropdown}
+                        >
+                          Cài đặt
+                        </Link>
+                        <Link
+                          onClick={logout}
+                          className="dropdown-item text-danger"
                           to="#"
                         >
-                          <img
-                            className="img-xs rounded-circle"
-                            src={user.photo}
-                            alt="User"
-                            onClick={toggleDropdown}
-                          />
+                          Đăng xuất
                         </Link>
-                        <div className="dropdown-menu dropdown-menu-end">
-                          <Link
-                            className="dropdown-item"
-                            to={`/user/info/${user._id}`}
-                            onClick={toggleDropdown}
-                          >
-                            Thông tin của tôi
-                          </Link>
-                          <Link
-                            className="dropdown-item"
-                            to="#"
-                            onClick={toggleDropdown}
-                          >
-                            Cài đặt
-                          </Link>
-                          <Link
-                            onClick={logout}
-                            className="dropdown-item text-danger"
-                            to="#"
-                          >
-                            Đăng xuất
-                          </Link>
-                        </div>
-                      </li>
-                    </ul>
-                    {/* <Button className="btn btn-dark" onClick={logout}>
+                      </div>
+                    </li>
+                  </ul>
+                  {/* <Button className="btn btn-dark" onClick={logout}>
                       Logout
                     </Button> */}
-                  </>
-                ) : (
-                  <>
-                    <Button className="btn secondary__btn">
-                      <Link to="/login">Đăng nhập</Link>
-                    </Button>
-                    <Button className="btn secondary__btn">
-                      <Link to="/register">Đăng ký</Link>
-                    </Button>
-                  </>
-                )}
-              </div>
-              <span className="mobile__menu" onClick={toggleMenu}>
-                <i class="ri-menu-line"></i>
-              </span>
+                </>
+              ) : (
+                <>
+                  <Button className="btn secondary__btn">
+                    <Link to="/login">Đăng nhập</Link>
+                  </Button>
+                  <Button className="btn secondary__btn">
+                    <Link to="/register">Đăng ký</Link>
+                  </Button>
+                </>
+              )}
             </div>
+            <span className="mobile__menu" onClick={toggleMenu}>
+              <i class="ri-menu-line"></i>
+            </span>
           </div>
-        </Row>
-      </Container>
+        </div>
+      </Row>
     </header>
   );
 };

@@ -161,7 +161,7 @@ const Orders = (props) => {
                     ""
                   )}
                   <Link
-                    to={`/order/${order._id}`}
+                    to={`/order/${order.userId._id}`}
                     className="text-success"
                     style={{
                       cursor: "pointer",

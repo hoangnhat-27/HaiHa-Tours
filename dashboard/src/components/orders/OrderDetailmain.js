@@ -38,7 +38,7 @@ const OrderDetailmain = (props) => {
                 <span>
                   <b>Ngày tạo: </b>
                   <span className="text-white">
-                    {new Date(order.data.createdAt).toLocaleDateString(
+                    {new Date(order.data[0].createdAt).toLocaleDateString(
                       window.userLang,
                       {
                         timeZone: "GMT",
@@ -48,13 +48,14 @@ const OrderDetailmain = (props) => {
                 </span>
                 <br />
                 <small className="text-black">
-                  Order ID: <span className="text-white">{order.data._id}</span>
+                  Order ID:{" "}
+                  <span className="text-white">{order.data[0]._id}</span>
                 </small>
               </div>
               <div className="col-lg-6 col-md-6 ms-auto d-flex justify-content-end align-items-center gap-2">
                 <dt>Tình trạng: </dt>
                 <span>
-                  {order.data.isPaid ? (
+                  {order.data[0].isPaid ? (
                     <span className="badge rounded-pill alert alert-success text-success mb-0">
                       Đã thanh toán
                     </span>

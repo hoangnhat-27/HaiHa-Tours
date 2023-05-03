@@ -7,14 +7,14 @@ import { useSelector } from "react-redux";
 const OrderMain = () => {
   const orderList = useSelector((state) => state.orderList);
   const { loading, error, orders } = orderList;
-  const [orderData, setOrderData] = useState([]);
+  const [orderData, setOrderData] = useState({});
 
   useEffect(() => {
     if (orders?.success) {
       setOrderData(orders.data);
     }
   }, [orders]);
-
+  console.log("order", orderData);
   return (
     <section className="content-main">
       <div className="content-header">
@@ -54,9 +54,9 @@ const OrderMain = () => {
               <Loading />
             ) : error ? (
               <Message variant="alert-danger">{error}</Message>
-            ) : (
+            ) : orderData.length ? (
               <Orders orders={orderData} />
-            )}
+            ) : null}
           </div>
         </div>
       </div>

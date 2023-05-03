@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BLOG_CREATE_RESET } from "../../Redux/Constants/BlogConstants";
 import { createBlog } from "../../Redux/Actions/BlogActions";
+import { Editor } from "@tinymce/tinymce-react";
 import Toast from "../LoadingError/Toast";
 import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
@@ -104,14 +105,15 @@ const AddBlogMain = () => {
                   </div>
                   <div className="mb-4">
                     <label className="form-label">Mô tả</label>
-                    <textarea
-                      placeholder="Nhập mô tả"
-                      className="form-control"
-                      rows="7"
-                      required
+                    <Editor
+                      apiKey={`${process.env.REACT_APP_API_KEY}`}
                       value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                    ></textarea>
+                      init={{
+                        height: 500,
+                        menubar: false,
+                      }}
+                      onEditorChange={(content) => setContent(content)}
+                    />
                   </div>
                   <div className="mb-4">
                     <label className="form-label">Ảnh</label>

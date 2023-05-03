@@ -7,11 +7,13 @@ import CategoryTourList from "./../pages/CategoryTourList";
 import Login from "./../pages/Login";
 import Register from "./../pages/Register";
 import SearchResultList from "./../pages/SearchResultList";
+import Blogs from "./../pages/Blogs";
 import UserInfo from "./../pages/UserInfo";
 import Checkout from "./../pages/Checkout";
 import ThankYou from "../pages/ThankYou";
 import OrderList from "../pages/OrderList";
 import NotFound from "../pages/NotFound";
+import BlogDetails from "../pages/BlogDetails";
 
 const Routers = () => {
   return (
@@ -24,6 +26,8 @@ const Routers = () => {
       <Route path="/tour/checkout/:id" element={<Checkout />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/blogs" element={<Blogs />} />
+      <Route path="/blog/:id" element={<BlogDetails />} />
       <Route path="/user/info/:id" element={<UserInfo />} />
       <Route path="/thank-you" element={<ThankYou />} />
       <Route path="/orders-list/:id" element={<OrderList />} />

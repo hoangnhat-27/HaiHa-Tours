@@ -14,10 +14,10 @@ const OrderDetailInfo = (props) => {
             <h6 className="mb-1">Khách hàng</h6>
             <p className="mb-1">
               <span>Họ tên: </span>
-              {order.data.fullName} <br />
+              {order.data[0].fullName} <br />
               <span>Email: </span>
-              <a href={`mailto:${order.data.userEmail}`}>
-                {order.data.userEmail}
+              <a href={`mailto:${order.data[0].userEmail}`}>
+                {order.data[0].userEmail}
               </a>
             </p>
           </div>
@@ -29,9 +29,9 @@ const OrderDetailInfo = (props) => {
             <p className="mb-1">
               <br />
               <span>Điện thoại: </span>
-              {order.data.phone} <br />
+              {order.data[0].phone} <br />
               Phương thức thanh toán:{" "}
-              {order.data.paymentMethod === "direct"
+              {order.data[0].paymentMethod === "direct"
                 ? "Thanh toán trực tiếp"
                 : "Chuyển khoản"}
             </p>

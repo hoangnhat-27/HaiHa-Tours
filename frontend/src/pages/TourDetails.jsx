@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch.js";
 import { BASE_URL } from "../utils/config.js";
 import calculateAvgRating from "../utils/avgRating";
-import avatar from "../assets/images/avatar.jpg";
 import { Link } from "react-router-dom";
 import Newsletter from "../shared/Newsletter";
 import { AuthContext } from "./../context/AuthContext";
@@ -99,7 +98,7 @@ const TourDetails = () => {
                       </span>
                     </div>
                     <h5>Mô tả</h5>
-                    <p>{desc}</p>
+                    <p dangerouslySetInnerHTML={{ __html: desc }}></p>
                   </div>
 
                   {/* tour review section */}

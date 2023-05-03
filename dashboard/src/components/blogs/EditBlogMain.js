@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editBlog, updateBlog } from "../../Redux/Actions/BlogActions";
 import { BLOG_UPDATE_RESET } from "../../Redux/Constants/BlogConstants";
+import { Editor } from "@tinymce/tinymce-react";
 import { toast } from "react-toastify";
 import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
@@ -143,14 +144,15 @@ const EditBlogMain = (props) => {
                       </div>
                       <div className="mb-4">
                         <label className="form-label">Mô tả</label>
-                        <textarea
-                          placeholder="Type here"
-                          className="form-control"
-                          rows="7"
-                          required
+                        <Editor
+                          apiKey={`${process.env.REACT_APP_API_KEY}`}
                           value={content}
-                          onChange={(e) => setContent(e.target.value)}
-                        ></textarea>
+                          init={{
+                            height: 500,
+                            menubar: false,
+                          }}
+                          onEditorChange={(content) => setContent(content)}
+                        />
                       </div>
                       <div className="mb-4">
                         <label className="form-label">Ảnh</label>

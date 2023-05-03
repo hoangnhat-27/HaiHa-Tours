@@ -7,6 +7,7 @@ import { editTour, updateTour } from "../../Redux/Actions/TourActions";
 import { TOUR_UPDATE_RESET } from "../../Redux/Constants/TourConstants";
 import { listInvestors } from "../../Redux/Actions/InvestorActions";
 import { listCategories } from "../../Redux/Actions/CategoryActions";
+import { Editor } from "@tinymce/tinymce-react";
 import { toast } from "react-toastify";
 import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
@@ -363,14 +364,15 @@ const EditTourMain = (props) => {
                       </div> */}
                       <div className="mb-4">
                         <label className="form-label">Mô tả</label>
-                        <textarea
-                          placeholder="Type here"
-                          className="form-control"
-                          rows="7"
-                          required
+                        <Editor
+                          apiKey={`${process.env.REACT_APP_API_KEY}`}
                           value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                        ></textarea>
+                          init={{
+                            height: 500,
+                            menubar: false,
+                          }}
+                          onEditorChange={(desc) => setDescription(desc)}
+                        />
                       </div>
                       <div className="mb-4">
                         <label className="form-label">Ảnh</label>
