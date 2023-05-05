@@ -9,6 +9,7 @@ import Register from "./../pages/Register";
 import SearchResultList from "./../pages/SearchResultList";
 import Blogs from "./../pages/Blogs";
 import UserInfo from "./../pages/UserInfo";
+import UserDiscounts from "./../pages/UserDiscounts";
 import Checkout from "./../pages/Checkout";
 import ThankYou from "../pages/ThankYou";
 import OrderList from "../pages/OrderList";
@@ -29,6 +30,7 @@ const Routers = () => {
       <Route path="/blogs" element={<Blogs />} />
       <Route path="/blog/:id" element={<BlogDetails />} />
       <Route path="/user/info/:id" element={<UserInfo />} />
+      <Route path="/discounts/:id" element={<UserDiscounts />} />
       <Route path="/thank-you" element={<ThankYou />} />
       <Route path="/orders-list/:id" element={<OrderList />} />
       <Route path="/tours/search" element={<SearchResultList />} />

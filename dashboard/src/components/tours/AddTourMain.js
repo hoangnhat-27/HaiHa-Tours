@@ -24,7 +24,6 @@ const AddTourMain = () => {
   const [photo, setPhoto] = useState("");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
-  const [distance, setDistance] = useState(0);
   const [slot, setSlot] = useState(0);
   const [description, setDescription] = useState("");
   const [uploadData, setUploadData] = useState("");
@@ -75,7 +74,6 @@ const AddTourMain = () => {
       setCity("");
       setUploadData("");
       setPhoto("");
-      setDistance(0);
       setPrice(0);
       setSlot(0);
     }
@@ -121,7 +119,6 @@ const AddTourMain = () => {
         name,
         city,
         address,
-        distance,
         photo,
         description,
         Number(price),
@@ -197,20 +194,6 @@ const AddTourMain = () => {
                       required
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label htmlFor="tour_title" className="form-label">
-                      Khoảng cách
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="Khoảng cách"
-                      className="form-control"
-                      id="distance"
-                      required
-                      value={distance}
-                      onChange={(e) => setDistance(e.target.value)}
                     />
                   </div>
                   <div className="mb-4">

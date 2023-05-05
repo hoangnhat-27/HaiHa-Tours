@@ -1,18 +1,18 @@
 import React from "react";
 import Sidebar from "../components/sidebar";
 import Header from "../components/Header";
-import AddBlogMain from "./../components/blogs/AddBlogMain";
+import AddDiscountMain from "./../components/discounts/AddDiscountMain";
 
-const AddBlog = () => {
+const AddDiscount = () => {
   return (
     <>
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <AddBlogMain />
+        <AddDiscountMain />
       </main>
     </>
   );
 };
 
-export default AddBlog;
+export default AddDiscount;

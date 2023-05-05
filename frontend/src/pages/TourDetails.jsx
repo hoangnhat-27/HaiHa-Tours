@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import "../styles/tour-details.css";
-import "../components/Booking/booking.css";
+import "../styles/booking.css";
 import { Container, Row, Col, Form, ListGroup, List } from "reactstrap";
 import { useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch.js";
@@ -8,61 +8,16 @@ import { BASE_URL } from "../utils/config.js";
 import calculateAvgRating from "../utils/avgRating";
 import { Link } from "react-router-dom";
 import Newsletter from "../shared/Newsletter";
-import { AuthContext } from "./../context/AuthContext";
 
 const TourDetails = () => {
   const { id } = useParams();
-  const reviewMsgRef = useRef("");
-  const [tourRating, setTourRating] = useState(null);
-  const { user } = useContext(AuthContext);
 
   const { data: tour, error, loading } = useFetch(`${BASE_URL}/tours/${id}`);
 
-  const {
-    photo,
-    title,
-    desc,
-    price,
-    address,
-    reviews,
-    city,
-    distance,
-    maxGroupSize,
-  } = tour;
+  const { photo, title, desc, price, address, reviews, city, maxGroupSize } =
+    tour;
 
   const { totalRating, avgRating } = calculateAvgRating(reviews);
-
-  //format date
-  const options = { day: "numeric", month: "long", year: "numeric" };
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    const reviewText = reviewMsgRef.current.value;
-
-    try {
-      if (!user || user === undefined || user === null) {
-        alert("Please sign in");
-      }
-      const reviewObj = {
-        username: user?.username,
-        reviewText,
-        rating: tourRating,
-      };
-      const res = await fetch(`${BASE_URL}/review/${id}`, {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(reviewObj),
-      });
-
-      const result = await res.json();
-      if (!res.ok) return alert(result.message);
-      alert(result.message);
-    } catch (error) {
-      alert(error.message);
-    }
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -86,12 +41,8 @@ const TourDetails = () => {
                         {city}
                       </span>
                       <span>
-                        <i class="ri-money-dollar-circle-line"></i> {price}đ
-                        /người
-                      </span>
-                      <span>
-                        <i class="ri-map-pin-time-line"></i>
-                        {distance} k/m
+                        <i class="ri-money-dollar-circle-line"></i>
+                        {Intl.NumberFormat("en-US").format(price)}đ /người
                       </span>
                       <span>
                         <i class="ri-group-line"></i> {maxGroupSize} người
@@ -138,7 +89,8 @@ const TourDetails = () => {
                 <div className="booking">
                   <h2>{title}</h2>
                   <h5>
-                    {price}đ <span>/người</span>
+                    {Intl.NumberFormat("en-US").format(price)}đ{" "}
+                    <span>/người</span>
                   </h5>
 
                   <div className="d-flex align-items-center gap-5">

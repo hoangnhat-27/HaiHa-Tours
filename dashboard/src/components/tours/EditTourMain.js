@@ -27,7 +27,6 @@ const EditTourMain = (props) => {
   const [photo, setPhoto] = useState("");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
-  const [distance, setDistance] = useState("");
   const [slot, setSlot] = useState("");
   // const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
@@ -111,7 +110,7 @@ const EditTourMain = (props) => {
       let investor = investorData.find((item) => item._id === investorId);
       setCurrentInvestorName(investor?.name);
     }
-  }, [cateId, investorId]);
+  }, [cateId, investorId, categoryData, investorData]);
 
   useEffect(() => {
     if (successUpdate) {
@@ -125,7 +124,6 @@ const EditTourMain = (props) => {
         setName(tourData.title);
         setCity(tourData.city);
         setAddress(tourData.address);
-        setDistance(tourData.distance);
         setSlot(tourData.maxGroupSize);
         setDescription(tourData.desc);
         // setCountInStock(tourData.countInStock);
@@ -157,7 +155,6 @@ const EditTourMain = (props) => {
         title: name,
         city,
         address,
-        distance,
         maxGroupSize: slot,
         price,
         desc: description,
@@ -239,20 +236,6 @@ const EditTourMain = (props) => {
                           required
                           value={address}
                           onChange={(e) => setAddress(e.target.value)}
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <label htmlFor="tour_title" className="form-label">
-                          Khoảng cách
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="Type here"
-                          className="form-control"
-                          id="distance"
-                          required
-                          value={distance}
-                          onChange={(e) => setDistance(e.target.value)}
                         />
                       </div>
                       <div className="mb-4">

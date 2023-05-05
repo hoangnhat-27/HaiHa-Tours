@@ -84,6 +84,16 @@ const Sidebar = () => {
                 <span className="text">Blogs</span>
               </NavLink>
             </li>
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/discounts"
+              >
+                <i className="icon fas fa-percent"></i>
+                <span className="text">Discounts</span>
+              </NavLink>
+            </li>
           </ul>
           <br />
           <br />

@@ -18,41 +18,47 @@ const LatestOrder = (props) => {
           <table className="table">
             <tbody>
               {orders.length ? (
-                orders.slice(0, 5).map((order) => (
-                  <tr key={order._id}>
-                    <td>
-                      <b>{order.fullName}</b>
-                    </td>
-                    <td>{order.userEmail}</td>
-                    <td>
-                      {Intl.NumberFormat("en-US").format(order.totalPrice)}đ
-                    </td>
-                    <td>
-                      {order.isPaid ? (
-                        <span className="badge rounded-pill alert-success">
-                          Đã thanh toán
-                        </span>
-                      ) : (
-                        <span className="badge rounded-pill alert-danger">
-                          Chưa thanh toán
-                        </span>
-                      )}
-                    </td>
-                    <td>
-                      {new Date(order.createdAt).toLocaleDateString(
-                        window.userLang,
-                        {
-                          timeZone: "GMT",
-                        }
-                      )}
-                    </td>
-                    <td className="d-flex justify-content-end align-item-center">
-                      <Link to={`/order/${order._id}`} className="text-success">
-                        <i className="fas fa-eye"></i>
-                      </Link>
-                    </td>
-                  </tr>
-                ))
+                orders
+                  .slice(0, 5)
+                  .reverse()
+                  .map((order) => (
+                    <tr key={order._id}>
+                      <td>
+                        <b>{order.fullName}</b>
+                      </td>
+                      <td>{order.userEmail}</td>
+                      <td>
+                        {Intl.NumberFormat("en-US").format(order.totalPrice)}đ
+                      </td>
+                      <td>
+                        {order.isPaid ? (
+                          <span className="badge rounded-pill alert-success">
+                            Đã thanh toán
+                          </span>
+                        ) : (
+                          <span className="badge rounded-pill alert-danger">
+                            Chưa thanh toán
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        {new Date(order.createdAt).toLocaleDateString(
+                          window.userLang,
+                          {
+                            timeZone: "GMT",
+                          }
+                        )}
+                      </td>
+                      <td className="d-flex justify-content-end align-item-center">
+                        <Link
+                          to={`/order/${order._id}`}
+                          className="text-success"
+                        >
+                          <i className="fas fa-eye"></i>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))
               ) : (
                 <div className="text-center">Không lấy được dữ liệu</div>
               )}

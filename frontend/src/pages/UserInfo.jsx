@@ -24,6 +24,7 @@ const UserInfo = () => {
   const [username, setUserName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("");
   const [birthday, setBirthday] = useState("");
   const [photo, setPhoto] = useState("");
   const [uploadData, setUploadData] = useState("");
@@ -60,6 +61,7 @@ const UserInfo = () => {
     if (user) {
       setEmail(user.email);
       setPhone(user.phone);
+      setGender(user.gender);
       setBirthday(user.birthday);
       setPhoto(user.photo);
       setUserName(user.username);
@@ -79,6 +81,7 @@ const UserInfo = () => {
       body: JSON.stringify({
         email: email,
         phone: Number(phone),
+        gender: gender,
         birthday: birthday,
         photo: photo,
         username: username,
@@ -94,6 +97,7 @@ const UserInfo = () => {
           username: result.data.username,
           email: result.data.email,
           phone: result.data.phone,
+          gender: result.data.gender,
           birthday: result.data.birthday,
           photo: result.data.photo,
           createdAt: result.data.createdAt,
@@ -208,6 +212,35 @@ const UserInfo = () => {
                       value={phone ? phone : ""}
                       onChange={(e) => setPhone(e.target.value)}
                     />
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="gender" className="form-label">
+                      Giới tính
+                    </label>
+                    <div className="d-flex gap-3">
+                      <div>
+                        <input
+                          type="radio"
+                          id="male"
+                          name="gender"
+                          value="male"
+                          checked={gender === "male"}
+                          onChange={(e) => setGender(e.target.value)}
+                        />{" "}
+                        Nam
+                      </div>
+                      <div>
+                        <input
+                          type="radio"
+                          name="gender"
+                          id="female"
+                          value="female"
+                          checked={gender === "female"}
+                          onChange={(e) => setGender(e.target.value)}
+                        />{" "}
+                        Nữ
+                      </div>
+                    </div>
                   </div>
                   <div className="mb-4">
                     <label htmlFor="tour_title" className="form-label">

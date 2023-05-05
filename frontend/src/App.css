@@ -42,6 +42,10 @@ ul {
 }
 .primary__btn{
   background: var(--secondary-color) !important;
+  border: none !important;
+}
+.primary__btn:hover{
+  background-color: #b85403 !important;
 }
 .primary__btn a{
   color: #000;

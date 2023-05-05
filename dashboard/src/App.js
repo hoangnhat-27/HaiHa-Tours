@@ -11,6 +11,7 @@ import OrderDetailScreen from "./screens/OrderDetailScreen";
 import BlogScreen from "./screens/BlogScreen";
 import AddBlog from "./screens/AddBlog";
 import BlogEditScreen from "./screens/BlogEditScreen";
+import DiscountScreen from "./screens/DiscountScreen";
 import AddTour from "./screens/AddTour";
 import Login from "./screens/LoginScreen";
 import UsersScreen from "./screens/UsersScreen";
@@ -21,6 +22,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { listTours } from "./Redux/Actions/TourActions";
 import { listOrders } from "./Redux/Actions/OrderActions";
 import UserInfo from "./screens/UserInfo";
+import AddDiscount from "./screens/AddDiscount";
+import DiscountEditScreen from "./screens/DiscountEditScreen";
 
 function App() {
   const dispatch = useDispatch();
@@ -49,6 +52,12 @@ function App() {
           <PrivateRouter path="/blogs" component={BlogScreen} />
           <PrivateRouter path="/addblog" component={AddBlog} />
           <PrivateRouter path="/blog/:id/edit" component={BlogEditScreen} />
+          <PrivateRouter path="/discounts" component={DiscountScreen} />
+          <PrivateRouter path="/adddiscount" component={AddDiscount} />
+          <PrivateRouter
+            path="/discount/:id/edit"
+            component={DiscountEditScreen}
+          />
           <PrivateRouter path="/admin/info/:id" component={UserInfo} />
           <PrivateRouter path="/tour/:id/edit" component={TourEditScreen} />
           <Route path="/login" component={Login} />

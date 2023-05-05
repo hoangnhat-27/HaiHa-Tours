@@ -268,7 +268,14 @@ const Header = () => {
                           to={`/user/info/${user._id}`}
                           onClick={toggleDropdown}
                         >
-                          Thông tin của tôi
+                          Thông tin cá nhân
+                        </Link>
+                        <Link
+                          className="dropdown-item"
+                          to={`/discounts/${user._id}`}
+                          onClick={toggleDropdown}
+                        >
+                          Mã khuyến mãi
                         </Link>
                         <Link
                           className="dropdown-item"

@@ -16,8 +16,8 @@ const OrderDetailInfo = (props) => {
               <span>Họ tên: </span>
               {order.data[0].fullName} <br />
               <span>Email: </span>
-              <a href={`mailto:${order.data[0].userEmail}`}>
-                {order.data[0].userEmail}
+              <a href={`mailto:${order.data[0].userId.email}`}>
+                {order.data[0].userId.email}
               </a>
             </p>
           </div>

@@ -14,7 +14,7 @@ const OrderMain = () => {
       setOrderData(orders.data);
     }
   }, [orders]);
-  console.log("order", orderData);
+
   return (
     <section className="content-main">
       <div className="content-header">

@@ -27,6 +27,14 @@ import {
   blogUpdateReducer,
 } from "./Reducers/BlogReducers";
 import {
+  discountCreateReducer,
+  discountDeleteReducer,
+  discountListReducer,
+  discountEditReducer,
+  discountUpdateReducer,
+  discountReducer,
+} from "./Reducers/DiscountReducers";
+import {
   orderUpdatedReducer,
   orderDetailsReducer,
   orderListReducer,
@@ -56,6 +64,12 @@ const reducer = combineReducers({
   blogCreate: blogCreateReducer,
   blogEdit: blogEditReducer,
   blogUpdate: blogUpdateReducer,
+  discountList: discountListReducer,
+  discountDelete: discountDeleteReducer,
+  discountCreate: discountCreateReducer,
+  discountEdit: discountEditReducer,
+  discountUpdate: discountUpdateReducer,
+  discountSingleUser: discountReducer,
   categoryList: categoryListReducer,
   categoryDelete: categoryDeleteReducer,
   categoryCreate: categoryCreateReducer,

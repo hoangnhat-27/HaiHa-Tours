@@ -3,6 +3,7 @@ import TopTotal from "./TopTotal";
 import LatestOrder from "./LatestOrder";
 import SaleStatistics from "./SalesStatistics";
 import ToursStatistics from "./ToursStatistics";
+import ToursRatings from "./ToursRatings";
 import { useSelector } from "react-redux";
 
 const Main = () => {
@@ -34,6 +35,9 @@ const Main = () => {
           {/* STATICS */}
           <SaleStatistics />
           <ToursStatistics />
+        </div>
+        <div>
+          <ToursRatings />
         </div>
 
         {/* LATEST ORDER */}
