@@ -30,9 +30,8 @@ const EditDiscountMain = (props) => {
   const [photo, setPhoto] = useState("");
   const [type, setType] = useState("decreasePercent");
   const [uploadData, setUploadData] = useState("");
-  const [discountUserId, setDiscountUserId] = useState("");
-  const [discountData, setDiscountData] = useState({});
   const [currentUser, setCurrentUser] = useState("");
+  const [discountData, setDiscountData] = useState({});
 
   const dispatch = useDispatch();
 
@@ -41,6 +40,7 @@ const EditDiscountMain = (props) => {
   const userList = useSelector((state) => state.userList);
   const { users } = userList;
   const [userData, setUserData] = useState([]);
+  const [discountUserId, setDiscountUserId] = useState("");
 
   useEffect(() => {
     if (discount?.success) {
@@ -50,7 +50,7 @@ const EditDiscountMain = (props) => {
       setBelowPrice(discount.data.belowPrice);
       setPhoto(discount.data.photo);
       setType(discount.data.type);
-      setDiscountUserId(discount.data.userId);
+      setDiscountUserId(discount.data.userId._id);
       setDiscountData(discount.data);
     }
   }, [discount]);
@@ -62,9 +62,9 @@ const EditDiscountMain = (props) => {
   }, [users]);
 
   useEffect(() => {
-    if (discountUserId) {
+    if (discountUserId.trim() && userData.length) {
       let user = userData.find((user) => user._id === discountUserId);
-      setCurrentUser(user?.username);
+      setCurrentUser(`${user?.username} (${user?.email})`);
     }
   }, [discountUserId, userData]);
 
@@ -96,7 +96,7 @@ const EditDiscountMain = (props) => {
         setAmount(discountData.amount);
         setBelowPrice(discountData.belowPrice);
         setType(discountData.type);
-        setDiscountUserId(discountData.userId);
+        setDiscountUserId(discountData.userId._id);
       }
     }
   }, [discountData, dispatch, discountId, successUpdate]);
@@ -263,11 +263,13 @@ const EditDiscountMain = (props) => {
                           value={currentUser}
                         >
                           {userData.length &&
-                            userData.map((user) => (
-                              <option data-user-id={user._id}>
-                                {user.username} ({user.email})
-                              </option>
-                            ))}
+                            userData.map((user) =>
+                              user ? (
+                                <option data-user-id={user._id}>
+                                  {user.username} ({user.email})
+                                </option>
+                              ) : null
+                            )}
                         </select>
                       </div>
                       <div className="mb-4">

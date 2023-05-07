@@ -64,7 +64,7 @@ const MainDiscounts = () => {
   return (
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Discounts</h2>
+        <h2 className="content-title">Mã khuyến mãi</h2>
         <div>
           <Link to="/adddiscount" className="btn btn-primary">
             Thêm mới
@@ -78,7 +78,7 @@ const MainDiscounts = () => {
             <div className="col-lg-4 col-md-6 me-auto ">
               <input
                 type="search"
-                placeholder="Tìm kiếm discount..."
+                placeholder="Tìm kiếm mã khuyến mãi..."
                 className="form-control p-2"
                 onChange={(e) => setSearchInput(e.target.value)}
               />

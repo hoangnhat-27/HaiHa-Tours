@@ -56,19 +56,6 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-      <section>
-        <Container>
-          <Row>
-            <Col lg="3">
-              <h5 className="services__subtitle">Bạn sẽ nhận được gì ?</h5>
-              <h2 className="services__title">
-                Chúng tôi đưa đến trải nghiệm tốt nhất
-              </h2>
-            </Col>
-            <ServiceList />
-          </Row>
-        </Container>
-      </section>
       {/* {feature tour section} */}
       <section>
         <Container>

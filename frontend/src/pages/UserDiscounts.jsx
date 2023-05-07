@@ -12,10 +12,6 @@ const Discounts = () => {
   const token = localStorage.getItem("token");
   const [discountData, setDiscountData] = useState(async () => {
     try {
-      // if (!user || user === undefined || user === null) {
-      //   return alert("Please sign in");
-      // }
-
       const res = await fetch(`${BASE_URL}/discounts/user/${id}`, {
         method: "get",
         headers: {

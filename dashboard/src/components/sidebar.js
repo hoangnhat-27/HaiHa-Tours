@@ -30,8 +30,8 @@ const Sidebar = () => {
                 to="/"
                 exact={true}
               >
-                <i className="icon fas fa-home"></i>
-                <span className="text">Dashboard</span>
+                <i className="icon fas fa-chart-bar" aria-hidden="true"></i>
+                <span className="text">Thống kê</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -40,7 +40,7 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/tours"
               >
-                <i className="icon fas fa-shopping-bag"></i>
+                <i className="icon fas fa-shopping-bag" aria-hidden="true"></i>
                 <span className="text">Tours</span>
               </NavLink>
             </li>
@@ -50,7 +50,7 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/category"
               >
-                <i className="icon fas fa-list"></i>
+                <i className="icon fas fa-list" aria-hidden="true"></i>
                 <span className="text">Danh mục</span>
               </NavLink>
             </li>
@@ -60,7 +60,7 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/orders"
               >
-                <i className="icon fas fa-bags-shopping"></i>
+                <i className="icon fas fa-bags-shopping" aria-hidden="true"></i>
                 <span className="text">Đơn hàng</span>
               </NavLink>
             </li>
@@ -70,7 +70,7 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/users"
               >
-                <i className="icon fas fa-user"></i>
+                <i className="icon fas fa-user" aria-hidden="true"></i>
                 <span className="text">Người dùng</span>
               </NavLink>
             </li>
@@ -80,7 +80,7 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/blogs"
               >
-                <i className="icon fas fa-blog"></i>
+                <i className="icon fas fa-blog" aria-hidden="true"></i>
                 <span className="text">Blogs</span>
               </NavLink>
             </li>
@@ -90,8 +90,18 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/discounts"
               >
-                <i className="icon fas fa-percent"></i>
-                <span className="text">Discounts</span>
+                <i className="icon fas fa-percent" aria-hidden="true"></i>
+                <span className="text">Mã khuyến mãi</span>
+              </NavLink>
+            </li>
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/investors"
+              >
+                <i class="icon fa fa-users" aria-hidden="true"></i>
+                <span className="text">Nhà đầu tư</span>
               </NavLink>
             </li>
           </ul>

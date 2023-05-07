@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { BASE_URL } from "../utils/config";
 import { Container, Row, Col, Table, Button } from "reactstrap";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -65,6 +66,8 @@ export default function OrderList() {
   const [tourRating, setTourRating] = useState(5);
   const [reviewMsg, setReviewMsg] = useState("");
 
+  const navigate = useNavigate();
+
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -92,6 +95,14 @@ export default function OrderList() {
     }
   });
 
+  useEffect(() => {
+    if (!user) {
+      toast.error("Bạn chưa đăng nhập!", ToastObjects);
+      setTimeout(() => navigate("/login"), 2500);
+      return;
+    }
+  }, [user]);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -103,10 +114,6 @@ export default function OrderList() {
 
   const UpdateOrder = async (order) => {
     try {
-      // if (!user || user === undefined || user === null) {
-      //   return alert("Please sign in");
-      // }
-
       const res = await fetch(`${BASE_URL}/orders/${order._id}`, {
         method: "put",
         headers: {
@@ -138,18 +145,17 @@ export default function OrderList() {
         }
         setOrderData(result.data?.reverse());
       } catch (error) {
-        alert(error.message);
+        toast.error("Có lỗi khi lấy ra danh sách!", ToastObjects);
+        return;
       }
     } catch (error) {
-      alert(error.message);
+      toast.error("Hủy đơn không thành công!", ToastObjects);
+      return;
     }
   };
 
   const submitHandler = async (order) => {
     try {
-      if (!user || user === undefined || user === null) {
-        alert("Please sign in");
-      }
       const reviewObj = {
         tourId: order.tourId._id,
         userId: user?._id,
@@ -169,10 +175,6 @@ export default function OrderList() {
       const result = await res.json();
       if (!res.ok) return alert(result.message);
       try {
-        // if (!user || user === undefined || user === null) {
-        //   return alert("Please sign in");
-        // }
-
         const res = await fetch(`${BASE_URL}/orders/${order._id}`, {
           method: "put",
           headers: {
@@ -184,9 +186,10 @@ export default function OrderList() {
             updatedAt: new Date(Date.now()),
           }),
         });
-        const result = await res.json();
+        await res.json();
         if (!res.ok) {
-          return alert(result.message);
+          toast.error("Cập nhật đơn hàng không thành công!", ToastObjects);
+          return;
         }
         try {
           const res = await fetch(`${BASE_URL}/orders/${user._id}`, {
@@ -199,18 +202,22 @@ export default function OrderList() {
           });
           const result = await res.json();
           if (!res.ok) {
-            return alert(result.message);
+            toast.error("Lấy danh sách không thành công!", ToastObjects);
+            return;
           }
           setOrderData(result.data?.reverse());
         } catch (error) {
-          alert(error.message);
+          toast.error("Lấy danh sách không thành công!", ToastObjects);
+          return;
         }
       } catch (error) {
-        alert(error.message);
+        toast.error("Cập nhật đơn hàng không thành công!", ToastObjects);
+        return;
       }
       toast.success("Đánh giá đơn hàng thành công", ToastObjects);
     } catch (error) {
-      alert(error.message);
+      toast.error("Đánh giá đơn hàng không thành công!", ToastObjects);
+      return;
     }
   };
 

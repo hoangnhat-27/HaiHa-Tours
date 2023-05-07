@@ -33,7 +33,10 @@ const Login = () => {
       });
       const result = await res.json();
       if (!res.ok) alert(result.message);
-      else {
+      else if (result.role !== "user") {
+        dispatch({ type: "LOGIN_FAILURE" });
+        alert("Bạn không phải user!");
+      } else {
         dispatch({ type: "LOGIN_SUCCESS", payload: result.data });
         localStorage.setItem("token", result.token);
         navigate("/");

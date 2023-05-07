@@ -4,6 +4,8 @@ import { Container, Row, Col } from "reactstrap";
 import useFetch from "../hooks/useFetch.js";
 import { BASE_URL } from "../utils/config";
 import "../styles/booking.css";
+import { toast } from "react-toastify";
+import Toast from "../Toast/Toast.js";
 
 import {
   Form,
@@ -16,15 +18,49 @@ import {
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
+const ToastObjects = {
+  position: "top-right",
+  autoClose: 2000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: false,
+  draggable: false,
+  progress: undefined,
+  theme: "light",
+};
+
 const Checkout = () => {
   const { id } = useParams();
   const { data: tour, error, loading } = useFetch(`${BASE_URL}/tours/${id}`);
-  const { price, photo, title } = tour;
+  const { price, photo, title, maxGroupSize } = tour;
 
   const navigate = useNavigate();
 
   const { user } = useContext(AuthContext);
   const token = localStorage.getItem("token");
+  const [discountInput, setDiscountInput] = useState("");
+  const [useDiscount, setUseDiscount] = useState(false);
+  const [discountData, setDiscountData] = useState(async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/discounts/user/${user._id}`, {
+        method: "get",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        toast.error("Không lấy được mã giảm giá", ToastObjects);
+        return;
+      }
+      setDiscountData(result.data?.reverse());
+    } catch (error) {
+      toast.error("Không lấy được mã giảm giá", ToastObjects);
+      return;
+    }
+  });
   const [order, setOrder] = useState({
     userId: user && user._id,
     userEmail: user && user.email,
@@ -43,7 +79,7 @@ const Checkout = () => {
   let totalAmount = 0;
   if (order.bookFrom && order.bookTo) {
     if (Date.parse(order.bookFrom) > Date.parse(order.bookTo)) {
-      alert("Ngày không hợp lệ");
+      toast.error("Ngày không hợp lệ!", ToastObjects);
     } else {
       let days = Math.round(
         Math.abs(
@@ -62,7 +98,29 @@ const Checkout = () => {
         children =
           Math.round(Number(price / 2)) * Number(order.people.children) * days;
       else children = 0;
-      totalAmount = adults + children;
+      if (useDiscount) {
+        if (discountInput?.trim() && discountData.length) {
+          let discount = discountData.filter(
+            (discount) =>
+              discount.discountCode === discountInput &&
+              discount.belowPrice >= price
+          );
+          if (discount.length) {
+            if (discount[0].type === "decreasePercent") {
+              let total =
+                adults +
+                children -
+                (discount[0].amount * adults + children) / 100;
+              totalAmount = total > 0 ? total : 0;
+              toast.success("Áp dụng mã giảm giá thành công!", ToastObjects);
+            } else {
+              let total = adults + children - Number(discount[0].amount);
+              toast.success("Áp dụng mã giảm giá thành công!", ToastObjects);
+              totalAmount = total > 0 ? total : 0;
+            }
+          }
+        }
+      } else totalAmount = adults + children;
     }
   }
 
@@ -75,14 +133,33 @@ const Checkout = () => {
     }
   }, [totalAmount]);
 
+  useEffect(() => {
+    if (!user) {
+      toast.error("Bạn chưa đăng nhập!", ToastObjects);
+      setTimeout(() => navigate("/login"), 2500);
+      return;
+    }
+  }, [user]);
+
   const handleClick = async (e) => {
     e.preventDefault();
 
     try {
-      if (!user || user === undefined || user === null) {
-        return alert("Please sign in");
+      if (
+        !order.userId ||
+        !order.userEmail ||
+        !order.fullName ||
+        !order.phone ||
+        !order.bookFrom ||
+        !order.bookTo
+      ) {
+        toast.error("Hãy nhập đầy đủ tất cả các trường!", ToastObjects);
+        return;
       }
-
+      if (Date.parse(order.bookFrom) > Date.parse(order.bookTo)) {
+        toast.error("Ngày không hợp lệ!", ToastObjects);
+        return;
+      }
       const res = await fetch(`${BASE_URL}/orders/create`, {
         method: "post",
         headers: {
@@ -92,18 +169,47 @@ const Checkout = () => {
         credentials: "include",
         body: JSON.stringify(order),
       });
-      const result = await res.json();
+      await res.json();
       if (!res.ok) {
-        return alert(result.message);
+        toast.error("Số lượng không hợp lệ", ToastObjects);
+        return;
       }
-      navigate("/thank-you");
+      let remainSlot =
+        maxGroupSize -
+        (Number(order.people.adult) + Number(order.people.children));
+      const resUpdateTour = await fetch(`${BASE_URL}/tours/${id}`, {
+        method: "put",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          maxGroupSize: remainSlot,
+        }),
+      });
+      await resUpdateTour.json();
+      if (!resUpdateTour.ok) {
+        toast.error("Cập nhật số lượng không thành công!", ToastObjects);
+        return;
+      }
+      toast.success("Đặt tour thành công", ToastObjects);
+      setTimeout(() => navigate("/thank-you"), 2500);
     } catch (error) {
-      alert(error.message);
+      toast.error("Đã có lỗi xảy ra!", ToastObjects);
+      return;
+    }
+  };
+
+  const handleCheckDiscount = () => {
+    if (discountInput?.trim() && discountData.length) {
+      setUseDiscount(true);
     }
   };
 
   return (
     <>
+      <Toast />
       <Container style={{ position: "relative" }}>
         {loading && <h4 className="text-center pt-5">Loading...</h4>}
         {error && <h4 className="text-center pt-5">{error}</h4>}
@@ -266,8 +372,17 @@ const Checkout = () => {
                           <Row>
                             <Col lg="12">
                               <div className="d-flex gap-2">
-                                <input type="text" style={{ width: "75%" }} />
-                                <Button className="primary__btn">
+                                <input
+                                  type="text"
+                                  style={{ width: "75%" }}
+                                  onChange={(e) =>
+                                    setDiscountInput(e.target.value)
+                                  }
+                                />
+                                <Button
+                                  className="primary__btn"
+                                  onClick={handleCheckDiscount}
+                                >
                                   Áp dụng
                                 </Button>
                               </div>
