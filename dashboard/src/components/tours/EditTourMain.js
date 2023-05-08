@@ -174,7 +174,7 @@ const EditTourMain = (props) => {
             <Link to="/tours" className="btn btn-danger text-white">
               Quay lại
             </Link>
-            <h2 className="content-title">Update Tour</h2>
+            <h2 className="content-title">Cập nhật Tour</h2>
             <div>
               <button type="submit" className="btn btn-primary">
                 Cập nhật

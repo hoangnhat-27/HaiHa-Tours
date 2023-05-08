@@ -53,7 +53,7 @@ app.use("/api/v1/orders", orderRoute);
 app.use("/api/v1/blogs", blogRoute);
 app.use("/api/v1/discounts", discountRoute);
 app.use("/api/v1/category", categoryRoute);
-app.use("/api/v1/investor", investorRoute);
+app.use("/api/v1/investors", investorRoute);
 
 // ERROR HANDLER
 app.use(notFound);

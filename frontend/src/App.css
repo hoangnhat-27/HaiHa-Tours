@@ -64,7 +64,7 @@ ul {
   color: #fff;
 }
 .secondary__btn:hover {
-  background: var(--secondary-color) !important;
+  background:#276b00 !important;
 }
 .secondary__btn {
   background: transparent !important;

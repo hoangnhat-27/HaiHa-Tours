@@ -71,30 +71,6 @@ export default function OrderList() {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const [orderData, setOrderData] = useState(async () => {
-    try {
-      // if (!user || user === undefined || user === null) {
-      //   return alert("Please sign in");
-      // }
-
-      const res = await fetch(`${BASE_URL}/orders/${user._id}`, {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: "include",
-      });
-      const result = await res.json();
-      if (!res.ok) {
-        return alert(result.message);
-      }
-      setOrderData(result.data?.reverse());
-    } catch (error) {
-      alert(error.message);
-    }
-  });
-
   useEffect(() => {
     if (!user) {
       toast.error("Bạn chưa đăng nhập!", ToastObjects);
@@ -102,6 +78,28 @@ export default function OrderList() {
       return;
     }
   }, [user]);
+
+  const [orderData, setOrderData] = useState(async () => {
+    try {
+      if (user) {
+        const res = await fetch(`${BASE_URL}/orders/${user._id}`, {
+          method: "get",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        });
+        const result = await res.json();
+        if (!res.ok) {
+          return alert(result.message);
+        }
+        setOrderData(result.data?.reverse());
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -125,9 +123,32 @@ export default function OrderList() {
           updatedAt: new Date(Date.now()),
         }),
       });
-      const result = await res.json();
+      await res.json();
       if (!res.ok) {
-        return alert(result.message);
+        toast.error("Có lỗi đã xảy ra, hãy thử lại!", ToastObjects);
+        return;
+      }
+      let remainSlot =
+        order.tourId.maxGroupSize +
+        (Number(order.people.adult) + Number(order.people.children));
+      const resUpdateTour = await fetch(
+        `${BASE_URL}/tours/${order.tourId._id}`,
+        {
+          method: "put",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            maxGroupSize: remainSlot,
+          }),
+        }
+      );
+      await resUpdateTour.json();
+      if (!resUpdateTour.ok) {
+        toast.error("Cập nhật số lượng không thành công!", ToastObjects);
+        return;
       }
       toast.success("Huỷ đơn thành công", ToastObjects);
       try {

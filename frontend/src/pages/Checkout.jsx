@@ -156,6 +156,10 @@ const Checkout = () => {
         toast.error("Hãy nhập đầy đủ tất cả các trường!", ToastObjects);
         return;
       }
+      if (Number(order.people.adult) + Number(order.people.children) <= 0) {
+        toast.error("Số người không hợp lệ!", ToastObjects);
+        return;
+      }
       if (Date.parse(order.bookFrom) > Date.parse(order.bookTo)) {
         toast.error("Ngày không hợp lệ!", ToastObjects);
         return;
@@ -288,6 +292,7 @@ const Checkout = () => {
                           }));
                         }}
                         value={order.people.adult ? order.people.adult : 1}
+                        min={0}
                       />
                       <input
                         type="number"
@@ -304,6 +309,7 @@ const Checkout = () => {
                         value={
                           order.people.children ? order.people.children : 1
                         }
+                        min={0}
                       />
                     </FormGroup>
                     <Row>

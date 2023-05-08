@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import OrderDetailTours from "./OrderDetailTours";
 import OrderDetailInfo from "./OrderDetailInfo";
 import { Link } from "react-router-dom";
@@ -10,7 +10,6 @@ import Message from "../LoadingError/Error";
 const OrderDetailmain = (props) => {
   const { orderId } = props;
   const dispatch = useDispatch();
-
   const orderDetails = useSelector((state) => state.orderDetails);
   const { loading, error, order } = orderDetails;
 
@@ -30,7 +29,7 @@ const OrderDetailmain = (props) => {
         <Loading />
       ) : error ? (
         <Message variant="alert-danger">{error}</Message>
-      ) : (
+      ) : order.data.length ? (
         <div className="card">
           <header className="card-header p-3 Header-green">
             <div className="row align-items-center ">
@@ -81,7 +80,7 @@ const OrderDetailmain = (props) => {
             </div>
           </div>
         </div>
-      )}
+      ) : null}
     </section>
   );
 };

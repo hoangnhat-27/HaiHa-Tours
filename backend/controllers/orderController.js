@@ -21,9 +21,9 @@ export const createOrder = async (req, res) => {
 
 //get single user order
 export const getOrder = async (req, res) => {
-  const userId = req.params.id;
+  const id = req.params.id;
   try {
-    const order = await Order.find({ userId: userId })
+    const order = await Order.find({ _id: id })
       .populate("userId")
       .populate("tourId");
     res.status(200).json({ success: true, message: "Successful", data: order });

@@ -24,6 +24,9 @@ import { listOrders } from "./Redux/Actions/OrderActions";
 import UserInfo from "./screens/UserInfo";
 import AddDiscount from "./screens/AddDiscount";
 import DiscountEditScreen from "./screens/DiscountEditScreen";
+import InvestorScreen from "./screens/InvestorScreen";
+import InvestorEditScreen from "./screens/InvestorEditScreen";
+import CategoryEditScreen from "./screens/CategoryEditScreen";
 
 function App() {
   const dispatch = useDispatch();
@@ -44,7 +47,11 @@ function App() {
         <Switch>
           <PrivateRouter path="/" component={HomeScreen} exact />
           <PrivateRouter path="/tours" component={TourScreen} />
-          <PrivateRouter path="/category" component={CategoriesScreen} />
+          <PrivateRouter path="/categories" component={CategoriesScreen} />
+          <PrivateRouter
+            path="/category/:id/edit"
+            component={CategoryEditScreen}
+          />
           <PrivateRouter path="/orders" component={OrderScreen} />
           <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
           <PrivateRouter path="/addtour" component={AddTour} />
@@ -54,6 +61,11 @@ function App() {
           <PrivateRouter path="/blog/:id/edit" component={BlogEditScreen} />
           <PrivateRouter path="/discounts" component={DiscountScreen} />
           <PrivateRouter path="/adddiscount" component={AddDiscount} />
+          <PrivateRouter path="/investors" component={InvestorScreen} />
+          <PrivateRouter
+            path="/investor/:id/edit"
+            component={InvestorEditScreen}
+          />
           <PrivateRouter
             path="/discount/:id/edit"
             component={DiscountEditScreen}

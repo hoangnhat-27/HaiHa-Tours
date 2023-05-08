@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  listCategories,
-  deleteCategory,
-} from "../../Redux/Actions/CategoryActions";
+  listInvestors,
+  deleteInvestor,
+} from "../../Redux/Actions/InvestorActions";
 import Toast from "../LoadingError/Toast";
 import { toast } from "react-toastify";
 import Modal from "react-bootstrap/Modal";
@@ -16,38 +16,33 @@ const ToastObjects = {
   pauseOnHover: false,
   autoClose: 2000,
 };
-const CategoriesTable = () => {
+const InvestorsTable = () => {
   const dispatch = useDispatch();
 
-  const categoryList = useSelector((state) => state.categoryList);
-  const { categories } = categoryList;
-  const [categoryData, setCategoryData] = useState([]);
+  const investorList = useSelector((state) => state.investorList);
+  const { investors } = investorList;
+  const [investorData, setInvestorData] = useState([]);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const [categoryItem, setCategoryItem] = useState({});
-  const categoryDelete = useSelector((state) => state.categoryDelete);
-  const { success: successDelete } = categoryDelete;
+  const [investorItem, setInvestorItem] = useState({});
+  const investorDelete = useSelector((state) => state.investorDelete);
+  const { success: successDelete } = investorDelete;
 
   useEffect(() => {
-    if (categories?.success) {
-      setCategoryData(categories.data);
+    if (investors?.success) {
+      setInvestorData(investors.data);
     }
-  }, [categories]);
+  }, [investors]);
 
   useEffect(() => {
-    dispatch(listCategories());
+    dispatch(listInvestors());
   }, [dispatch, successDelete]);
 
-  const findCategoryName = (categoryArr, id) => {
-    let category = categoryArr.find((item) => item._id === id);
-    return category.categoryName;
-  };
-
-  const DeleteCategory = async (item) => {
+  const DeleteInvestor = async (item) => {
     try {
-      dispatch(deleteCategory(item._id));
-      toast.success("Xoá danh mục thành công", ToastObjects);
+      dispatch(deleteInvestor(item._id));
+      toast.success("Xoá nhà đầu tư thành công", ToastObjects);
     } catch (e) {
       console.log(e);
     }
@@ -60,12 +55,9 @@ const CategoriesTable = () => {
       </div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Xoá danh mục</Modal.Title>
+          <Modal.Title>Xoá nhà đầu tư</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          Bạn chắc chắn muốn xóa danh mục này chứ ? (Tất cả các tour nằm trong
-          danh mục này cũng sẽ bị xóa)
-        </Modal.Body>
+        <Modal.Body>Bạn chắc chắn muốn xóa nhà đầu tư này chứ ?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Đóng
@@ -73,7 +65,7 @@ const CategoriesTable = () => {
           <Button
             variant="primary"
             onClick={() => {
-              DeleteCategory(categoryItem);
+              DeleteInvestor(investorItem);
               handleClose();
             }}
           >
@@ -86,25 +78,21 @@ const CategoriesTable = () => {
           <thead>
             <tr>
               <th>STT</th>
-              <th>Tên danh mục con</th>
-              <th>Danh mục cha</th>
+              <th>Tên nhà đầu tư</th>
+              <th>Địa chỉ</th>
               <th className="text-end">Action</th>
             </tr>
           </thead>
           {/* Table Data */}
           <tbody>
-            {categoryData.length &&
-              categoryData.map((item, index) => (
+            {investorData.length &&
+              investorData.map((item, index) => (
                 <tr>
                   <td>{index + 1}</td>
                   <td>
-                    <b>{item.categoryName}</b>
+                    <b>{item.name}</b>
                   </td>
-                  <td>
-                    {item.fatherCateId
-                      ? findCategoryName(categoryData, item.fatherCateId)
-                      : "Không"}
-                  </td>
+                  <td>{item.address}</td>
                   <td className="text-end">
                     <div className="dropdown">
                       <Link
@@ -117,24 +105,21 @@ const CategoriesTable = () => {
                       <div className="dropdown-menu">
                         <Link
                           className="dropdown-item"
-                          to={`/category/${item._id}/edit`}
+                          to={`/investor/${item._id}/edit`}
                         >
                           Chỉnh sửa
                         </Link>
-                        {item.fatherCateId ? (
-                          <div
-                            className="dropdown-item text-danger"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              handleShow();
-                              setCategoryItem(item);
-                            }}
-                          >
-                            Xoá
-                          </div>
-                        ) : (
-                          ""
-                        )}
+
+                        <div
+                          className="dropdown-item text-danger"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            handleShow();
+                            setInvestorItem(item);
+                          }}
+                        >
+                          Xoá
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -147,4 +132,4 @@ const CategoriesTable = () => {
   );
 };
 
-export default CategoriesTable;
+export default InvestorsTable;

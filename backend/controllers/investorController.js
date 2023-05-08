@@ -43,6 +43,22 @@ export const updateInvestor = async (req, res) => {
   }
 };
 
+//delete investor
+export const deleteInvestor = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await Investor.findByIdAndDelete(id);
+    res.status(200).json({
+      success: true,
+      message: "Successfully deleted",
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: "Fail to delete. Try again" });
+  }
+};
+
 //get single investor
 export const getSingleInvestor = async (req, res) => {
   const id = req.params.id;

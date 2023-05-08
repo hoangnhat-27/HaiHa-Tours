@@ -4,9 +4,22 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styles/login.css";
 import { BASE_URL } from "../utils/config.js";
 import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import Toast from "../Toast/Toast.js";
 
 import loginImg from "../assets/images/login.png";
 import userImg from "../assets/images/user.png";
+
+const ToastObjects = {
+  position: "top-right",
+  autoClose: 2000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: false,
+  draggable: false,
+  progress: undefined,
+  theme: "light",
+};
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -35,7 +48,8 @@ const Login = () => {
       if (!res.ok) alert(result.message);
       else if (result.role !== "user") {
         dispatch({ type: "LOGIN_FAILURE" });
-        alert("Bạn không phải user!");
+        toast.error("Bạn không phải user!", ToastObjects);
+        return;
       } else {
         dispatch({ type: "LOGIN_SUCCESS", payload: result.data });
         localStorage.setItem("token", result.token);
@@ -48,6 +62,7 @@ const Login = () => {
 
   return (
     <section>
+      <Toast />
       <Container>
         <Row>
           <Col lg="8" className="m-auto">

@@ -1,30 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import CommonSection from "./../shared/CommonSection";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import { BASE_URL } from "../utils/config.js";
 import Discount from "../shared/Discount";
+import { toast } from "react-toastify";
+import Toast from "../Toast/Toast.js";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 import Newsletter from "../shared/Newsletter";
+
+const ToastObjects = {
+  position: "top-right",
+  autoClose: 2000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: false,
+  draggable: false,
+  progress: undefined,
+  theme: "light",
+};
 
 const Discounts = () => {
   const { id } = useParams();
   const token = localStorage.getItem("token");
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [discountData, setDiscountData] = useState(async () => {
     try {
-      const res = await fetch(`${BASE_URL}/discounts/user/${id}`, {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: "include",
-      });
-      const result = await res.json();
-      if (!res.ok) {
-        return alert(result.message);
+      if (user) {
+        const res = await fetch(`${BASE_URL}/discounts/user/${id}`, {
+          method: "get",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        });
+        const result = await res.json();
+        if (!res.ok) {
+          return alert(result.message);
+        }
+        setDiscountData(result.data?.reverse());
       }
-      setDiscountData(result.data?.reverse());
     } catch (error) {
       alert(error.message);
     }
@@ -34,6 +53,14 @@ const Discounts = () => {
   const [page, setPage] = useState(0);
   const [sortOption, setSortOption] = useState(0);
   const [discountSorted, setDiscountSorted] = useState([]);
+
+  useEffect(() => {
+    if (!user) {
+      toast.error("Bạn chưa đăng nhập!", ToastObjects);
+      setTimeout(() => navigate("/login"), 2500);
+      return;
+    }
+  }, [user]);
 
   const handleSort = (event) => {
     const selectedOption = event.target.selectedIndex;
@@ -72,6 +99,7 @@ const Discounts = () => {
 
   return (
     <>
+      <Toast />
       <CommonSection title={`Danh sách discounts`} />
       <section className="pt-0 mt-4">
         <Container style={{ maxWidth: "1150px", position: "relative" }}>

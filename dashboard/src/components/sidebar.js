@@ -48,10 +48,20 @@ const Sidebar = () => {
               <NavLink
                 activeClassName="active"
                 className="menu-link"
-                to="/category"
+                to="/categories"
               >
                 <i className="icon fas fa-list" aria-hidden="true"></i>
                 <span className="text">Danh mục</span>
+              </NavLink>
+            </li>
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/investors"
+              >
+                <i class="icon fa fa-users" aria-hidden="true"></i>
+                <span className="text">Nhà đầu tư</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -78,16 +88,6 @@ const Sidebar = () => {
               <NavLink
                 activeClassName="active"
                 className="menu-link"
-                to="/blogs"
-              >
-                <i className="icon fas fa-blog" aria-hidden="true"></i>
-                <span className="text">Blogs</span>
-              </NavLink>
-            </li>
-            <li className="menu-item">
-              <NavLink
-                activeClassName="active"
-                className="menu-link"
                 to="/discounts"
               >
                 <i className="icon fas fa-percent" aria-hidden="true"></i>
@@ -98,15 +98,13 @@ const Sidebar = () => {
               <NavLink
                 activeClassName="active"
                 className="menu-link"
-                to="/investors"
+                to="/blogs"
               >
-                <i class="icon fa fa-users" aria-hidden="true"></i>
-                <span className="text">Nhà đầu tư</span>
+                <i className="icon fas fa-blog" aria-hidden="true"></i>
+                <span className="text">Blogs</span>
               </NavLink>
             </li>
           </ul>
-          <br />
-          <br />
         </nav>
       </aside>
     </div>
