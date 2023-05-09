@@ -141,25 +141,30 @@ const EditCategoryMain = (props) => {
                           onChange={(e) => setCategoryName(e.target.value)}
                         />
                       </div>
-                      <div className="mb-4">
-                        <label htmlFor="fatherCategory" className="form-label">
-                          Danh mục cha
-                        </label>
-                        <select
-                          className="form-select"
-                          onChange={handleCategory}
-                          value={currentCateName}
-                        >
-                          {categoryData.length &&
-                            categoryData.map((item) =>
-                              !item.fatherCateId ? (
-                                <option data-cate-id={item._id}>
-                                  {item.categoryName}
-                                </option>
-                              ) : null
-                            )}
-                        </select>
-                      </div>
+                      {fatherCateId ? (
+                        <div className="mb-4">
+                          <label
+                            htmlFor="fatherCategory"
+                            className="form-label"
+                          >
+                            Danh mục cha
+                          </label>
+                          <select
+                            className="form-select"
+                            onChange={handleCategory}
+                            value={currentCateName}
+                          >
+                            {categoryData.length &&
+                              categoryData.map((item) =>
+                                !item.fatherCateId ? (
+                                  <option data-cate-id={item._id}>
+                                    {item.categoryName}
+                                  </option>
+                                ) : null
+                              )}
+                          </select>
+                        </div>
+                      ) : null}
                     </>
                   )}
                 </div>

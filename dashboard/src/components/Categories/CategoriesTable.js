@@ -46,6 +46,16 @@ const CategoriesTable = () => {
 
   const DeleteCategory = async (item) => {
     try {
+      if (!item.fatherCateId) {
+        let categoryArr = categoryData.filter(
+          (category) => category.fatherCateId === item._id
+        );
+        if (categoryArr.length) {
+          categoryArr.forEach((category) =>
+            dispatch(deleteCategory(category._id))
+          );
+        }
+      }
       dispatch(deleteCategory(item._id));
       toast.success("Xoá danh mục thành công", ToastObjects);
     } catch (e) {
@@ -63,8 +73,8 @@ const CategoriesTable = () => {
           <Modal.Title>Xoá danh mục</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Bạn chắc chắn muốn xóa danh mục này chứ ? (Tất cả các tour nằm trong
-          danh mục này cũng sẽ bị xóa)
+          Bạn chắc chắn muốn xóa danh mục này chứ ? (Tất cả các danh mục con và
+          tour nằm trong danh mục này cũng sẽ bị xóa)
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -86,7 +96,7 @@ const CategoriesTable = () => {
           <thead>
             <tr>
               <th>STT</th>
-              <th>Tên danh mục con</th>
+              <th>Tên danh mục</th>
               <th>Danh mục cha</th>
               <th className="text-end">Action</th>
             </tr>
@@ -121,20 +131,16 @@ const CategoriesTable = () => {
                         >
                           Chỉnh sửa
                         </Link>
-                        {item.fatherCateId ? (
-                          <div
-                            className="dropdown-item text-danger"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              handleShow();
-                              setCategoryItem(item);
-                            }}
-                          >
-                            Xoá
-                          </div>
-                        ) : (
-                          ""
-                        )}
+                        <div
+                          className="dropdown-item text-danger"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            handleShow();
+                            setCategoryItem(item);
+                          }}
+                        >
+                          Xoá
+                        </div>
                       </div>
                     </div>
                   </td>

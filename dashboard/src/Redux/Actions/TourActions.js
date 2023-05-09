@@ -118,7 +118,7 @@ export const createTour =
         {
           title: name,
           city,
-          address,
+          address: address,
           maxGroupSize: slot,
           price,
           desc: description,

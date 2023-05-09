@@ -28,7 +28,6 @@ const CreateCategory = () => {
   useEffect(() => {
     if (categories?.success) {
       setCategoryData(categories.data);
-      setFatherCateId(categoryData[0]?._id);
     }
   }, [categories]);
 
@@ -78,6 +77,7 @@ const CreateCategory = () => {
               Danh mục cha
             </label>
             <select className="form-select" onChange={handleCategory}>
+              <option onChange={() => setFatherCateId(null)}>Không</option>
               {categoryData.length &&
                 categoryData.map((item) =>
                   !item.fatherCateId ? (

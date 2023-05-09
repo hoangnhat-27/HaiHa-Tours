@@ -63,7 +63,6 @@ const Checkout = () => {
   });
   const [order, setOrder] = useState({
     userId: user && user._id,
-    userEmail: user && user.email,
     fullName: "",
     phone: "",
     tourId: `${id}`,
