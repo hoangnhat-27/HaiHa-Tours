@@ -2,11 +2,13 @@ import React from "react";
 import { Card, CardBody } from "reactstrap";
 import { Link } from "react-router-dom";
 import calculateAvgRating from "../utils/avgRating";
+import useFetch from "../hooks/useFetch";
+import { BASE_URL } from "./../utils/config";
 import "./tour-card.css";
 
 const TourCard = ({ tour }) => {
-  const { _id, title, city, photo, price, featured, reviews } = tour;
-
+  const { _id, title, city, photo, price, featured } = tour;
+  const { data: reviews } = useFetch(`${BASE_URL}/review/${_id}`);
   const { totalRating, avgRating } = calculateAvgRating(reviews);
   return (
     <div className="tour__card">

@@ -5,8 +5,7 @@ import { Container, Row, Col } from "reactstrap";
 import { useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch.js";
 import { BASE_URL } from "../utils/config.js";
-import TourCard from "../shared/TourCard";
-import Newsletter from "../shared/Newsletter";
+import Pagination from "../components/pagination/Pagination";
 
 const CategoryTourList = () => {
   const { id } = useParams();
@@ -14,8 +13,6 @@ const CategoryTourList = () => {
   const { data: category } = useFetch(`${BASE_URL}/category/${id}`);
   const [tourCategory, setTourCategory] = useState([]);
 
-  const [pageCount, setPageCount] = useState(0);
-  const [page, setPage] = useState(0);
   const [sortOption, setSortOption] = useState(0);
   const [tourSorted, setTourSorted] = useState([]);
   const [tourFilter, setTourFilter] = useState([]);
@@ -34,6 +31,7 @@ const CategoryTourList = () => {
     if (tours.length) {
       let tourCategories = tours.filter((tour) => tour.cateId?._id === id);
       setTourCategory(tourCategories);
+      window.scrollTo(0, 350);
     }
   }, [tours, id]);
 
@@ -44,22 +42,22 @@ const CategoryTourList = () => {
 
   useEffect(() => {
     if (sortOption === 0) {
-      setTourSorted(tours.slice().reverse());
+      setTourSorted(tourCategory.slice().reverse());
     } else if (sortOption === 1) {
-      setTourSorted(tours);
+      setTourSorted(tourCategory);
     } else if (sortOption === 2) {
       setTourSorted(
-        tours.slice().sort((a, b) => a.title.localeCompare(b.title))
+        tourCategory.slice().sort((a, b) => a.title.localeCompare(b.title))
       );
     } else if (sortOption === 3) {
       setTourSorted(
-        tours
+        tourCategory
           .slice()
           .sort((a, b) => a.title.localeCompare(b.title))
           .reverse()
       );
     }
-  }, [tours, sortOption]);
+  }, [tourCategory, sortOption]);
   useEffect(() => {
     if (tourSorted.length) {
       let filterResult = tourSorted;
@@ -78,9 +76,7 @@ const CategoryTourList = () => {
         );
       }
       if (checkedSlot && slotValue) {
-        filterResult = filterResult.filter(
-          (tour) => +tour.maxGroupSize <= +slotValue
-        );
+        filterResult = filterResult.filter((tour) => +tour.slots <= +slotValue);
       }
       if (checkedReview) {
         filterResult = filterResult.filter(
@@ -107,13 +103,6 @@ const CategoryTourList = () => {
     reviewValue,
     isFeature,
   ]);
-  useEffect(() => {
-    if (tourFilter.length) {
-      let pages = Math.ceil(tourFilter.length / 8);
-      window.scrollTo(0, 350);
-      setPageCount(pages);
-    }
-  }, [tourFilter]);
 
   return (
     <>
@@ -261,22 +250,22 @@ const CategoryTourList = () => {
                           <option>A-Z</option>
                           <option>Z-A</option>
                         </select>
-                        {/* </Col> */}
                       </div>
                     </div>
                   </div>
                 </header>
-                {tourCategory?.map((tour) => (
-                  <Col lg="3" className="mb-4" key={tour._id}>
-                    <TourCard tour={tour} />
-                  </Col>
-                ))}
+                <Row>
+                  {tourFilter && tourFilter.length ? (
+                    <Pagination data={tourFilter} itemsPerPage={8} />
+                  ) : (
+                    "Không có dữ liệu"
+                  )}
+                </Row>
               </Col>
             </Row>
           )}
         </Container>
       </section>
-      <Newsletter />
     </>
   );
 };

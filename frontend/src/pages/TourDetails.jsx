@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import "../styles/tour-details.css";
 import "../styles/booking.css";
-import { Container, Row, Col, Form, ListGroup, List } from "reactstrap";
+import { Container, Row, Col, ListGroup } from "reactstrap";
 import { useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch.js";
 import { BASE_URL } from "../utils/config.js";
@@ -11,11 +11,9 @@ import Newsletter from "../shared/Newsletter";
 
 const TourDetails = () => {
   const { id } = useParams();
-
   const { data: tour, error, loading } = useFetch(`${BASE_URL}/tours/${id}`);
-
-  const { photo, title, desc, price, address, reviews, city, maxGroupSize } =
-    tour;
+  const { data: reviews } = useFetch(`${BASE_URL}/review/${id}`);
+  const { photo, title, desc, price, address, city, slots } = tour;
 
   const { totalRating, avgRating } = calculateAvgRating(reviews);
 
@@ -45,7 +43,7 @@ const TourDetails = () => {
                         {Intl.NumberFormat("en-US").format(price)}đ /người
                       </span>
                       <span>
-                        <i class="ri-group-line"></i> {maxGroupSize} người
+                        <i class="ri-group-line"></i> {slots} người
                       </span>
                     </div>
                     <h5>Mô tả</h5>

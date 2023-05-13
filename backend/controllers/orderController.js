@@ -20,7 +20,20 @@ export const createOrder = async (req, res) => {
 };
 
 //get single user order
-export const getOrder = async (req, res) => {
+export const getOrderUser = async (req, res) => {
+  const id = req.params.userId;
+  try {
+    const order = await Order.find({ userId: id })
+      .populate("userId")
+      .populate("tourId");
+    res.status(200).json({ success: true, message: "Successful", data: order });
+  } catch (error) {
+    res.status(404).json({ success: true, message: "Not found" });
+  }
+};
+
+//get single user order
+export const getSingleOrder = async (req, res) => {
   const id = req.params.id;
   try {
     const order = await Order.find({ _id: id })

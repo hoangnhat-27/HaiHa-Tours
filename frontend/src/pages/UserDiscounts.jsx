@@ -8,8 +8,7 @@ import { toast } from "react-toastify";
 import Toast from "../Toast/Toast.js";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-
-import Newsletter from "../shared/Newsletter";
+import ReactPaginate from "react-paginate";
 
 const ToastObjects = {
   position: "top-right",
@@ -49,10 +48,24 @@ const Discounts = () => {
     }
   });
 
-  const [pageCount, setPageCount] = useState(0);
-  const [page, setPage] = useState(0);
   const [sortOption, setSortOption] = useState(0);
   const [discountSorted, setDiscountSorted] = useState([]);
+  const [discountFilter, setDiscountFilter] = useState([]);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  let itemsPerPage = 5;
+  useEffect(() => {
+    if (discountSorted.length) {
+      const endOffset = itemOffset + itemsPerPage;
+      setDiscountFilter(discountSorted.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(discountSorted?.length / itemsPerPage));
+    }
+  }, [discountSorted, itemOffset, itemsPerPage]);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % discountSorted?.length;
+    setItemOffset(newOffset);
+    window.scrollTo(0, 0);
+  };
 
   useEffect(() => {
     if (!user) {
@@ -129,8 +142,8 @@ const Discounts = () => {
                   style={{ padding: "1rem", backgroundColor: "#78be9d" }}
                 >
                   <Row>
-                    {discountSorted?.length
-                      ? discountSorted.map((discount, index) => (
+                    {discountFilter?.length
+                      ? discountFilter.map((discount, index) => (
                           <Col
                             lg="4"
                             md="6"
@@ -147,13 +160,34 @@ const Discounts = () => {
                         ))
                       : null}
                   </Row>
+                  <div className="d-flex justify-content-center">
+                    <ReactPaginate
+                      nextLabel="Sau >"
+                      onPageChange={handlePageClick}
+                      pageRangeDisplayed={3}
+                      marginPagesDisplayed={2}
+                      pageCount={pageCount}
+                      previousLabel="< Trước"
+                      pageClassName="page-item"
+                      pageLinkClassName="page-link"
+                      previousClassName="page-item"
+                      previousLinkClassName="page-link"
+                      nextClassName="page-item"
+                      nextLinkClassName="page-link"
+                      breakLabel="..."
+                      breakClassName="page-item"
+                      breakLinkClassName="page-link"
+                      containerClassName="pagination"
+                      activeClassName="active"
+                      renderOnZeroPageCount={null}
+                    />
+                  </div>
                 </div>
               </Col>
             </Row>
           )}
         </Container>
       </section>
-      <Newsletter />
     </>
   );
 };

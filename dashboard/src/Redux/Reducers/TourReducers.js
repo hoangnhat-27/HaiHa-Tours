@@ -63,7 +63,7 @@ export const tourCreateReducer = (state = {}, action) => {
 };
 
 // EDIT tour
-export const tourEditReducer = (state = { tour: { reviews: [] } }, action) => {
+export const tourEditReducer = (state = { tour: {} }, action) => {
   switch (action.type) {
     case TOUR_EDIT_REQUEST:
       return { ...state, loading: true };

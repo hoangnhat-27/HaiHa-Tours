@@ -124,7 +124,7 @@ const EditTourMain = (props) => {
         setName(tourData.title);
         setCity(tourData.city);
         setAddress(tourData.address);
-        setSlot(tourData.maxGroupSize);
+        setSlot(tourData.slots);
         setDescription(tourData.desc);
         // setCountInStock(tourData.countInStock);
         setPhoto(tourData.photo);
@@ -155,7 +155,7 @@ const EditTourMain = (props) => {
         title: name,
         city,
         address,
-        maxGroupSize: slot,
+        slots: slot,
         price,
         desc: description,
         photo: photo,

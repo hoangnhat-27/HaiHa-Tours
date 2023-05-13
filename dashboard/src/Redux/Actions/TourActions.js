@@ -119,14 +119,13 @@ export const createTour =
           title: name,
           city,
           address: address,
-          maxGroupSize: slot,
+          slots: slot,
           price,
           desc: description,
           photo,
           featured: featured,
           cateId,
           investorId,
-          // countInStock,
         },
         config
       );

@@ -32,7 +32,7 @@ const ToastObjects = {
 const Checkout = () => {
   const { id } = useParams();
   const { data: tour, error, loading } = useFetch(`${BASE_URL}/tours/${id}`);
-  const { price, photo, title, maxGroupSize } = tour;
+  const { price, photo, title, slots } = tour;
 
   const navigate = useNavigate();
 
@@ -178,8 +178,7 @@ const Checkout = () => {
         return;
       }
       let remainSlot =
-        maxGroupSize -
-        (Number(order.people.adult) + Number(order.people.children));
+        slots - (Number(order.people.adult) + Number(order.people.children));
       const resUpdateTour = await fetch(`${BASE_URL}/tours/${id}`, {
         method: "put",
         headers: {
@@ -188,7 +187,7 @@ const Checkout = () => {
         },
         credentials: "include",
         body: JSON.stringify({
-          maxGroupSize: remainSlot,
+          slots: remainSlot,
         }),
       });
       await resUpdateTour.json();

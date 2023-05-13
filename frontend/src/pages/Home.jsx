@@ -8,7 +8,6 @@ import wordImg from "../assets/images/world.png";
 import experienceImg from "../assets/images/experience.png";
 import Subtitle from "../shared/Subtitle";
 
-import ServiceList from "../services/ServiceList";
 import FeatureTourList from "../components/Featured-tours/FeatureTourList";
 import MasonryImagesGallery from "../components/Image-gallery/MasonryImagesGallery";
 import Testimonials from "../components/Testimonials/Testimonials";

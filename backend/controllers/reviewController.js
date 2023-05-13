@@ -17,3 +17,16 @@ export const createReview = async (req, res) => {
     res.status(500).json({ success: true, message: "Failed to submit" });
   }
 };
+export const getReviewById = async (req, res) => {
+  const tourId = req.params.tourId;
+  try {
+    const review = await Review.find({ tourId: tourId }).populate("userId");
+    res.status(200).json({
+      success: true,
+      message: "Successfully get review",
+      data: review,
+    });
+  } catch (err) {
+    res.status(404).json({ success: false, message: "Not found" });
+  }
+};

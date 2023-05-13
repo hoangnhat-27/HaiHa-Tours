@@ -55,9 +55,10 @@ const AddTourMain = () => {
   }, [categories, investors]);
   useEffect(() => {
     if (categoryData.length) {
-      setCateId(categoryData[0]._id);
+      setCateId(categoryData[2]._id);
     }
   }, [categoryData]);
+  console.log("categoryData", categoryData);
 
   useEffect(() => {
     dispatch(listCategories());
@@ -281,20 +282,6 @@ const AddTourMain = () => {
                       onChange={(e) => setPrice(e.target.value)}
                     />
                   </div>
-                  {/* <div className="mb-4">
-                        <label htmlFor="tour_price" className="form-label">
-                          Count In Stock
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="Type here"
-                          className="form-control"
-                          id="tour_price"
-                          required
-                          value={countInStock}
-                          onChange={(e) => setCountInStock(e.target.value)}
-                        />
-                      </div> */}
                   <div className="mb-4">
                     <label className="form-label">Mô tả</label>
                     <Editor

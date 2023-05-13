@@ -123,7 +123,12 @@ const UserComponent = () => {
                           )}
 
                           <p>
-                            <a href={`mailto:${user.email}`}>{user.email}</a>
+                            <a
+                              href={`mailto:${user.email}`}
+                              style={{ fontSize: "0.8rem" }}
+                            >
+                              {user.email}
+                            </a>
                           </p>
                         </div>
                       </div>

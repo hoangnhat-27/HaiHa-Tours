@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import calculateAvgRating from "../utils/avgRating";
 import "../styles/tour.css";
 import Newsletter from "../shared/Newsletter";
-import TourCard from "../shared/TourCard";
 import { Container, Row, Col } from "reactstrap";
 import useFetch from "../hooks/useFetch";
 import { BASE_URL } from "../utils/config";
+import Pagination from "../components/pagination/Pagination";
 
 const Tours = () => {
-  const [pageCount, setPageCount] = useState(0);
-  const [page, setPage] = useState(0);
   const [sortOption, setSortOption] = useState(0);
   const [tourSorted, setTourSorted] = useState([]);
   const [tourFilter, setTourFilter] = useState([]);
@@ -24,22 +22,15 @@ const Tours = () => {
   const [reviewValue, setReviewValue] = useState(0);
   const [isFeature, setIsFeature] = useState("");
 
-  const {
-    data: tours,
-    loading,
-    error,
-  } = useFetch(`${BASE_URL}/tours?page=${page}`);
-  const { data: tourCount } = useFetch(`${BASE_URL}/tours/search/getTourCount`);
+  const { data: tours, loading, error } = useFetch(`${BASE_URL}/tours`);
   const handleSort = (event) => {
     const selectedOption = event.target.selectedIndex;
     setSortOption(selectedOption);
   };
 
   useEffect(() => {
-    const pages = Math.ceil(tourCount / 8);
-    window.scrollTo(0, 0);
-    setPageCount(pages);
     if (sortOption === 0) {
+      window.scrollTo(0, 0);
       setTourSorted(tours.slice().reverse());
     } else if (sortOption === 1) {
       setTourSorted(tours);
@@ -55,7 +46,7 @@ const Tours = () => {
           .reverse()
       );
     }
-  }, [page, tourCount, tours, sortOption]);
+  }, [tours, sortOption]);
   useEffect(() => {
     if (tourSorted.length) {
       let filterResult = tourSorted;
@@ -74,9 +65,7 @@ const Tours = () => {
         );
       }
       if (checkedSlot && slotValue) {
-        filterResult = filterResult.filter(
-          (tour) => +tour.maxGroupSize <= +slotValue
-        );
+        filterResult = filterResult.filter((tour) => +tour.slots <= +slotValue);
       }
       if (checkedReview) {
         filterResult = filterResult.filter(
@@ -253,27 +242,10 @@ const Tours = () => {
               {error && <h4 className="text-center pt-5">{error}</h4>}
               {!loading && !error && (
                 <Row>
-                  {tourFilter?.map((tour) => (
-                    <Col lg="3" md="6" sm="6" className="mb-4" key={tour._id}>
-                      <TourCard tour={tour} />
-                    </Col>
-                  ))}
-                  {pageCount > 1 ? (
-                    <Col lg="12">
-                      <div className="pagination d-flex align-items-center justify-content-center mt-4 gap-3">
-                        {[...Array(pageCount).keys()].map((number) => (
-                          <span
-                            key={number}
-                            onClick={() => setPage(number)}
-                            className={page === number ? "active__page" : ""}
-                          >
-                            {number + 1}
-                          </span>
-                        ))}
-                      </div>
-                    </Col>
+                  {tourFilter && tourFilter.length ? (
+                    <Pagination data={tourFilter} itemsPerPage={8} />
                   ) : (
-                    ""
+                    "Không có dữ liệu"
                   )}
                 </Row>
               )}

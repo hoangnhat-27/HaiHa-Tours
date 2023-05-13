@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { BASE_URL } from "../utils/config";
-import { Container, Row, Col, Table, Button } from "reactstrap";
+import { Container, Row, Table, Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -13,6 +13,7 @@ import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 import Toast from "../Toast/Toast.js";
 import "../styles/order-list.css";
+import ReactPaginate from "react-paginate";
 
 const ToastObjects = {
   position: "top-right",
@@ -82,7 +83,7 @@ export default function OrderList() {
   const [orderData, setOrderData] = useState(async () => {
     try {
       if (user) {
-        const res = await fetch(`${BASE_URL}/orders/${user._id}`, {
+        const res = await fetch(`${BASE_URL}/orders/user/${user._id}`, {
           method: "get",
           headers: {
             "content-type": "application/json",
@@ -92,7 +93,8 @@ export default function OrderList() {
         });
         const result = await res.json();
         if (!res.ok) {
-          return alert(result.message);
+          toast.error("Có lỗi trong quá trình lấy dữ liệu!", ToastObjects);
+          return;
         }
         setOrderData(result.data?.reverse());
       }
@@ -100,6 +102,23 @@ export default function OrderList() {
       alert(error.message);
     }
   });
+  const [orderFilter, setOrderFilter] = useState([]);
+
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  let itemsPerPage = 5;
+  useEffect(() => {
+    if (orderData.length) {
+      const endOffset = itemOffset + itemsPerPage;
+      setOrderFilter(orderData.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(orderData?.length / itemsPerPage));
+    }
+  }, [orderData, itemOffset, itemsPerPage]);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % orderData?.length;
+    setItemOffset(newOffset);
+    window.scrollTo(0, 0);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -129,7 +148,7 @@ export default function OrderList() {
         return;
       }
       let remainSlot =
-        order.tourId.maxGroupSize +
+        order.tourId.slots +
         (Number(order.people.adult) + Number(order.people.children));
       const resUpdateTour = await fetch(
         `${BASE_URL}/tours/${order.tourId._id}`,
@@ -141,7 +160,7 @@ export default function OrderList() {
           },
           credentials: "include",
           body: JSON.stringify({
-            maxGroupSize: remainSlot,
+            slots: remainSlot,
           }),
         }
       );
@@ -358,140 +377,31 @@ export default function OrderList() {
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            {orderData?.length ? (
-              <div className="productSlider mb-2 mt-2">
-                <Row>
-                  <div className="col-12 cartShow">
-                    <Table
-                      bordered
-                      hover
-                      responsive="sm"
-                      style={{ textAlign: "center" }}
-                    >
-                      <thead>
-                        <tr>
-                          <th>Tên</th>
-                          <th>Ảnh</th>
-                          <th>Người lớn</th>
-                          <th>Trẻ em</th>
-                          <th>Số ngày</th>
-                          <th>Giá tiền</th>
-                          <th>Trạng thái</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {orderData.map((order) => (
-                          <tr key={order._id}>
-                            <td>
-                              <a href={`/tour/${order.tourId._id}`}>
-                                {order.tourId.title}
-                              </a>
-                            </td>
-                            <td>
-                              <img
-                                src={order.tourId.photo}
-                                alt=""
-                                width="50px"
-                              />
-                            </td>
-                            <td>{order.people.adult}</td>
-                            <td>{order.people.children}</td>
-                            <td>
-                              {Math.round(
-                                Math.abs(
-                                  (new Date(order.bookFrom) -
-                                    new Date(order.bookTo)) /
-                                    (24 * 60 * 60 * 1000)
-                                )
-                              )}
-                            </td>
-                            <td>
-                              {Intl.NumberFormat("en-US").format(
-                                order.totalPrice
-                              )}
-                              đ
-                            </td>
-                            <td>
-                              {order.status === "accept" ? (
-                                <span>Đã xác nhận</span>
-                              ) : order.status === "cancel" ? (
-                                <span>Đã hủy</span>
-                              ) : (
-                                <span>Chờ xác nhận</span>
-                              )}
-                            </td>
-                            <td>
-                              {order.isReviewed ? (
-                                ""
-                              ) : order.status === "accept" ? (
-                                <Button
-                                  className="btn btn-success"
-                                  onClick={() => {
-                                    setOrderItem(order);
-                                    handleShowReviews();
-                                  }}
-                                >
-                                  Đánh giá
-                                </Button>
-                              ) : order.status === "cancel" ? (
-                                ""
-                              ) : (
-                                <Button
-                                  className="btn btn-danger"
-                                  onClick={() => {
-                                    setOrderItem(order);
-                                    handleShow();
-                                  }}
-                                >
-                                  Hủy đơn
-                                </Button>
-                              )}
-                            </td>
+            {orderFilter?.length ? (
+              <>
+                <div className="productSlider mb-2 mt-2">
+                  <Row>
+                    <div className="col-12 cartShow">
+                      <Table
+                        bordered
+                        hover
+                        responsive="sm"
+                        style={{ textAlign: "center" }}
+                      >
+                        <thead>
+                          <tr>
+                            <th>Tên</th>
+                            <th>Ảnh</th>
+                            <th>Người lớn</th>
+                            <th>Trẻ em</th>
+                            <th>Số ngày</th>
+                            <th>Giá tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Action</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  </div>
-                </Row>
-              </div>
-            ) : (
-              <div className="text-center">
-                <span>Chưa có đơn hàng nào được đặt, </span>
-                <Button className="btn-warning">
-                  <Link to="/tours">tiếp tục mua sắm nào</Link>
-                </Button>
-              </div>
-            )}
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            {orderData?.length &&
-            orderData.filter((order) => order.status === "accept")?.length ? (
-              <div className="productSlider mb-2 mt-2">
-                <Row>
-                  <div className="col-12 cartShow">
-                    <Table
-                      bordered
-                      hover
-                      responsive="sm"
-                      style={{ textAlign: "center" }}
-                    >
-                      <thead>
-                        <tr>
-                          <th>Tên</th>
-                          <th>Ảnh</th>
-                          <th>Người lớn</th>
-                          <th>Trẻ em</th>
-                          <th>Số ngày</th>
-                          <th>Giá tiền</th>
-                          <th>Trạng thái</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {orderData
-                          ?.filter((order) => order.status === "accept")
-                          ?.map((order) => (
+                        </thead>
+                        <tbody>
+                          {orderFilter.map((order) => (
                             <tr key={order._id}>
                               <td>
                                 <a href={`/tour/${order.tourId._id}`}>
@@ -523,12 +433,18 @@ export default function OrderList() {
                                 đ
                               </td>
                               <td>
-                                <span>Đã xác nhận</span>
+                                {order.status === "accept" ? (
+                                  <span>Đã xác nhận</span>
+                                ) : order.status === "cancel" ? (
+                                  <span>Đã hủy</span>
+                                ) : (
+                                  <span>Chờ xác nhận</span>
+                                )}
                               </td>
                               <td>
                                 {order.isReviewed ? (
                                   ""
-                                ) : (
+                                ) : order.status === "accept" ? (
                                   <Button
                                     className="btn btn-success"
                                     onClick={() => {
@@ -538,15 +454,166 @@ export default function OrderList() {
                                   >
                                     Đánh giá
                                   </Button>
+                                ) : order.status === "cancel" ? (
+                                  ""
+                                ) : (
+                                  <Button
+                                    className="btn btn-danger"
+                                    onClick={() => {
+                                      setOrderItem(order);
+                                      handleShow();
+                                    }}
+                                  >
+                                    Hủy đơn
+                                  </Button>
                                 )}
                               </td>
                             </tr>
                           ))}
-                      </tbody>
-                    </Table>
-                  </div>
-                </Row>
+                        </tbody>
+                      </Table>
+                    </div>
+                  </Row>
+                </div>
+                <div className="d-flex justify-content-center">
+                  <ReactPaginate
+                    nextLabel="Sau >"
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={3}
+                    marginPagesDisplayed={2}
+                    pageCount={pageCount}
+                    previousLabel="< Trước"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    containerClassName="pagination"
+                    activeClassName="active"
+                    renderOnZeroPageCount={null}
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="text-center">
+                <span>Chưa có đơn hàng nào được đặt, </span>
+                <Button className="btn-warning">
+                  <Link to="/tours">tiếp tục mua sắm nào</Link>
+                </Button>
               </div>
+            )}
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            {orderFilter?.length &&
+            orderFilter.filter((order) => order.status === "accept")?.length ? (
+              <>
+                <div className="productSlider mb-2 mt-2">
+                  <Row>
+                    <div className="col-12 cartShow">
+                      <Table
+                        bordered
+                        hover
+                        responsive="sm"
+                        style={{ textAlign: "center" }}
+                      >
+                        <thead>
+                          <tr>
+                            <th>Tên</th>
+                            <th>Ảnh</th>
+                            <th>Người lớn</th>
+                            <th>Trẻ em</th>
+                            <th>Số ngày</th>
+                            <th>Giá tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {orderFilter
+                            ?.filter((order) => order.status === "accept")
+                            ?.map((order) => (
+                              <tr key={order._id}>
+                                <td>
+                                  <a href={`/tour/${order.tourId._id}`}>
+                                    {order.tourId.title}
+                                  </a>
+                                </td>
+                                <td>
+                                  <img
+                                    src={order.tourId.photo}
+                                    alt=""
+                                    width="50px"
+                                  />
+                                </td>
+                                <td>{order.people.adult}</td>
+                                <td>{order.people.children}</td>
+                                <td>
+                                  {Math.round(
+                                    Math.abs(
+                                      (new Date(order.bookFrom) -
+                                        new Date(order.bookTo)) /
+                                        (24 * 60 * 60 * 1000)
+                                    )
+                                  )}
+                                </td>
+                                <td>
+                                  {Intl.NumberFormat("en-US").format(
+                                    order.totalPrice
+                                  )}
+                                  đ
+                                </td>
+                                <td>
+                                  <span>Đã xác nhận</span>
+                                </td>
+                                <td>
+                                  {order.isReviewed ? (
+                                    ""
+                                  ) : (
+                                    <Button
+                                      className="btn btn-success"
+                                      onClick={() => {
+                                        setOrderItem(order);
+                                        handleShowReviews();
+                                      }}
+                                    >
+                                      Đánh giá
+                                    </Button>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </Table>
+                    </div>
+                  </Row>
+                </div>
+                <div className="d-flex justify-content-center">
+                  <ReactPaginate
+                    nextLabel="Sau >"
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={3}
+                    marginPagesDisplayed={2}
+                    pageCount={pageCount}
+                    previousLabel="< Trước"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    containerClassName="pagination"
+                    activeClassName="active"
+                    renderOnZeroPageCount={null}
+                  />
+                </div>
+              </>
             ) : (
               <div className="text-center">
                 <span>Chưa có đơn hàng nào được đặt thành công, </span>
@@ -557,86 +624,110 @@ export default function OrderList() {
             )}
           </TabPanel>
           <TabPanel value={value} index={2}>
-            {orderData?.length &&
-            orderData.filter(
+            {orderFilter?.length &&
+            orderFilter.filter(
               (order) => order.status !== "accept" && order.status !== "cancel"
             )?.length ? (
-              <div className="productSlider mb-2 mt-2">
-                <Row>
-                  <div className="col-12 cartShow">
-                    <Table
-                      bordered
-                      hover
-                      responsive="sm"
-                      style={{ textAlign: "center" }}
-                    >
-                      <thead>
-                        <tr>
-                          <th>Tên</th>
-                          <th>Ảnh</th>
-                          <th>Người lớn</th>
-                          <th>Trẻ em</th>
-                          <th>Số ngày</th>
-                          <th>Giá tiền</th>
-                          <th>Trạng thái</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {orderData
-                          ?.filter(
-                            (order) =>
-                              order.status !== "accept" &&
-                              order.status !== "cancel"
-                          )
-                          ?.map((order) => (
-                            <tr key={order._id}>
-                              <td>{order.tourId.title}</td>
-                              <td>
-                                <img
-                                  src={order.tourId.photo}
-                                  alt=""
-                                  width="50px"
-                                />
-                              </td>
-                              <td>{order.people.adult}</td>
-                              <td>{order.people.children}</td>
-                              <td>
-                                {Math.round(
-                                  Math.abs(
-                                    (new Date(order.bookFrom) -
-                                      new Date(order.bookTo)) /
-                                      (24 * 60 * 60 * 1000)
-                                  )
-                                )}
-                              </td>
-                              <td>
-                                {Intl.NumberFormat("en-US").format(
-                                  order.totalPrice
-                                )}
-                                đ
-                              </td>
-                              <td>
-                                <span>Chờ xác nhận</span>
-                              </td>
-                              <td>
-                                <Button
-                                  className="btn btn-danger"
-                                  onClick={() => {
-                                    setOrderItem(order);
-                                    handleShow();
-                                  }}
-                                >
-                                  Hủy đơn
-                                </Button>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </Table>
-                  </div>
-                </Row>
-              </div>
+              <>
+                <div className="productSlider mb-2 mt-2">
+                  <Row>
+                    <div className="col-12 cartShow">
+                      <Table
+                        bordered
+                        hover
+                        responsive="sm"
+                        style={{ textAlign: "center" }}
+                      >
+                        <thead>
+                          <tr>
+                            <th>Tên</th>
+                            <th>Ảnh</th>
+                            <th>Người lớn</th>
+                            <th>Trẻ em</th>
+                            <th>Số ngày</th>
+                            <th>Giá tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {orderFilter
+                            ?.filter(
+                              (order) =>
+                                order.status !== "accept" &&
+                                order.status !== "cancel"
+                            )
+                            ?.map((order) => (
+                              <tr key={order._id}>
+                                <td>{order.tourId.title}</td>
+                                <td>
+                                  <img
+                                    src={order.tourId.photo}
+                                    alt=""
+                                    width="50px"
+                                  />
+                                </td>
+                                <td>{order.people.adult}</td>
+                                <td>{order.people.children}</td>
+                                <td>
+                                  {Math.round(
+                                    Math.abs(
+                                      (new Date(order.bookFrom) -
+                                        new Date(order.bookTo)) /
+                                        (24 * 60 * 60 * 1000)
+                                    )
+                                  )}
+                                </td>
+                                <td>
+                                  {Intl.NumberFormat("en-US").format(
+                                    order.totalPrice
+                                  )}
+                                  đ
+                                </td>
+                                <td>
+                                  <span>Chờ xác nhận</span>
+                                </td>
+                                <td>
+                                  <Button
+                                    className="btn btn-danger"
+                                    onClick={() => {
+                                      setOrderItem(order);
+                                      handleShow();
+                                    }}
+                                  >
+                                    Hủy đơn
+                                  </Button>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </Table>
+                    </div>
+                  </Row>
+                </div>
+                <div className="d-flex justify-content-center">
+                  <ReactPaginate
+                    nextLabel="Sau >"
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={3}
+                    marginPagesDisplayed={2}
+                    pageCount={pageCount}
+                    previousLabel="< Trước"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    containerClassName="pagination"
+                    activeClassName="active"
+                    renderOnZeroPageCount={null}
+                  />
+                </div>
+              </>
             ) : (
               <div className="text-center">
                 <span>Chưa có đơn hàng nào cần chờ xác nhận, </span>
@@ -647,68 +738,92 @@ export default function OrderList() {
             )}
           </TabPanel>
           <TabPanel value={value} index={3}>
-            {orderData?.length &&
-            orderData.filter((order) => order.status === "cancel")?.length ? (
-              <div className="productSlider mb-2 mt-2">
-                <Row>
-                  <div className="col-12 cartShow">
-                    <Table
-                      bordered
-                      hover
-                      responsive="sm"
-                      style={{ textAlign: "center" }}
-                    >
-                      <thead>
-                        <tr>
-                          <th>Tên</th>
-                          <th>Ảnh</th>
-                          <th>Người lớn</th>
-                          <th>Trẻ em</th>
-                          <th>Số ngày</th>
-                          <th>Giá tiền</th>
-                          <th>Trạng thái</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {orderData
-                          ?.filter((order) => order.status === "cancel")
-                          ?.map((order) => (
-                            <tr key={order._id}>
-                              <td>{order.tourId.title}</td>
-                              <td>
-                                <img
-                                  src={order.tourId.photo}
-                                  alt=""
-                                  width="50px"
-                                />
-                              </td>
-                              <td>{order.people.adult}</td>
-                              <td>{order.people.children}</td>
-                              <td>
-                                {Math.round(
-                                  Math.abs(
-                                    (new Date(order.bookFrom) -
-                                      new Date(order.bookTo)) /
-                                      (24 * 60 * 60 * 1000)
-                                  )
-                                )}
-                              </td>
-                              <td>
-                                {Intl.NumberFormat("en-US").format(
-                                  order.totalPrice
-                                )}
-                                đ
-                              </td>
-                              <td>
-                                <span>Đã hủy</span>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </Table>
-                  </div>
-                </Row>
-              </div>
+            {orderFilter?.length &&
+            orderFilter.filter((order) => order.status === "cancel")?.length ? (
+              <>
+                <div className="productSlider mb-2 mt-2">
+                  <Row>
+                    <div className="col-12 cartShow">
+                      <Table
+                        bordered
+                        hover
+                        responsive="sm"
+                        style={{ textAlign: "center" }}
+                      >
+                        <thead>
+                          <tr>
+                            <th>Tên</th>
+                            <th>Ảnh</th>
+                            <th>Người lớn</th>
+                            <th>Trẻ em</th>
+                            <th>Số ngày</th>
+                            <th>Giá tiền</th>
+                            <th>Trạng thái</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {orderFilter
+                            ?.filter((order) => order.status === "cancel")
+                            ?.map((order) => (
+                              <tr key={order._id}>
+                                <td>{order.tourId.title}</td>
+                                <td>
+                                  <img
+                                    src={order.tourId.photo}
+                                    alt=""
+                                    width="50px"
+                                  />
+                                </td>
+                                <td>{order.people.adult}</td>
+                                <td>{order.people.children}</td>
+                                <td>
+                                  {Math.round(
+                                    Math.abs(
+                                      (new Date(order.bookFrom) -
+                                        new Date(order.bookTo)) /
+                                        (24 * 60 * 60 * 1000)
+                                    )
+                                  )}
+                                </td>
+                                <td>
+                                  {Intl.NumberFormat("en-US").format(
+                                    order.totalPrice
+                                  )}
+                                  đ
+                                </td>
+                                <td>
+                                  <span>Đã hủy</span>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </Table>
+                    </div>
+                  </Row>
+                </div>
+                <div className="d-flex justify-content-center">
+                  <ReactPaginate
+                    nextLabel="Sau >"
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={3}
+                    marginPagesDisplayed={2}
+                    pageCount={pageCount}
+                    previousLabel="< Trước"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    containerClassName="pagination"
+                    activeClassName="active"
+                    renderOnZeroPageCount={null}
+                  />
+                </div>
+              </>
             ) : (
               <div className="text-center">
                 <span>Chưa có đơn hàng nào bị hủy, </span>

@@ -89,12 +89,12 @@ export const getAllUser = async (req, res) => {
 export const getUserBySearch = async (req, res) => {
   const city = new RegExp(req.query.city, "i");
   const distance = parseInt(req.query.distance);
-  const maxGroupSize = parseInt(req.query.maxGroupSize);
+  const slots = parseInt(req.query.slots);
   try {
     const users = await User.find({
       city: city,
       distance: { $gte: distance },
-      maxGroupSize: { $gte: maxGroupSize },
+      slots: { $gte: slots },
     });
 
     res.status(200).json({

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import CommonSection from "./../shared/CommonSection";
 import calculateAvgRating from "../utils/avgRating";
 import useFetch from "../hooks/useFetch";
 import { BASE_URL } from "../utils/config";
 import { Container, Row, Col } from "reactstrap";
-import TourCard from "../shared/TourCard";
-import Newsletter from "../shared/Newsletter";
+import Pagination from "../components/pagination/Pagination";
 
 const SearchResultList = () => {
   let urlParams = new URLSearchParams(window.location.search);
@@ -13,8 +11,6 @@ const SearchResultList = () => {
   const { data: tours } = useFetch(
     `${BASE_URL}/tours/search/getTourBySearch?title=${title}`
   );
-  const [pageCount, setPageCount] = useState(0);
-  const [page, setPage] = useState(0);
   const [sortOption, setSortOption] = useState(0);
   const [tourSorted, setTourSorted] = useState([]);
   const [tourFilter, setTourFilter] = useState([]);
@@ -70,9 +66,7 @@ const SearchResultList = () => {
         );
       }
       if (checkedSlot && slotValue) {
-        filterResult = filterResult.filter(
-          (tour) => +tour.maxGroupSize <= +slotValue
-        );
+        filterResult = filterResult.filter((tour) => +tour.slots <= +slotValue);
       }
       if (checkedReview) {
         filterResult = filterResult.filter(
@@ -99,13 +93,6 @@ const SearchResultList = () => {
     reviewValue,
     isFeature,
   ]);
-  useEffect(() => {
-    if (tourFilter.length) {
-      let pages = Math.ceil(tourFilter.length / 8);
-      window.scrollTo(0, 0);
-      setPageCount(pages);
-    }
-  }, [tourFilter]);
 
   return (
     <>
@@ -259,18 +246,17 @@ const SearchResultList = () => {
                   </div>
                 </header>
                 <Row>
-                  {tourFilter?.map((tour) => (
-                    <Col lg="3" className="mb-4" key={tour._id}>
-                      <TourCard tour={tour} />
-                    </Col>
-                  ))}
+                  {tourFilter && tourFilter.length ? (
+                    <Pagination data={tourFilter} itemsPerPage={8} />
+                  ) : (
+                    "Không có dữ liệu"
+                  )}
                 </Row>
               </Col>
             </Row>
           )}
         </Container>
       </section>
-      <Newsletter />
     </>
   );
 };

@@ -6,7 +6,7 @@ export const checkSlots = (req, res, next) => {
       if (
         tour &&
         +req.body.people.adult + +req.body.people.children > 0 &&
-        tour.maxGroupSize >= +req.body.people.adult + +req.body.people.children
+        tour.slots >= +req.body.people.adult + +req.body.people.children
       ) {
         next();
       } else {

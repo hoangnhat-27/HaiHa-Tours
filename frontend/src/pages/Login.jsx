@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, FormGroup, Button } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/login.css";
@@ -26,8 +26,18 @@ const Login = () => {
     email: undefined,
     password: undefined,
   });
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
   const { dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && token) {
+      toast.error("Bạn đã đăng nhập rồi!", ToastObjects);
+      setTimeout(() => navigate("/home"), 2500);
+      return;
+    }
+  }, [user, token]);
 
   const handleChange = (e) => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));

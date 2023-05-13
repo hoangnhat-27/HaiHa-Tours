@@ -5,24 +5,30 @@ import useFetch from "../hooks/useFetch.js";
 import { BASE_URL } from "../utils/config.js";
 import "../styles/blogs.css";
 import Blog from "../shared/Blog";
-
-import Newsletter from "../shared/Newsletter";
+import ReactPaginate from "react-paginate";
 
 const Blogs = () => {
   const { data: blogs } = useFetch(`${BASE_URL}/blogs`);
 
-  const [pageCount, setPageCount] = useState(0);
-  const [page, setPage] = useState(0);
   const [sortOption, setSortOption] = useState(0);
-  const [blogData, setBlogData] = useState(null);
   const [blogSorted, setBlogSorted] = useState([]);
   const [blogFilter, setBlogFilter] = useState([]);
 
+  const [itemOffset, setItemOffset] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  let itemsPerPage = 6;
   useEffect(() => {
-    if (blogs.length) {
-      setBlogData(blogs);
+    if (blogSorted.length) {
+      const endOffset = itemOffset + itemsPerPage;
+      setBlogFilter(blogSorted.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(blogSorted?.length / itemsPerPage));
     }
-  }, [blogs]);
+  }, [blogSorted, itemOffset, itemsPerPage]);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % blogSorted?.length;
+    setItemOffset(newOffset);
+    window.scrollTo(0, 0);
+  };
 
   const handleSort = (event) => {
     const selectedOption = event.target.selectedIndex;
@@ -99,13 +105,34 @@ const Blogs = () => {
                         ))
                       : null}
                   </Row>
+                  <div className="d-flex justify-content-center">
+                    <ReactPaginate
+                      nextLabel="Sau >"
+                      onPageChange={handlePageClick}
+                      pageRangeDisplayed={3}
+                      marginPagesDisplayed={2}
+                      pageCount={pageCount}
+                      previousLabel="< Trước"
+                      pageClassName="page-item"
+                      pageLinkClassName="page-link"
+                      previousClassName="page-item"
+                      previousLinkClassName="page-link"
+                      nextClassName="page-item"
+                      nextLinkClassName="page-link"
+                      breakLabel="..."
+                      breakClassName="page-item"
+                      breakLinkClassName="page-link"
+                      containerClassName="pagination"
+                      activeClassName="active"
+                      renderOnZeroPageCount={null}
+                    />
+                  </div>
                 </div>
               </Col>
             </Row>
           )}
         </Container>
       </section>
-      <Newsletter />
     </>
   );
 };
