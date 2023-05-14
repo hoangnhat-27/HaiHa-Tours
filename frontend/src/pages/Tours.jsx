@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import calculateAvgRating from "../utils/avgRating";
 import "../styles/tour.css";
-import Newsletter from "../shared/Newsletter";
 import { Container, Row, Col } from "reactstrap";
 import useFetch from "../hooks/useFetch";
 import { BASE_URL } from "../utils/config";
@@ -241,19 +240,21 @@ const Tours = () => {
               {loading && <h4 className="text-center pt-5">Loading...</h4>}
               {error && <h4 className="text-center pt-5">{error}</h4>}
               {!loading && !error && (
-                <Row>
-                  {tourFilter && tourFilter.length ? (
-                    <Pagination data={tourFilter} itemsPerPage={8} />
-                  ) : (
-                    "Không có dữ liệu"
-                  )}
-                </Row>
+                <>
+                  <h6>Có {tourFilter.length} kết quả</h6>
+                  <Row>
+                    {tourFilter && tourFilter.length ? (
+                      <Pagination data={tourFilter} itemsPerPage={8} />
+                    ) : (
+                      "Không có dữ liệu"
+                    )}
+                  </Row>
+                </>
               )}
             </Col>
           </Row>
         </Container>
       </section>
-      <Newsletter />
     </>
   );
 };

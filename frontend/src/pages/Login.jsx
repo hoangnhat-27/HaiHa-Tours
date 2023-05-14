@@ -55,7 +55,7 @@ const Login = () => {
         body: JSON.stringify(credentials),
       });
       const result = await res.json();
-      if (!res.ok) alert(result.message);
+      if (!res.ok) toast.error("Người dùng không tồn tại!", ToastObjects);
       else if (result.role !== "user") {
         dispatch({ type: "LOGIN_FAILURE" });
         toast.error("Bạn không phải user!", ToastObjects);

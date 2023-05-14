@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,6 +9,7 @@ import Toast from "../LoadingError/Toast";
 import { toast } from "react-toastify";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import ReactPaginate from "react-paginate";
 
 const ToastObjects = {
   pauseOnFocusLoss: false,
@@ -38,6 +39,27 @@ const InvestorsTable = () => {
   useEffect(() => {
     dispatch(listInvestors());
   }, [dispatch, successDelete]);
+
+  const [itemOffset, setItemOffset] = useState(0);
+  const [investorFilter, setInvestorFilter] = useState([]);
+  const [pageCount, setPageCount] = useState([]);
+
+  const endOffset = itemOffset + 10;
+  useEffect(() => {
+    if (investorData.length) {
+      setInvestorFilter(investorData.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(investorData.length / 10));
+    }
+  }, [investorData, itemOffset, endOffset]);
+
+  const handlePageClick = useCallback(
+    (event) => {
+      const newOffset = (event.selected * 10) % investorData.length;
+      setItemOffset(newOffset);
+      window.scrollTo(0, 350);
+    },
+    [investorData]
+  );
 
   const DeleteInvestor = async (item) => {
     try {
@@ -74,6 +96,7 @@ const InvestorsTable = () => {
         </Modal.Footer>
       </Modal>
       <div className="col-md-12 col-lg-8">
+        <h6>Có {investorData.length} kết quả</h6>
         <table className="table">
           <thead>
             <tr>
@@ -85,8 +108,8 @@ const InvestorsTable = () => {
           </thead>
           {/* Table Data */}
           <tbody>
-            {investorData.length &&
-              investorData.map((item, index) => (
+            {investorFilter.length &&
+              investorFilter.map((item, index) => (
                 <tr>
                   <td>{index + 1}</td>
                   <td>
@@ -127,6 +150,28 @@ const InvestorsTable = () => {
               ))}
           </tbody>
         </table>
+        <div className="d-flex justify-content-center">
+          <ReactPaginate
+            nextLabel="Sau >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            marginPagesDisplayed={2}
+            pageCount={pageCount}
+            previousLabel="< Trước"
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakLabel="..."
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+            renderOnZeroPageCount={null}
+          />
+        </div>
       </div>
     </>
   );

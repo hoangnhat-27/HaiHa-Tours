@@ -34,10 +34,10 @@ const Main = () => {
         <div className="row">
           {/* STATICS */}
           <SaleStatistics />
-          <ToursStatistics />
+          <ToursRatings />
         </div>
         <div>
-          <ToursRatings />
+          <ToursStatistics />
         </div>
 
         {/* LATEST ORDER */}

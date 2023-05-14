@@ -183,6 +183,8 @@ const AddDiscountMain = () => {
                       className="form-control"
                       id="discount_amount"
                       required
+                      min={0}
+                      max={type === "decreasePercent" ? 100 : 100000000000000}
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                     />
@@ -197,6 +199,7 @@ const AddDiscountMain = () => {
                       className="form-control"
                       id="discount_below_price"
                       required
+                      min={0}
                       value={belowPrice}
                       onChange={(e) => setBelowPrice(e.target.value)}
                     />

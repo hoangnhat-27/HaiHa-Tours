@@ -1,17 +1,17 @@
 import React from "react";
 import "../styles/home.css";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, Button } from "reactstrap";
 import heroImg01 from "../assets/images/hero-img01.jpg";
 import heroImg02 from "../assets/images/hero-img02.jpg";
 import heroVideo from "../assets/images/hero-video.mp4";
 import wordImg from "../assets/images/world.png";
 import experienceImg from "../assets/images/experience.png";
 import Subtitle from "../shared/Subtitle";
+import { Link } from "react-router-dom";
 
 import FeatureTourList from "../components/Featured-tours/FeatureTourList";
 import MasonryImagesGallery from "../components/Image-gallery/MasonryImagesGallery";
 import Testimonials from "../components/Testimonials/Testimonials";
-import Newsletter from "../shared/Newsletter";
 
 const Home = () => {
   return (
@@ -68,6 +68,11 @@ const Home = () => {
             </Col>
             <FeatureTourList />
           </Row>
+          <div style={{ float: "right" }}>
+            <Button className="btn btn-warning">
+              <Link to={`/tours`}>Xem tất cả -&gt;</Link>
+            </Button>
+          </div>
         </Container>
       </section>
       {/* {experience section} */}
@@ -143,7 +148,6 @@ const Home = () => {
             </Col>
           </Row>
         </Container>
-        <Newsletter />
       </section>
     </>
   );

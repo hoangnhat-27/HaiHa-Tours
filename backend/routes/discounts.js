@@ -2,6 +2,7 @@ import express from "express";
 import {
   createDiscount,
   deleteDiscount,
+  deleteDiscountUser,
   getAllDiscounts,
   getSingleDiscount,
   getSingleUserDiscount,
@@ -12,6 +13,7 @@ const router = express.Router();
 router.post("/", verifyAdmin, createDiscount);
 router.put("/:id", verifyAdmin, updateDiscount);
 router.delete("/:id", verifyAdmin, deleteDiscount);
+router.delete("/user/:id", verifyUser, deleteDiscountUser);
 router.get("/:id", getSingleDiscount);
 router.get("/", verifyAdmin, getAllDiscounts);
 router.get("/user/:id", verifyUser, getSingleUserDiscount);

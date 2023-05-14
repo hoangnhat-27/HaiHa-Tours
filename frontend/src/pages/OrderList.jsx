@@ -99,7 +99,7 @@ export default function OrderList() {
         setOrderData(result.data?.reverse());
       }
     } catch (error) {
-      alert(error.message);
+      toast.error("Mạng không ổn định, vui lòng thử lại", ToastObjects);
     }
   });
   const [orderFilter, setOrderFilter] = useState([]);
@@ -405,15 +405,11 @@ export default function OrderList() {
                             <tr key={order._id}>
                               <td>
                                 <a href={`/tour/${order.tourId._id}`}>
-                                  {order.tourId.title}
+                                  {order.tourName}
                                 </a>
                               </td>
                               <td>
-                                <img
-                                  src={order.tourId.photo}
-                                  alt=""
-                                  width="50px"
-                                />
+                                <img src={order.photo} alt="" width="50px" />
                               </td>
                               <td>{order.people.adult}</td>
                               <td>{order.people.children}</td>

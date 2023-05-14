@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 const OrderDetailTours = (props) => {
@@ -20,11 +20,11 @@ const OrderDetailTours = (props) => {
         <tr key={order?.data[0]._id}>
           <td>
             <Link className="itemside" to="#">
-              <td>{order?.data[0].tourId.title}</td>
+              <td>{order?.data[0].tourName}</td>
             </Link>
           </td>
           <td>
-            <img src={order?.data[0].tourId.photo} alt="" width="50px" />
+            <img src={order?.data[0].photo} alt="" width="50px" />
           </td>
           <td>
             {new Date(order?.data[0].bookFrom).toLocaleDateString(

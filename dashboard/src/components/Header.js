@@ -42,16 +42,6 @@ const Header = () => {
           <i className="md-28 fas fa-bars"></i>
         </button>
         <ul className="nav">
-          <li className="nav-item">
-            <Link className={`nav-link btn-icon `} title="Dark mode" to="#">
-              <i className="fas fa-moon"></i>
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link btn-icon" to="#">
-              <i className="fas fa-bell"></i>
-            </Link>
-          </li>
           <li style={{ marginLeft: "10px", marginRight: "5px" }}>
             <h5>{userInfo.data.username}</h5>
           </li>
@@ -70,8 +60,11 @@ const Header = () => {
               >
                 Thông tin của tôi
               </Link>
-              <Link className="dropdown-item" to="#">
-                Cài đặt
+              <Link
+                className="dropdown-item"
+                to={`/admin/password/${userInfo.data._id}`}
+              >
+                Đổi mật khẩu
               </Link>
               <Link
                 onClick={logoutHandler}

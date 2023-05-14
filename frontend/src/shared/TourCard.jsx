@@ -7,7 +7,7 @@ import { BASE_URL } from "./../utils/config";
 import "./tour-card.css";
 
 const TourCard = ({ tour }) => {
-  const { _id, title, city, photo, price, featured } = tour;
+  const { _id, title, city, photo, price, slots, featured } = tour;
   const { data: reviews } = useFetch(`${BASE_URL}/review/${_id}`);
   const { totalRating, avgRating } = calculateAvgRating(reviews);
   return (
@@ -24,6 +24,10 @@ const TourCard = ({ tour }) => {
           <div className="card__top d-flex align-items-center justify-content-between">
             <span className="tour__location d-flex align-items-center gap-1">
               <i class="ri-map-pin-line"></i> {city}
+            </span>
+            <span className="tour__location d-flex align-items-center gap-1">
+              <i class="ri-group-line"></i>
+              {slots}
             </span>
             <span className="tour__rating d-flex align-items-center gap-1">
               <i class="ri-star-fill"></i> {avgRating === 0 ? null : avgRating}

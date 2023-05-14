@@ -18,6 +18,14 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "Tour",
     },
+    tourName: {
+      type: String,
+      required: true,
+    },
+    photo: {
+      type: String,
+      required: true,
+    },
     people: {
       adult: { type: Number, default: 0 },
       children: { type: Number, default: 0 },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,6 +9,7 @@ import Toast from "../LoadingError/Toast";
 import { toast } from "react-toastify";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import ReactPaginate from "react-paginate";
 
 const ToastObjects = {
   pauseOnFocusLoss: false,
@@ -38,6 +39,27 @@ const CategoriesTable = () => {
   useEffect(() => {
     dispatch(listCategories());
   }, [dispatch, successDelete]);
+
+  const [itemOffset, setItemOffset] = useState(0);
+  const [categoryFilter, setCategoryFilter] = useState([]);
+  const [pageCount, setPageCount] = useState([]);
+
+  const endOffset = itemOffset + 10;
+  useEffect(() => {
+    if (categoryData.length) {
+      setCategoryFilter(categoryData.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(categoryData.length / 10));
+    }
+  }, [categoryData, itemOffset, endOffset]);
+
+  const handlePageClick = useCallback(
+    (event) => {
+      const newOffset = (event.selected * 10) % categoryData.length;
+      setItemOffset(newOffset);
+      window.scrollTo(0, 350);
+    },
+    [categoryData]
+  );
 
   const findCategoryName = (categoryArr, id) => {
     let category = categoryArr.find((item) => item._id === id);
@@ -92,10 +114,10 @@ const CategoriesTable = () => {
         </Modal.Footer>
       </Modal>
       <div className="col-md-12 col-lg-8">
+        <h6>Có {categoryData.length} kết quả</h6>
         <table className="table">
           <thead>
             <tr>
-              <th>STT</th>
               <th>Tên danh mục</th>
               <th>Danh mục cha</th>
               <th className="text-end">Action</th>
@@ -103,10 +125,9 @@ const CategoriesTable = () => {
           </thead>
           {/* Table Data */}
           <tbody>
-            {categoryData.length &&
-              categoryData.map((item, index) => (
+            {categoryFilter.length &&
+              categoryFilter.map((item, index) => (
                 <tr>
-                  <td>{index + 1}</td>
                   <td>
                     <b>{item.categoryName}</b>
                   </td>
@@ -148,6 +169,28 @@ const CategoriesTable = () => {
               ))}
           </tbody>
         </table>
+        <div className="d-flex justify-content-center">
+          <ReactPaginate
+            nextLabel="Sau >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            marginPagesDisplayed={2}
+            pageCount={pageCount}
+            previousLabel="< Trước"
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakLabel="..."
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+            renderOnZeroPageCount={null}
+          />
+        </div>
       </div>
     </>
   );

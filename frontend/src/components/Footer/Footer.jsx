@@ -1,21 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./footer.css";
 import { Container, Row, Col, ListGroup, ListGroupItem } from "reactstrap";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
-
-const quick__links1 = [
-  { path: "/home", display: "Trang chủ" },
-  { path: "/about", display: "Về chúng tôi" },
-  { path: "/tours", display: "Tours du lịch" },
-];
-const quick__links2 = [
-  { path: "/gallery", display: "Bộ sưu tập" },
-  { path: "/login", display: "Đăng nhập" },
-  { path: "/register", display: "Đăng ký" },
-];
+import { AuthContext } from "./../../context/AuthContext";
 
 const Footer = () => {
+  const { user } = useContext(AuthContext);
+  const quick__links1 = [
+    { path: "/home", display: "Trang chủ" },
+    { path: "/about", display: "Về chúng tôi" },
+    { path: "/tours", display: "Tours du lịch" },
+  ];
+  const quick__links2 = [
+    { path: "/blogs", display: "Tin tức" },
+    {
+      path: user ? `/orders-list/${user?._id}` : `/login`,
+      display: "Đơn đặt hàng",
+    },
+    {
+      path: user ? `/discounts/${user?._id}` : `/login`,
+      display: "Mã khuyến mãi",
+    },
+  ];
   const year = new Date().getFullYear();
 
   return (

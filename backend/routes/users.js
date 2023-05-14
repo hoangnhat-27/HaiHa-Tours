@@ -5,9 +5,6 @@ import {
   getAllUser,
   getSingleUser,
   updateUser,
-  getUserBySearch,
-  getFeaturedUser,
-  getUserCount,
 } from "../controllers/userController.js";
 import { verifyAdmin, verifyUser } from "../utils/verifyToken.js";
 const router = express.Router();

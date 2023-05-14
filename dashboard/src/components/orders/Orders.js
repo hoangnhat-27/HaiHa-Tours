@@ -124,7 +124,7 @@ const Orders = (props) => {
                           UpdateOrder(order, "accept");
                         }}
                       >
-                        Xác nhận
+                        Xác nhận giao
                       </button>
                       <button
                         className="btn btn-danger"

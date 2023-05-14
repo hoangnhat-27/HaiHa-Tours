@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Tour from "./Tour";
 import { useDispatch, useSelector } from "react-redux";
 import { listTours } from "../../Redux/Actions/TourActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
+import ReactPaginate from "react-paginate";
 
 const MainTours = () => {
   const dispatch = useDispatch();
@@ -58,6 +59,25 @@ const MainTours = () => {
     }
     setTourSorted(result);
   }, [tourData, sortOption, searchInput]);
+
+  const [itemOffset, setItemOffset] = useState(0);
+  const [tourFilter, setTourFilter] = useState([]);
+  const [pageCount, setPageCount] = useState([]);
+
+  const endOffset = itemOffset + 8;
+  useEffect(() => {
+    setTourFilter(tourSorted.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(tourSorted.length / 8));
+  }, [tourSorted, itemOffset, endOffset]);
+
+  const handlePageClick = useCallback(
+    (event) => {
+      const newOffset = (event.selected * 8) % tourSorted.length;
+      setItemOffset(newOffset);
+      window.scrollTo(0, 350);
+    },
+    [tourSorted]
+  );
   return (
     <section className="content-main">
       <div className="content-header">
@@ -107,43 +127,38 @@ const MainTours = () => {
           ) : error ? (
             <Message variant="alert-danger">{error}</Message>
           ) : (
-            <div className="row">
-              {/* Tours */}
-              {tourSorted.map((tour) => (
-                <Tour tour={tour} key={tour._id} />
-              ))}
-            </div>
+            <>
+              <h6>Có {tourSorted.length} kết quả</h6>
+              <div className="row">
+                {/* Tours */}
+                {tourFilter.map((tour) => (
+                  <Tour tour={tour} key={tour._id} />
+                ))}
+              </div>
+              <div className="d-flex justify-content-center">
+                <ReactPaginate
+                  nextLabel="Sau >"
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={3}
+                  marginPagesDisplayed={2}
+                  pageCount={pageCount}
+                  previousLabel="< Trước"
+                  pageClassName="page-item"
+                  pageLinkClassName="page-link"
+                  previousClassName="page-item"
+                  previousLinkClassName="page-link"
+                  nextClassName="page-item"
+                  nextLinkClassName="page-link"
+                  breakLabel="..."
+                  breakClassName="page-item"
+                  breakLinkClassName="page-link"
+                  containerClassName="pagination"
+                  activeClassName="active"
+                  renderOnZeroPageCount={null}
+                />
+              </div>
+            </>
           )}
-
-          <nav className="float-end mt-4" aria-label="Page navigation">
-            <ul className="pagination">
-              <li className="page-item disabled">
-                <Link className="page-link" to="#">
-                  Trước
-                </Link>
-              </li>
-              <li className="page-item active">
-                <Link className="page-link" to="#">
-                  1
-                </Link>
-              </li>
-              <li className="page-item">
-                <Link className="page-link" to="#">
-                  2
-                </Link>
-              </li>
-              <li className="page-item">
-                <Link className="page-link" to="#">
-                  3
-                </Link>
-              </li>
-              <li className="page-item">
-                <Link className="page-link" to="#">
-                  Sau
-                </Link>
-              </li>
-            </ul>
-          </nav>
         </div>
       </div>
     </section>

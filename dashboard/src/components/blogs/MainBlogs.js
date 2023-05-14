@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Blog from "./Blog";
 import { useDispatch, useSelector } from "react-redux";
 import { listBlogs } from "../../Redux/Actions/BlogActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
+import ReactPaginate from "react-paginate";
 
 const MainBlogs = () => {
   const dispatch = useDispatch();
@@ -59,6 +60,25 @@ const MainBlogs = () => {
     setBlogSorted(result);
   }, [blogData, sortOption, searchInput]);
 
+  const [itemOffset, setItemOffset] = useState(0);
+  const [blogFilter, setBlogFilter] = useState([]);
+  const [pageCount, setPageCount] = useState([]);
+
+  const endOffset = itemOffset + 5;
+  useEffect(() => {
+    setBlogFilter(blogSorted.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(blogSorted.length / 5));
+  }, [blogSorted, itemOffset, endOffset]);
+
+  const handlePageClick = useCallback(
+    (event) => {
+      const newOffset = (event.selected * 5) % blogSorted.length;
+      setItemOffset(newOffset);
+      window.scrollTo(0, 350);
+    },
+    [blogSorted]
+  );
+
   return (
     <section className="content-main">
       <div className="content-header">
@@ -107,41 +127,36 @@ const MainBlogs = () => {
           ) : error ? (
             <Message variant="alert-danger">{error}</Message>
           ) : (
-            <div className="row">
-              {/* Blogs */}
-              {blogSorted.length ? <Blog blogs={blogSorted} /> : null}
-            </div>
+            <>
+              <h6>Có {blogSorted.length} kết quả</h6>
+              <div className="row">
+                {/* Blogs */}
+                {blogFilter.length ? <Blog blogs={blogFilter} /> : null}
+              </div>
+              <div className="d-flex justify-content-center">
+                <ReactPaginate
+                  nextLabel="Sau >"
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={3}
+                  marginPagesDisplayed={2}
+                  pageCount={pageCount}
+                  previousLabel="< Trước"
+                  pageClassName="page-item"
+                  pageLinkClassName="page-link"
+                  previousClassName="page-item"
+                  previousLinkClassName="page-link"
+                  nextClassName="page-item"
+                  nextLinkClassName="page-link"
+                  breakLabel="..."
+                  breakClassName="page-item"
+                  breakLinkClassName="page-link"
+                  containerClassName="pagination"
+                  activeClassName="active"
+                  renderOnZeroPageCount={null}
+                />
+              </div>
+            </>
           )}
-
-          <nav className="float-end mt-4" aria-label="Page navigation">
-            <ul className="pagination">
-              <li className="page-item disabled">
-                <Link className="page-link" to="#">
-                  Trước
-                </Link>
-              </li>
-              <li className="page-item active">
-                <Link className="page-link" to="#">
-                  1
-                </Link>
-              </li>
-              <li className="page-item">
-                <Link className="page-link" to="#">
-                  2
-                </Link>
-              </li>
-              <li className="page-item">
-                <Link className="page-link" to="#">
-                  3
-                </Link>
-              </li>
-              <li className="page-item">
-                <Link className="page-link" to="#">
-                  Sau
-                </Link>
-              </li>
-            </ul>
-          </nav>
         </div>
       </div>
     </section>

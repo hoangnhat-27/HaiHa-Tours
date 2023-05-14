@@ -8,7 +8,7 @@ const Discount = ({ discount }) => {
       <img className="image" src={discount.photo} alt="discount" />
       <h4 className="text-center">{discount.discountCode}</h4>
       <p className="text-center">
-        Giảm ngay {discount.amount}
+        Giảm ngay {Intl.NumberFormat("en-US").format(discount.amount)}
         {discount.type === "decreasePercent" ? "%" : "đ"} cho các tour có giá
         dưới {Intl.NumberFormat("en-US").format(discount.belowPrice)}đ
       </p>

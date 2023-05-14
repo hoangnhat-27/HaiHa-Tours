@@ -245,6 +245,7 @@ const SearchResultList = () => {
                     </div>
                   </div>
                 </header>
+                <h6>Có {tourFilter.length} kết quả</h6>
                 <Row>
                   {tourFilter && tourFilter.length ? (
                     <Pagination data={tourFilter} itemsPerPage={8} />

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "./../components/sidebar";
 import Header from "./../components/Header";
 import { Container, Row, Col } from "reactstrap";
@@ -34,7 +34,7 @@ const UserInfo = () => {
   const { id } = useParams();
 
   const userSingle = useSelector((state) => state.userSingle);
-  const { loading, error, user } = userSingle;
+  const { user } = userSingle;
 
   useEffect(() => {
     if (user?.success) {

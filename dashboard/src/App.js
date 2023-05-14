@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { listTours } from "./Redux/Actions/TourActions";
 import { listOrders } from "./Redux/Actions/OrderActions";
 import UserInfo from "./screens/UserInfo";
+import ChangePassword from "./screens/ChangePassword";
 import AddDiscount from "./screens/AddDiscount";
 import DiscountEditScreen from "./screens/DiscountEditScreen";
 import InvestorScreen from "./screens/InvestorScreen";
@@ -71,6 +72,10 @@ function App() {
             component={DiscountEditScreen}
           />
           <PrivateRouter path="/admin/info/:id" component={UserInfo} />
+          <PrivateRouter
+            path="/admin/password/:id"
+            component={ChangePassword}
+          />
           <PrivateRouter path="/tour/:id/edit" component={TourEditScreen} />
           <Route path="/login" component={Login} />
           <PrivateRouter path="*" component={NotFound} />

@@ -6,7 +6,7 @@ import { AuthContext } from "./../context/AuthContext";
 import { toast } from "react-toastify";
 import Toast from "../Toast/Toast.js";
 import { Image } from "cloudinary-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ToastObjects = {
   position: "top-right",
@@ -29,6 +29,7 @@ const UserInfo = () => {
   const [photo, setPhoto] = useState("");
   const [uploadData, setUploadData] = useState("");
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const uploadImage = async (files) => {
     const formData = new FormData();
@@ -56,6 +57,7 @@ const UserInfo = () => {
   const chooseFile = () => {
     document.getElementById("fileInput").click();
   };
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (user) {
@@ -65,10 +67,12 @@ const UserInfo = () => {
       setBirthday(user.birthday);
       setPhoto(user.photo);
       setUserName(user.username);
+    } else if (!user && !token) {
+      toast.error("Bạn chưa đăng nhập!", ToastObjects);
+      setTimeout(() => navigate("/login"), 2500);
+      return;
     }
-  }, [user]);
-
-  const token = localStorage.getItem("token");
+  }, [user, token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -132,7 +136,6 @@ const UserInfo = () => {
             </div>
             <Row>
               <Col lg="4" className="text-center">
-                {/* <img src={photo} alt="profile" /> */}
                 <div className="mb-4">
                   <Image
                     cloudName="nhat-clouds"

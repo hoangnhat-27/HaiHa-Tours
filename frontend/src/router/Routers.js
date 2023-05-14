@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./../pages/Home";
+import About from "./../pages/About";
 import Tours from "./../pages/Tours";
 import TourDetails from "./../pages/TourDetails";
 import CategoryTourList from "./../pages/CategoryTourList";
@@ -10,6 +11,7 @@ import SearchResultList from "./../pages/SearchResultList";
 import Blogs from "./../pages/Blogs";
 import UserInfo from "./../pages/UserInfo";
 import UserDiscounts from "./../pages/UserDiscounts";
+import Settings from "./../pages/Settings";
 import Checkout from "./../pages/Checkout";
 import ThankYou from "../pages/ThankYou";
 import OrderList from "../pages/OrderList";
@@ -21,6 +23,7 @@ const Routers = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/about" element={<About />} />
       <Route path="/tours" element={<Tours />} />
       <Route path="/tour/:id" element={<TourDetails />} />
       <Route path="/category/:id" element={<CategoryTourList />} />
@@ -31,6 +34,7 @@ const Routers = () => {
       <Route path="/blog/:id" element={<BlogDetails />} />
       <Route path="/user/info/:id" element={<UserInfo />} />
       <Route path="/discounts/:id" element={<UserDiscounts />} />
+      <Route path="/settings/:id" element={<Settings />} />
       <Route path="/thank-you" element={<ThankYou />} />
       <Route path="/orders-list/:id" element={<OrderList />} />
       <Route path="/tours/search" element={<SearchResultList />} />

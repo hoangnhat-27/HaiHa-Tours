@@ -58,7 +58,7 @@ const Register = () => {
       else {
         toast.success("Đăng ký thành công!", ToastObjects);
         dispatch({ type: "REGISTER_SUCCESS" });
-        navigate("/login");
+        setTimeout(() => navigate("/login"), 2500);
       }
     } catch (error) {
       toast.error("Đăng ký không thành công!", ToastObjects);

@@ -43,7 +43,7 @@ export const updateDiscount = async (req, res) => {
   }
 };
 
-//delete tour
+//delete discount
 export const deleteDiscount = async (req, res) => {
   const id = req.params.id;
   try {
@@ -51,6 +51,22 @@ export const deleteDiscount = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Successfully deleted",
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: "Fail to delete. Try again" });
+  }
+};
+
+//delete discount user
+export const deleteDiscountUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    await Discount.deleteMany({ userId: userId });
+    res.status(200).json({
+      success: true,
+      message: "Successfully deleted many discount",
     });
   } catch (err) {
     res

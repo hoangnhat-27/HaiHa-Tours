@@ -89,7 +89,7 @@ const Discount = (props) => {
                   <td>
                     <img src={discount.photo} alt="" width="50px" />
                   </td>
-                  <td>{discount.userId.username}</td>
+                  <td>{discount.userId?.username}</td>
                   <td>{discount.discountCode}</td>
                   <td>
                     {discount.type && discount.type === "decreasePercent"

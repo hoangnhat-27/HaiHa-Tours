@@ -82,3 +82,19 @@ export const updateOrder = async (req, res) => {
       .json({ success: false, message: "Fail to update. Try again" });
   }
 };
+
+//delete order
+export const deleteOrder = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await Order.deleteMany({ userId: id });
+    res.status(200).json({
+      success: true,
+      message: "Successfully deleted",
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: "Fail to delete. Try again" });
+  }
+};

@@ -67,3 +67,51 @@ export const login = async (req, res) => {
     });
   }
 };
+
+export const changePassword = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    //check password
+    const checkCorrectPassword = await bcrypt.compare(
+      req.body.oldPassword,
+      user.password
+    );
+
+    if (!checkCorrectPassword) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Incorrect password" });
+    }
+
+    //hashing password
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.newPassword, salt);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        // $set: req.body,
+        password: hash,
+      },
+      { new: true }
+    );
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Successfully change password",
+        data: updatedUser,
+      });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to change password",
+    });
+  }
+};

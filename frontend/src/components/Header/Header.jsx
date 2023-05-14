@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useContext, useState } from "react";
-import { Container, Row, Button } from "reactstrap";
+import { Row, Button } from "reactstrap";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./../../context/AuthContext";
 import useFetch from "../../hooks/useFetch";
@@ -68,16 +68,14 @@ const Header = () => {
     dispatch({ type: "LOGOUT" });
   };
   const stickyHeaderFunc = () => {
-    window.addEventListener("scroll", () => {
-      if (
-        document.body.scrollTop > 80 ||
-        document.documentElement.scrollTop > 80
-      ) {
+    window.onscroll = function (e) {
+      if (this.oldScroll > this.scrollY) {
         headerRef.current?.classList.add("sticky__header");
       } else {
         headerRef.current?.classList.remove("sticky__header");
       }
-    });
+      this.oldScroll = this.scrollY;
+    };
   };
   const toggleDropdown = () => {
     document.querySelector(".dropdown-toggle").classList.toggle("show");
@@ -279,7 +277,7 @@ const Header = () => {
                         </Link>
                         <Link
                           className="dropdown-item"
-                          to="#"
+                          to={`/settings/${user._id}`}
                           onClick={toggleDropdown}
                         >
                           Cài đặt

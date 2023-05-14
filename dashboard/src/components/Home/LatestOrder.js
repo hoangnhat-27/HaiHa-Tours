@@ -1,4 +1,3 @@
-import moment from "moment";
 import React from "react";
 import { Link } from "react-router-dom";
 import Message from "../LoadingError/Error";
@@ -26,7 +25,7 @@ const LatestOrder = (props) => {
                       <td>
                         <b>{order.fullName}</b>
                       </td>
-                      <td>{order.userEmail}</td>
+                      <td>{order.userId.email}</td>
                       <td>
                         {Intl.NumberFormat("en-US").format(order.totalPrice)}đ
                       </td>
@@ -60,7 +59,7 @@ const LatestOrder = (props) => {
                     </tr>
                   ))
               ) : (
-                <div className="text-center">Không lấy được dữ liệu</div>
+                <div className="text-center">Không có dữ liệu</div>
               )}
             </tbody>
           </table>

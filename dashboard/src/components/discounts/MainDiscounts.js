@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Discount from "./Discount";
 import { useDispatch, useSelector } from "react-redux";
 import { listDiscounts } from "../../Redux/Actions/DiscountActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
+import ReactPaginate from "react-paginate";
 
 const MainDiscounts = () => {
   const dispatch = useDispatch();
@@ -61,6 +62,25 @@ const MainDiscounts = () => {
     setDiscountSorted(result);
   }, [discountData, sortOption, searchInput]);
 
+  const [itemOffset, setItemOffset] = useState(0);
+  const [discountFilter, setDiscountFilter] = useState([]);
+  const [pageCount, setPageCount] = useState([]);
+
+  const endOffset = itemOffset + 5;
+  useEffect(() => {
+    setDiscountFilter(discountSorted.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(discountSorted.length / 5));
+  }, [discountSorted, itemOffset, endOffset]);
+
+  const handlePageClick = useCallback(
+    (event) => {
+      const newOffset = (event.selected * 5) % discountSorted.length;
+      setItemOffset(newOffset);
+      window.scrollTo(0, 350);
+    },
+    [discountSorted]
+  );
+
   return (
     <section className="content-main">
       <div className="content-header">
@@ -112,39 +132,35 @@ const MainDiscounts = () => {
             <>
               <div className="row">
                 {/* Discounts */}
-                {discountSorted.length ? (
-                  <Discount discounts={discountSorted} />
+                {discountFilter.length ? (
+                  <>
+                    <h6>Có {discountFilter.length} kết quả</h6>
+                    <Discount discounts={discountFilter} />
+                    <div className="d-flex justify-content-center">
+                      <ReactPaginate
+                        nextLabel="Sau >"
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={3}
+                        marginPagesDisplayed={2}
+                        pageCount={pageCount}
+                        previousLabel="< Trước"
+                        pageClassName="page-item"
+                        pageLinkClassName="page-link"
+                        previousClassName="page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="page-item"
+                        nextLinkClassName="page-link"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        containerClassName="pagination"
+                        activeClassName="active"
+                        renderOnZeroPageCount={null}
+                      />
+                    </div>
+                  </>
                 ) : null}
               </div>
-              <nav className="float-end mt-4" aria-label="Page navigation">
-                <ul className="pagination">
-                  <li className="page-item disabled">
-                    <Link className="page-link" to="#">
-                      Trước
-                    </Link>
-                  </li>
-                  <li className="page-item active">
-                    <Link className="page-link" to="#">
-                      1
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="#">
-                      2
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="#">
-                      3
-                    </Link>
-                  </li>
-                  <li className="page-item">
-                    <Link className="page-link" to="#">
-                      Sau
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
             </>
           ) : (
             <div className="text-center">Không có dữ liệu</div>

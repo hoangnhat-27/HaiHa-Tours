@@ -61,11 +61,14 @@ const Checkout = () => {
       return;
     }
   });
+
   const [order, setOrder] = useState({
     userId: user && user._id,
     fullName: "",
     phone: "",
     tourId: `${id}`,
+    tourName: `${title ? title : ""}`,
+    photo: `${photo ? photo : ""}`,
     people: {
       adult: 1,
       children: 1,
@@ -112,11 +115,17 @@ const Checkout = () => {
                 (discount[0].amount * adults + children) / 100;
               totalAmount = total > 0 ? total : 0;
               toast.success("Áp dụng mã giảm giá thành công!", ToastObjects);
+              setUseDiscount(false);
             } else {
               let total = adults + children - Number(discount[0].amount);
               toast.success("Áp dụng mã giảm giá thành công!", ToastObjects);
               totalAmount = total > 0 ? total : 0;
+              setUseDiscount(false);
             }
+          } else {
+            totalAmount = adults + children;
+            toast.error("Mã khuyến mãi không hợp lệ", ToastObjects);
+            setUseDiscount(false);
           }
         }
       } else totalAmount = adults + children;
@@ -127,10 +136,15 @@ const Checkout = () => {
     setOrder((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
   useEffect(() => {
-    if (totalAmount) {
-      setOrder({ ...order, totalPrice: totalAmount });
+    if (title && photo && totalAmount) {
+      setOrder({
+        ...order,
+        tourName: title,
+        photo: photo,
+        totalPrice: totalAmount,
+      });
     }
-  }, [totalAmount]);
+  }, [totalAmount, title, photo]);
 
   useEffect(() => {
     if (!user) {
@@ -146,7 +160,6 @@ const Checkout = () => {
     try {
       if (
         !order.userId ||
-        !order.userEmail ||
         !order.fullName ||
         !order.phone ||
         !order.bookFrom ||
@@ -159,7 +172,7 @@ const Checkout = () => {
         toast.error("Số người không hợp lệ!", ToastObjects);
         return;
       }
-      if (Date.parse(order.bookFrom) > Date.parse(order.bookTo)) {
+      if (Date.parse(order.bookFrom) >= Date.parse(order.bookTo)) {
         toast.error("Ngày không hợp lệ!", ToastObjects);
         return;
       }
@@ -452,7 +465,10 @@ const Checkout = () => {
                       </span>
                     </p>
                     <p>
-                      Tổng tiền: <span>{totalAmount}đ</span>
+                      Tổng tiền:{" "}
+                      <span>
+                        {Intl.NumberFormat("en-US").format(totalAmount)}đ
+                      </span>
                     </p>
                   </div>
                 </Col>
