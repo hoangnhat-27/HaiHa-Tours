@@ -169,24 +169,26 @@ export default function OrderList() {
         toast.error("Cập nhật số lượng không thành công!", ToastObjects);
         return;
       }
-      toast.success("Huỷ đơn thành công", ToastObjects);
       try {
-        const res = await fetch(`${BASE_URL}/orders/${user._id}`, {
-          method: "get",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          credentials: "include",
-        });
-        const result = await res.json();
-        if (!res.ok) {
-          return alert(result.message);
+        if (user) {
+          const res = await fetch(`${BASE_URL}/orders/user/${user._id}`, {
+            method: "get",
+            headers: {
+              "content-type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          });
+          const result = await res.json();
+          if (!res.ok) {
+            toast.error("Có lỗi trong quá trình lấy dữ liệu!", ToastObjects);
+            return;
+          }
+          setOrderData(result.data?.reverse());
+          toast.success("Huỷ đơn thành công!", ToastObjects);
         }
-        setOrderData(result.data?.reverse());
       } catch (error) {
-        toast.error("Có lỗi khi lấy ra danh sách!", ToastObjects);
-        return;
+        toast.error("Mạng không ổn định, vui lòng thử lại", ToastObjects);
       }
     } catch (error) {
       toast.error("Hủy đơn không thành công!", ToastObjects);
@@ -232,23 +234,24 @@ export default function OrderList() {
           return;
         }
         try {
-          const res = await fetch(`${BASE_URL}/orders/${user._id}`, {
-            method: "get",
-            headers: {
-              "content-type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            credentials: "include",
-          });
-          const result = await res.json();
-          if (!res.ok) {
-            toast.error("Lấy danh sách không thành công!", ToastObjects);
-            return;
+          if (user) {
+            const res = await fetch(`${BASE_URL}/orders/user/${user._id}`, {
+              method: "get",
+              headers: {
+                "content-type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              credentials: "include",
+            });
+            const result = await res.json();
+            if (!res.ok) {
+              toast.error("Có lỗi trong quá trình lấy dữ liệu!", ToastObjects);
+              return;
+            }
+            setOrderData(result.data?.reverse());
           }
-          setOrderData(result.data?.reverse());
         } catch (error) {
-          toast.error("Lấy danh sách không thành công!", ToastObjects);
-          return;
+          toast.error("Mạng không ổn định, vui lòng thử lại", ToastObjects);
         }
       } catch (error) {
         toast.error("Cập nhật đơn hàng không thành công!", ToastObjects);

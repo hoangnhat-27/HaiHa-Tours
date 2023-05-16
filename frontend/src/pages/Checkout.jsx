@@ -61,7 +61,8 @@ const Checkout = () => {
       return;
     }
   });
-
+  const [discountItem, setDiscountItem] = useState({});
+  const [totalPrice, setTotalPrice] = useState(0);
   const [order, setOrder] = useState({
     userId: user && user._id,
     fullName: "",
@@ -78,73 +79,90 @@ const Checkout = () => {
     bookTo: "",
     paymentMethod: "direct",
   });
-  let totalAmount = 0;
-  if (order.bookFrom && order.bookTo) {
-    if (Date.parse(order.bookFrom) > Date.parse(order.bookTo)) {
-      toast.error("Ngày không hợp lệ!", ToastObjects);
-    } else {
-      let days = Math.round(
-        Math.abs(
-          (new Date(order.bookFrom) - new Date(order.bookTo)) /
-            (24 * 60 * 60 * 1000)
-        )
-      );
-      let adults = 0;
-      let children = 0;
-      if (!order.people.adult > 0 && !order.people.children > 0)
-        totalAmount = 1000;
-      if (order.people.adult > 0)
-        adults = Number(price) * Number(order.people.adult) * days;
-      else adults = 0;
-      if (order.people.children > 0)
-        children =
-          Math.round(Number(price / 2)) * Number(order.people.children) * days;
-      else children = 0;
-      if (useDiscount) {
-        if (discountInput?.trim() && discountData.length) {
-          let discount = discountData.filter(
-            (discount) =>
-              discount.discountCode === discountInput &&
-              discount.belowPrice >= price
-          );
-          if (discount.length) {
-            if (discount[0].type === "decreasePercent") {
-              let total =
-                adults +
-                children -
-                (discount[0].amount * adults + children) / 100;
-              totalAmount = total > 0 ? total : 0;
-              toast.success("Áp dụng mã giảm giá thành công!", ToastObjects);
-              setUseDiscount(false);
+  useEffect(() => {
+    if (order.bookFrom && order.bookTo) {
+      if (Date.parse(order.bookFrom) > Date.parse(order.bookTo)) {
+        toast.error("Ngày không hợp lệ!", ToastObjects);
+      } else {
+        let days = Math.round(
+          Math.abs(
+            (new Date(order.bookFrom) - new Date(order.bookTo)) /
+              (24 * 60 * 60 * 1000)
+          )
+        );
+        let adults = 0;
+        let children = 0;
+        if (!order.people.adult > 0 && !order.people.children > 0)
+          setTotalPrice(0);
+        if (order.people.adult > 0)
+          adults = Number(price) * Number(order.people.adult) * days;
+        else adults = 0;
+        if (order.people.children > 0)
+          children =
+            Math.round(Number(price / 2)) *
+            Number(order.people.children) *
+            days;
+        else children = 0;
+        if (useDiscount) {
+          if (discountInput?.trim() && discountData.length) {
+            let discount = discountData.filter(
+              (discount) =>
+                discount.discountCode === discountInput &&
+                discount.belowPrice >= price
+            );
+            if (discount.length) {
+              setDiscountItem(discount[0]);
+              if (discount[0].type === "decreasePercent") {
+                let total =
+                  adults +
+                  children -
+                  (discount[0].amount * (adults + children)) / 100;
+                setTotalPrice(total > 0 ? total : 0);
+                toast.success("Áp dụng mã giảm giá thành công!", ToastObjects);
+              } else {
+                let total = adults + children - Number(discount[0].amount);
+                toast.success("Áp dụng mã giảm giá thành công!", ToastObjects);
+                setTotalPrice(total > 0 ? total : 0);
+              }
             } else {
-              let total = adults + children - Number(discount[0].amount);
-              toast.success("Áp dụng mã giảm giá thành công!", ToastObjects);
-              totalAmount = total > 0 ? total : 0;
-              setUseDiscount(false);
+              toast.error("Mã khuyến mãi không hợp lệ", ToastObjects);
+              setTotalPrice(adults + children);
             }
           } else {
-            totalAmount = adults + children;
-            toast.error("Mã khuyến mãi không hợp lệ", ToastObjects);
-            setUseDiscount(false);
+            if (discountInput?.trim() && !discountData.length) {
+              toast.error("Mã khuyến mãi không hợp lệ", ToastObjects);
+            }
+            setTotalPrice(adults + children);
           }
+        } else {
+          setTotalPrice(adults + children);
         }
-      } else totalAmount = adults + children;
+      }
     }
-  }
+  }, [
+    order.bookFrom,
+    order.bookTo,
+    order.people.adult,
+    order.people.children,
+    useDiscount,
+    discountInput,
+    discountData,
+    price,
+  ]);
 
   const handleChange = (e) => {
     setOrder((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
   useEffect(() => {
-    if (title && photo && totalAmount) {
+    if (title && photo && totalPrice) {
       setOrder({
         ...order,
         tourName: title,
         photo: photo,
-        totalPrice: totalAmount,
+        totalPrice: totalPrice,
       });
     }
-  }, [totalAmount, title, photo]);
+  }, [totalPrice, title, photo]);
 
   useEffect(() => {
     if (!user) {
@@ -208,6 +226,23 @@ const Checkout = () => {
         toast.error("Cập nhật số lượng không thành công!", ToastObjects);
         return;
       }
+      if (useDiscount && discountItem) {
+        let resDiscount = await fetch(
+          `${BASE_URL}/discounts/${discountItem?._id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const resultDeleteDiscount = await resDiscount.json();
+        if (!resultDeleteDiscount.success) {
+          toast.error("Xóa mã khuyến mãi không thành công!", ToastObjects);
+          return;
+        }
+      }
       toast.success("Đặt tour thành công", ToastObjects);
       setTimeout(() => navigate("/thank-you"), 2500);
     } catch (error) {
@@ -217,7 +252,7 @@ const Checkout = () => {
   };
 
   const handleCheckDiscount = () => {
-    if (discountInput?.trim() && discountData.length) {
+    if (discountInput?.trim()) {
       setUseDiscount(true);
     }
   };
@@ -410,7 +445,7 @@ const Checkout = () => {
                         <ListGroupItem className="border-0 px-0 total">
                           <h5>Tổng cộng</h5>
                           <span>
-                            {Intl.NumberFormat("en-US").format(totalAmount)}đ
+                            {Intl.NumberFormat("en-US").format(totalPrice)}đ
                           </span>
                         </ListGroupItem>
                       </ListGroup>
@@ -467,7 +502,7 @@ const Checkout = () => {
                     <p>
                       Tổng tiền:{" "}
                       <span>
-                        {Intl.NumberFormat("en-US").format(totalAmount)}đ
+                        {Intl.NumberFormat("en-US").format(totalPrice)}đ
                       </span>
                     </p>
                   </div>

@@ -113,7 +113,7 @@ const Discounts = () => {
   return (
     <>
       <Toast />
-      <CommonSection title={`Danh sách discounts`} />
+      <CommonSection title={`Danh sách mã khuyến mãi`} />
       <section className="pt-0 mt-4">
         <Container style={{ maxWidth: "1150px", position: "relative" }}>
           {discountSorted?.length === 0 ? (

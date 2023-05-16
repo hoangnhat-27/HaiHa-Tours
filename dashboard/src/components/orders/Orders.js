@@ -55,7 +55,7 @@ const Orders = (props) => {
           <Button
             variant="primary"
             onClick={() => {
-              UpdateOrder(orderItem, "accept", true);
+              UpdateOrder(orderItem, orderItem.status, true);
               handleClose();
             }}
           >
@@ -141,7 +141,7 @@ const Orders = (props) => {
               </td>
               <td className="d-flex justify-content-end align-item-center">
                 <div className="d-flex gap-2">
-                  {!order.isPaid ? (
+                  {!order.isPaid && order.status !== "cancel" ? (
                     <div
                       className="text-success"
                       onClick={() => {
